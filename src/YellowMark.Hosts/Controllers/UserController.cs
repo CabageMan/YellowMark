@@ -19,14 +19,14 @@ public class UserController(
     [HttpGet("get-by-id")]
     public async Task<IActionResult> GetByIdAsync(Guid userId, CancellationToken cancellationToken)
     {
-        var result = await _userService.GetById(userId, cancellationToken);
+        var result = await _userService.GetByIdAsync(userId, cancellationToken);
         return Ok(result);
     }
 
-    [HttpPost("get-by-id")]
-    public async Task<IActionResult> CreateAsync(CreateUserDto userModel, CancellationToken cancellationToken)
+    [HttpPost("create-user")]
+    public async Task<IActionResult> CreateUserAsync(CreateUserDto userModel, CancellationToken cancellationToken)
     {
         var userId = await _userService.CreateAsync(userModel, cancellationToken);
-        return Created(nameof(CreateAsync), userId);
+        return Created(nameof(CreateUserAsync), userId);
     }
 }

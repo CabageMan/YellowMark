@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\YellowMark.Application\YellowMark.Application.csproj" />
+    <ProjectReference Include="..\YellowMark.Infrastructure\YellowMark.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

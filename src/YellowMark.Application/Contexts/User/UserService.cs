@@ -8,9 +8,9 @@ public class UserService(IUserRepository userRepository) : IUserService
     private readonly IUserRepository _userRepository = userRepository;
 
     /// <inheritdoc />
-    public Task<Domain.Users.User> GetById(Guid userId, CancellationToken cancellationToken)
+    public Task<Domain.Users.User> GetByIdAsync(Guid userId, CancellationToken cancellationToken)
     {
-        return _userRepository.GetById(userId, cancellationToken);
+        return _userRepository.GetByIdAsync(userId, cancellationToken);
     }
 
     /// <inheritdoc />

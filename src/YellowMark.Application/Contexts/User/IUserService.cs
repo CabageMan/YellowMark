@@ -12,7 +12,7 @@ public interface IUserService
     /// <param name="userId"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Domain.Users.User> GetById(Guid userId, CancellationToken cancellationToken);
+    Task<Domain.Users.User> GetByIdAsync(Guid userId, CancellationToken cancellationToken);
 
     /// <summary>
     /// 
