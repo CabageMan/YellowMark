@@ -1,0 +1,25 @@
+using YellowMark.Domain.Users;
+
+namespace YellowMark.Application.Contexts.User;
+
+/// <summary>
+/// User Repository.
+/// </summary>
+public interface IUserRepository
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userId"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<Domain.Users.User> GetById(Guid userId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="userModel"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<Guid> CreateAsync(Domain.Users.User userModel, CancellationToken cancellationToken);
+}

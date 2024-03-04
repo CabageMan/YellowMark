@@ -10,4 +10,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\YellowMark.Application\YellowMark.Application.csproj" />
+  </ItemGroup>
+
 </Project>

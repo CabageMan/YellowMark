@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\YellowMark.Domain\YellowMark.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
