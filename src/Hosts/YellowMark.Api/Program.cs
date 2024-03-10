@@ -1,8 +1,5 @@
 
-using YellowMark.Application.Contexts.User;
-using YellowMark.Infrastructure.DataAccess;
-
-namespace YellowMark.Hosts;
+namespace YellowMark.Api;
 
 public class Program
 {
@@ -16,9 +13,6 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-
-        builder.Services.AddScoped<IUserService, UserService>();
-        builder.Services.AddScoped<IUserRepository, UserRepository>();
 
         var app = builder.Build();
 

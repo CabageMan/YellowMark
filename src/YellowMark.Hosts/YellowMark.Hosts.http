@@ -1,6 +1,0 @@
-@YellowMark.Hosts_HostAddress = http://localhost:5198
-
-GET {{YellowMark.Hosts_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
