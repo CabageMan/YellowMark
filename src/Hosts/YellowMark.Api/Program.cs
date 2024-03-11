@@ -1,4 +1,8 @@
 
+using YellowMark.AppServices.Users.Repositories;
+using YellowMark.AppServices.Users.Services;
+using YellowMark.DataAccess.User.Repository;
+
 namespace YellowMark.Api;
 
 public class Program
@@ -14,6 +18,10 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        // Check if we can add a dependency for DataAccess to inject UserRepository.
+        builder.Services.AddSingleton<IUserRepository, UserRepository>();
+        builder.Services.AddSingleton<IUserService, UserService>();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -26,7 +34,6 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-
 
         app.MapControllers();
 
