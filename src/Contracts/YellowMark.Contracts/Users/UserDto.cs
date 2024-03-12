@@ -29,4 +29,14 @@ public class UserDto
     /// User's full name. 
     /// </summary>
     public string FullName { get; set; }
+
+    /// <summary>
+    /// User's email. 
+    /// </summary>
+    public string Email { get; set; }
+
+    /// <summary>
+    /// User's phone. 
+    /// </summary>
+    public string Phone { get; set; }
 }

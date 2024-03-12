@@ -21,4 +21,14 @@ public class User : BaseEntity
     /// User's last name.
     /// </summary>
     public string LastName { get; set; }
+
+    /// <summary>
+    /// User's email.
+    /// </summary>
+    public string Email { get; set; }
+    
+    /// <summary>
+    /// User's phone.
+    /// </summary>
+    public string Phone { get; set; }
 }

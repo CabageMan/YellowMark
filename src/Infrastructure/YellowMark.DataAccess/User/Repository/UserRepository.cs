@@ -9,7 +9,7 @@ public class UserRepository : IUserRepository
     /// <inheritdoc />
     public Task<IEnumerable<UserDto>> GetAll(CancellationToken cancellationToken)
     {
-        var users = UserList();
+        var users = UsersMockList();
 
         return Task.Run(() => users.Select(user => new UserDto
         {
@@ -17,15 +17,17 @@ public class UserRepository : IUserRepository
             FirstName = user.FirstName,
             MiddleName = user.MiddleName,
             LastName = user.LastName,
-            FullName = $"{user.LastName} {user.MiddleName} {user.FirstName}"
+            FullName = $"{user.LastName} {user.MiddleName} {user.FirstName}",
+            Email = user.Email,
+            Phone = user.Phone
         }), cancellationToken);
     }
 
     /// <summary>
-    /// Mock Users Data
+    /// Mock User's Data
     /// </summary>
     /// <returns></returns>
-    public static List<Domain.Users.Entity.User> UserList()
+    private static List<Domain.Users.Entity.User> UsersMockList()
     {
         return
         [
@@ -34,14 +36,18 @@ public class UserRepository : IUserRepository
                 Id = Guid.NewGuid(),
                 FirstName = "Blob",
                 MiddleName = "Jr.",
-                LastName = "Awesome"
+                LastName = "Awesome",
+                Email = "blob.awesome@email.com",
+                Phone = "+71112345678"
             },
             new()
             {
                 Id = Guid.NewGuid(),
                 FirstName = "Jack",
                 MiddleName = "Captain",
-                LastName = "Sparrow"
+                LastName = "Sparrow",
+                Email = "captain.jack@blackpearl.com",
+                Phone = "+76669876543"
             }
         ];
     }
