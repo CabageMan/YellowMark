@@ -6,12 +6,17 @@ namespace YellowMark.Domain.Base;
 public class BaseEntity
 {
     /// <summary>
-    /// User record identifier. 
+    /// Record identifier. 
     /// </summary>
     public Guid Id { get; set; }
 
     /// <summary>
-    /// User record creation date.
+    /// Record creation date.
     /// </summary>
     public DateTime CreatedAt { get; set; }
+
+    /// <summary>
+    /// Record update date.
+    /// </summary>
+    public DateTime UpdatedAt { get; set; }
 }
