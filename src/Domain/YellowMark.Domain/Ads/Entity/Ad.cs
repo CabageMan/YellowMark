@@ -34,6 +34,12 @@ public class Ad : BaseEntity
     /// </summary>
     public string Description { get; set; }
 
+    // Investigate a better way to store images.
+    // - Store in data base.
+    // - Store in S3 and get Image URL. For example https://min.io/
+    // - Store with MongoDB GridFS https://www.mongodb.com/docs/manual/core/gridfs/.
+    // public Image Image { get; set; }
+
     /// <summary>
     /// Goods <see cref="Currency"/> id specified in the ad. 
     /// </summary>
