@@ -7,5 +7,10 @@ namespace YellowMark.AppServices.Users.Repositories;
 /// </summary>
 public interface IUserRepository
 {
-    Task<IEnumerable<UserDto>> GetAll(CancellationToken cancellationToken);
+    /// <summary>
+    /// Returns all instances of the UserDto. 
+    /// </summary>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns><see cref="UserDto"/></returns>
+    Task<IEnumerable<UserDto>> GetAllAsync(CancellationToken cancellationToken);
 }

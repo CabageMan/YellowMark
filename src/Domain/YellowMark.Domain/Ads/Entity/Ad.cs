@@ -38,6 +38,7 @@ public class Ad : BaseEntity
     // - Store in data base.
     // - Store in S3 and get Image URL. For example https://min.io/
     // - Store with MongoDB GridFS https://www.mongodb.com/docs/manual/core/gridfs/.
+    // See User.cs Avatar
     // public Image Image { get; set; }
 
     /// <summary>

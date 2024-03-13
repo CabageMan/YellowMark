@@ -20,6 +20,6 @@ public class UserService : IUserService
     /// <inheritdoc />
     public Task<IEnumerable<UserDto>> GetUsersAsync(CancellationToken cancellationToken)
     {
-        return _userRepository.GetAll(cancellationToken);
+        return _userRepository.GetAllAsync(cancellationToken);
     }
 }

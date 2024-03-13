@@ -7,7 +7,7 @@ namespace YellowMark.DataAccess.User.Repository;
 public class UserRepository : IUserRepository
 {
     /// <inheritdoc />
-    public Task<IEnumerable<UserDto>> GetAll(CancellationToken cancellationToken)
+    public Task<IEnumerable<UserDto>> GetAllAsync(CancellationToken cancellationToken)
     {
         var users = UsersMockList();
 

@@ -22,6 +22,13 @@ public class User : BaseEntity
     /// </summary>
     public string LastName { get; set; }
 
+    // Investigate a better way to store images.
+    // - Store in data base.
+    // - Store in S3 and get Image URL. For example https://min.io/
+    // - Store with MongoDB GridFS https://www.mongodb.com/docs/manual/core/gridfs/.
+    // See Ad.cs Image
+    // public Image Avatar { get; set; }
+
     /// <summary>
     /// User's email.
     /// </summary>
