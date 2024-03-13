@@ -1,4 +1,6 @@
 using YellowMark.Domain.Base;
+using YellowMark.Domain.Categories.Entity;
+using YellowMark.Domain.Subcategories.Entity;
 
 namespace YellowMark.Domain.Ads.Entity;
 
@@ -8,29 +10,34 @@ namespace YellowMark.Domain.Ads.Entity;
 public class Ad : BaseEntity
 {
     /// <summary>
-    /// Ad's owner (user) id.
+    /// Ad owner (<see cref="User"/>) id.
     /// </summary>
     public Guid UserId { get; set; }
 
     /// <summary>
-    /// Ad's category <see cref="CategoryDto"/>
+    /// Ad <see cref="Category"/> id.
     /// </summary>
-    public string Category { get; set; }
+    public Guid CategoryId { get; set; }
 
     /// <summary>
-    /// Ad's subcategory <see cref="SubcategoryDto"/>
+    /// Ad <see cref="Subcategory"/> id.
     /// </summary>
-    public string Subcategory { get; set; }
+    public Guid SubcategoryId { get; set; }
 
     /// <summary>
-    /// Ad's decription.
+    /// Ad title.
+    /// </summary>
+    public string Title { get; set; }
+
+    /// <summary>
+    /// Ad decription.
     /// </summary>
     public string Description { get; set; }
 
     /// <summary>
-    /// Goods currency specified in the ad. 
+    /// Goods <see cref="Currency"/> id specified in the ad. 
     /// </summary>
-    public string Currency { get; set; }
+    public Guid CurrencyId { get; set; }
 
     /// <summary>
     /// Goods price specified in the ad.

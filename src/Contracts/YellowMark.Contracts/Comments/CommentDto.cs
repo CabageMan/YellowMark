@@ -29,22 +29,27 @@ public class CommentDto
     public DateTime UpdatedAt { get; set; }
 
     /// <summary>
-    /// Comment author first name.
+    /// Comment author first name (<see cref="UserDto"/>).
     /// </summary>
     public String AuthorFirstName { get; set; }
 
     /// <summary>
-    /// Comment author last name.
+    /// Comment author last name (<see cref="UserDto"/>).
     /// </summary>
     public String AuthorLastName { get; set; }
     
     /// <summary>
-    /// Comment author Id.
+    /// Comment author (<see cref="UserDto"/>) Id.
     /// </summary>
-    public Guid UserId { get; set; }
+    public Guid AuthorId { get; set; }
 
     /// <summary>
-    /// Commented Ad Id.
+    /// Commented ad Id (<see cref="AdDto"/>).
     /// </summary>
     public Guid AdId { get; set; }
+
+    /// <summary>
+    /// Ad title (<see cref="AdDto"/>).
+    /// </summary>
+    public string AdTitle { get; set; }
 }
