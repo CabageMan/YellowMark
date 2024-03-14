@@ -3,6 +3,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Application\YellowMark.AppServices\YellowMark.AppServices.csproj" />
     <ProjectReference Include="..\..\Domain\YellowMark.Domain\YellowMark.Domain.csproj" />
+    <ProjectReference Include="..\YellowMark.Infrastructure\YellowMark.Infrastructure.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

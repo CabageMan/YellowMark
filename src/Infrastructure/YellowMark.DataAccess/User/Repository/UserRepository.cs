@@ -1,17 +1,35 @@
+using Microsoft.EntityFrameworkCore;
 using YellowMark.AppServices.Users.Repositories;
 using YellowMark.Contracts.Users;
+using YellowMark.Infrastructure.Repository;
 
 namespace YellowMark.DataAccess.User.Repository;
 
 /// <inheritdoc />
 public class UserRepository : IUserRepository
 {
-    /// <inheritdoc />
-    public Task<IEnumerable<UserDto>> GetAllAsync(CancellationToken cancellationToken)
-    {
-        var users = UsersMockList();
+    private readonly IWriteOnlyRepository<Domain.Users.Entity.User> _writeOnlyrepository;
+    private readonly IReadOnlyRepository<Domain.Users.Entity.User> _readOnlyrepository;
 
-        return Task.Run(() => users.Select(user => new UserDto
+    /// <summary>
+    /// Init UserRepository (<see cref="IUserRepository"/>) instance.
+    /// </summary>
+    /// <param name="repository"></param>
+    public UserRepository (
+        IWriteOnlyRepository<Domain.Users.Entity.User> writeOnlyRepository,
+        IReadOnlyRepository<Domain.Users.Entity.User> readOnlyRepository)
+    {
+        _writeOnlyrepository = writeOnlyRepository;
+        _readOnlyrepository = readOnlyRepository;
+    }
+
+    /// <inheritdoc />
+    public async Task<IEnumerable<UserDto>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        // var users = UsersMockList();
+        var users = await _readOnlyrepository.GetAll().ToListAsync(cancellationToken);
+
+        return users.Select(user => new UserDto
         {
             Id = user.Id,
             FirstName = user.FirstName,
@@ -20,13 +38,10 @@ public class UserRepository : IUserRepository
             FullName = $"{user.LastName} {user.MiddleName} {user.FirstName}",
             Email = user.Email,
             Phone = user.Phone
-        }), cancellationToken);
+        });
     }
 
-    /// <summary>
-    /// Mock User's Data
-    /// </summary>
-    /// <returns></returns>
+    // Mock User's Data
     private static List<Domain.Users.Entity.User> UsersMockList()
     {
         return
