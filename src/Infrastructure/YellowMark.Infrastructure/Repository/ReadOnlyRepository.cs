@@ -16,7 +16,7 @@ public class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity> where TE
     protected DbSet<TEntity> DbSet { get; }
 
     /// <summary>
-    /// Init <see cref="IRepository"/> instance.
+    /// Init <see cref="IReadOnlyRepository"/> instance.
     /// </summary>
     /// <param name="context">Data Base context</param>
     public ReadOnlyRepository(DbContext context)

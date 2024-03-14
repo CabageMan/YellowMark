@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-
-namespace YellowMark.Infrastructure.Repository;
+﻿namespace YellowMark.Infrastructure.Repository;
 
 /// <summary>
 /// Basic repository.

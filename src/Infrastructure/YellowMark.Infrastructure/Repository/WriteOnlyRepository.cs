@@ -18,7 +18,7 @@ public class WriteOnlyRepository<TEntity> : IWriteOnlyRepository<TEntity> where 
     protected DbSet<TEntity> DbSet { get; }
 
     /// <summary>
-    /// Init <see cref="IRepository"/> instance.
+    /// Init <see cref="IWriteOnlyRepository"/> instance.
     /// </summary>
     /// <param name="context">Data Base context</param>
     public WriteOnlyRepository(DbContext context)
