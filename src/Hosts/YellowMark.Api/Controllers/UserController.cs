@@ -1,6 +1,7 @@
 using YellowMark.AppServices.Users.Services;
 using Microsoft.AspNetCore.Mvc;
 using YellowMark.Contracts.Users;
+using System.Net;
 
 namespace YellowMark.Api.Controllers;
 
@@ -29,6 +30,9 @@ public class UserController : ControllerBase
     /// <returns>Users list.</returns>
     [HttpGet]
     [Route("all")]
+    [ProducesResponseType(typeof(IEnumerable<UserDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
     public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken)
     {
         var result = await _userService.GetUsersAsync(cancellationToken);
