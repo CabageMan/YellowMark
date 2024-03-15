@@ -25,6 +25,7 @@ public class AdDto
     /// </summary>
     public DateTime UpdatedAt { get; set; }
 
+    // TODO: Check, may be use part of user data, or other DTO.
     /// <summary>
     /// Ad owner <see cref="UserDto"/>
     /// </summary>

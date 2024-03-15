@@ -5,6 +5,8 @@ using YellowMark.AppServices.Users.Repositories;
 using YellowMark.AppServices.Users.Services;
 using YellowMark.Contracts.Users;
 using YellowMark.DataAccess.User.Repository;
+using YellowMark.Domain.Users.Entity;
+using YellowMark.Infrastructure.Repository;
 
 namespace YellowMark.Api;
 
@@ -17,6 +19,8 @@ public class Program
         // Add services to the container.
 
         builder.Services.AddControllers();
+
+        // Swager
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen(options =>
@@ -38,8 +42,12 @@ public class Program
             );
         });
 
+        // DI
         // Check if we can add a dependency for DataAccess to inject UserRepository.
+        // Temporary implemented for test. Chect if it is right. 
         builder.Services.AddSingleton<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<IWriteOnlyRepository<User>, WriteOnlyRepository<User>>();
+        builder.Services.AddScoped<IReadOnlyRepository<User>, ReadOnlyRepository<User>>();
         builder.Services.AddSingleton<IUserService, UserService>();
 
         var app = builder.Build();

@@ -14,7 +14,8 @@ public class UserRepository : IUserRepository
     /// <summary>
     /// Init UserRepository (<see cref="IUserRepository"/>) instance.
     /// </summary>
-    /// <param name="repository"></param>
+    /// <param name="writeOnlyRepository"><see cref="IWriteOnlyRepository"/></param>
+    /// <param name="readOnlyRepository"><see cref="IReadOnlyRepository"/></param>
     public UserRepository (
         IWriteOnlyRepository<Domain.Users.Entity.User> writeOnlyRepository,
         IReadOnlyRepository<Domain.Users.Entity.User> readOnlyRepository)

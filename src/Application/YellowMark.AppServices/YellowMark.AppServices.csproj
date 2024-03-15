@@ -4,6 +4,14 @@
     <ProjectReference Include="..\..\Contracts\YellowMark.Contracts\YellowMark.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Ads/Services/" />
+    <Folder Include="Categories/Services/" />
+    <Folder Include="Comments/Services/" />
+    <Folder Include="Currencies/Services/" />
+    <Folder Include="Subcategories/Services/" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
