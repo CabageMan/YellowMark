@@ -9,6 +9,7 @@ namespace YellowMark.DataAccess.Currency.Repository;
 /// <inheritdoc />
 public class CurrencyRepository : ICurrencyRepository
 {
+    /*
     private readonly IWriteOnlyRepository<Domain.Currencies.Entity.Currency> _writeOnlyRepository;
     private readonly IReadOnlyRepository<Domain.Currencies.Entity.Currency> _readOnlyRepository;
 
@@ -24,10 +25,18 @@ public class CurrencyRepository : ICurrencyRepository
         _writeOnlyRepository = writeOnlyRepository;
         _readOnlyRepository = readOnlyRepository;
     }
+    */
 
     /// <inheritdoc />
     public async Task<IEnumerable<CurrencyDto>> GetAllAsync(CancellationToken cancellationToken)
     {
+        var currencies = MockList();
+        return await Task.Run(() => currencies.Select(currency => new CurrencyDto
+        {
+            AlphabeticCode = currency.AlphabeticCode,
+            NumericCode = currency.NumericCode
+        }));
+        /*
         var currencies = await _readOnlyRepository.GetAll().ToListAsync(cancellationToken);
 
         return currencies.Select(currency => new CurrencyDto
@@ -35,5 +44,32 @@ public class CurrencyRepository : ICurrencyRepository
             AlphabeticCode = currency.AlphabeticCode,
             NumericCode = currency.NumericCode
         });
+        */
+    }
+
+    // Mock Currency Data
+    private static List<Domain.Currencies.Entity.Currency> MockList()
+    {
+        return
+        [
+            new()
+            {
+                Id = Guid.NewGuid(),
+                AlphabeticCode = "RUB",
+                NumericCode = 643
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                AlphabeticCode = "RWF",
+                NumericCode = 646
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                AlphabeticCode = "RON",
+                NumericCode = 946
+            },
+        ];
     }
 }

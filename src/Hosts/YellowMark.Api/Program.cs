@@ -46,8 +46,8 @@ public class Program
         // Check if we can add a dependency for DataAccess to inject UserRepository.
         // Temporary implemented for test. Chect if it is right. 
         builder.Services.AddSingleton<IUserRepository, UserRepository>();
-        builder.Services.AddScoped<IWriteOnlyRepository<User>, WriteOnlyRepository<User>>();
-        builder.Services.AddScoped<IReadOnlyRepository<User>, ReadOnlyRepository<User>>();
+        // builder.Services.AddScoped<IWriteOnlyRepository<User>, WriteOnlyRepository<User>>();
+        // builder.Services.AddScoped<IReadOnlyRepository<User>, ReadOnlyRepository<User>>();
         builder.Services.AddSingleton<IUserService, UserService>();
 
         var app = builder.Build();

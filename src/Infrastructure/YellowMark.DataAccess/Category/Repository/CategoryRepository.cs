@@ -8,6 +8,7 @@ namespace YellowMark.DataAccess.Category.Repository;
 /// <inheritdoc />
 public class CategoryRepository : ICategoryRepository
 {
+    /*
     private readonly IWriteOnlyRepository<Domain.Categories.Entity.Category> _writeOnlyrepository;
     private readonly IReadOnlyRepository<Domain.Categories.Entity.Category> _readOnlyrepository;
 
@@ -23,10 +24,18 @@ public class CategoryRepository : ICategoryRepository
         _writeOnlyrepository = writeOnlyRepository;
         _readOnlyrepository = readOnlyRepository;
     }
+    */
 
     /// <inheritdoc />
     public async Task<IEnumerable<CategoryDto>> GetAllAsync(CancellationToken cancellationToken)
     {
+        var categories = MockList();
+        return await Task.Run(() => categories.Select(category => new CategoryDto
+        {
+            Id = category.Id,
+            Name = category.Name
+        }), cancellationToken);
+        /*
         var categories = await _readOnlyrepository.GetAll().ToListAsync(cancellationToken);
 
         return categories.Select(category => new CategoryDto
@@ -34,5 +43,29 @@ public class CategoryRepository : ICategoryRepository
             Id = category.Id,
             Name = category.Name
         });
+        */
+    }
+
+    // Mock Subcategory Data
+    private static List<Domain.Categories.Entity.Category> MockList()
+    {
+        return
+        [
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Transport",
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Home",
+            },
+            new()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Sport",
+            }
+        ];
     }
 }
