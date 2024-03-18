@@ -1,4 +1,5 @@
 using YellowMark.AppServices.Users.Repositories;
+using YellowMark.Contracts;
 using YellowMark.Contracts.Users;
 
 namespace YellowMark.AppServices.Users.Services;
@@ -21,5 +22,11 @@ public class UserService : IUserService
     public Task<IEnumerable<UserDto>> GetUsersAsync(CancellationToken cancellationToken)
     {
         return _userRepository.GetAllAsync(cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<UserDto> CreateUserAsync(CreateUserRequest request, CancellationToken cancellationToken)
+    {
+        return _userRepository.CreateUserAsync(request, cancellationToken);
     }
 }
