@@ -22,12 +22,15 @@ public class CreateUserRequest
     /// <summary>
     /// User's email. 
     /// </summary>
-    [EmailAddress(ErrorMessage = "Enter a valid email address")]
     public string Email { get; set; }
 
     /// <summary>
     /// User's phone. 
     /// </summary>
-    [Phone(ErrorMessage = "Enter a valid phone number")]
     public string Phone { get; set; }
+
+    /// <summary>
+    /// User's birth date.
+    /// </summary>
+    public DateOnly BirthDate { get; set; }
 }

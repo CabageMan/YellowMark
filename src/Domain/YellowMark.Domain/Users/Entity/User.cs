@@ -38,4 +38,9 @@ public class User : BaseEntity
     /// User's phone.
     /// </summary>
     public string Phone { get; set; }
+
+    /// <summary>
+    /// User's birth date.
+    /// </summary>
+    public DateOnly BirthDate { get; set; }
 }

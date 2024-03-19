@@ -40,7 +40,8 @@ public class UserRepository : IUserRepository
             LastName = user.LastName,
             FullName = $"{user.LastName} {user.MiddleName} {user.FirstName}",
             Email = user.Email,
-            Phone = user.Phone
+            Phone = user.Phone,
+            BirthDate = user.BirthDate
         }), cancellationToken);
         /*
         var users = await _readOnlyrepository.GetAll().ToListAsync(cancellationToken);
@@ -53,7 +54,8 @@ public class UserRepository : IUserRepository
             LastName = user.LastName,
             FullName = $"{user.LastName} {user.MiddleName} {user.FirstName}",
             Email = user.Email,
-            Phone = user.Phone
+            Phone = user.Phone,
+            BirthDate = user.BirthDate
         });
         */
     }
@@ -68,7 +70,8 @@ public class UserRepository : IUserRepository
             MiddleName = request.MiddleName,
             LastName = request.LastName,
             Email = request.Email,
-            Phone = request.Phone
+            Phone = request.Phone,
+            BirthDate = request.BirthDate
         };
 
         return await Task.Run(() => new UserDto
@@ -79,7 +82,8 @@ public class UserRepository : IUserRepository
             LastName = requestUser.LastName,
             FullName = $"{requestUser.LastName} {requestUser.MiddleName} {requestUser.FirstName}",
             Email = requestUser.Email,
-            Phone = requestUser.Phone
+            Phone = requestUser.Phone,
+            BirthDate = requestUser.BirthDate
         });
         /*
         var user = await _writeOnlyrepository.AddAsync(requestUser, cancellationToken);
@@ -92,7 +96,8 @@ public class UserRepository : IUserRepository
             LastName = user.LastName,
             FullName = $"{user.LastName} {user.MiddleName} {user.FirstName}",
             Email = user.Email,
-            Phone = user.Phone
+            Phone = user.Phone,
+            BirthDate = requestUser.BirthDate
         };
         */
     }
@@ -109,7 +114,8 @@ public class UserRepository : IUserRepository
                 MiddleName = "Jr.",
                 LastName = "Awesome",
                 Email = "blob.awesome@email.com",
-                Phone = "+71112345678"
+                Phone = "+71112345678",
+                BirthDate = new DateOnly(2013, 9, 23)
             },
             new()
             {
@@ -118,7 +124,8 @@ public class UserRepository : IUserRepository
                 MiddleName = "Captain",
                 LastName = "Sparrow",
                 Email = "captain.jack@blackpearl.com",
-                Phone = "+76669876543"
+                Phone = "+76669876543",
+                BirthDate = new DateOnly(1970, 6, 18)
             }
         ];
     }
