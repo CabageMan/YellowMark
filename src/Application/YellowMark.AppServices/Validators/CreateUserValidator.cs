@@ -1,5 +1,4 @@
-﻿using System.Data;
-using FluentValidation;
+﻿using FluentValidation;
 using YellowMark.Contracts;
 
 namespace YellowMark.AppServices.Validators;

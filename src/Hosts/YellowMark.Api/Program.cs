@@ -1,8 +1,9 @@
-
+using FluentValidation;
 using Microsoft.OpenApi.Models;
 using YellowMark.Api.Controllers;
 using YellowMark.AppServices.Users.Repositories;
 using YellowMark.AppServices.Users.Services;
+using YellowMark.AppServices.Validators;
 using YellowMark.Contracts.Users;
 using YellowMark.DataAccess.User.Repository;
 using YellowMark.Domain.Users.Entity;
@@ -43,11 +44,17 @@ public class Program
         });
 
         // DI
+        // Validators
+        builder.Services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
+
+        // Repositories
         // Check if we can add a dependency for DataAccess to inject UserRepository.
         // Temporary implemented for test. Chect if it is right. 
         builder.Services.AddSingleton<IUserRepository, UserRepository>();
         // builder.Services.AddScoped<IWriteOnlyRepository<User>, WriteOnlyRepository<User>>();
         // builder.Services.AddScoped<IReadOnlyRepository<User>, ReadOnlyRepository<User>>();
+
+        // Services
         builder.Services.AddSingleton<IUserService, UserService>();
 
         var app = builder.Build();
