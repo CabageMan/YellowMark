@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using YellowMark.Domain.Base;
 
 namespace YellowMark.Infrastructure.Repository;
 
-public class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntity : class
+public class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntity : BaseEntity
 {
     /// <summary>
     /// <see cref="DbContext"/>

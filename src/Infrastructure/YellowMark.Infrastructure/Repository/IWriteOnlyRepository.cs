@@ -1,10 +1,12 @@
-﻿namespace YellowMark.Infrastructure.Repository;
+﻿using YellowMark.Domain.Base;
+
+namespace YellowMark.Infrastructure.Repository;
 
 /// <summary>
 /// Basic repository.
 /// </summary>
 /// <typeparam name="TEntity"></typeparam>
-public interface IWriteOnlyRepository<TEntity> where TEntity : class
+public interface IWriteOnlyRepository<TEntity> where TEntity : BaseEntity
 {
     /// <summary>
     /// Add new instance of the entity.

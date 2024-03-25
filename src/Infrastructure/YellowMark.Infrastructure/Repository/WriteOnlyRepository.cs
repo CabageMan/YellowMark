@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using YellowMark.Domain.Base;
 
 namespace YellowMark.Infrastructure.Repository;
 
 /// <summary>
 /// Implementation of the basic repository.
 /// </summary>
-public class WriteOnlyRepository<TEntity> : IWriteOnlyRepository<TEntity> where TEntity : class
+public class WriteOnlyRepository<TEntity> : IWriteOnlyRepository<TEntity> where TEntity : BaseEntity
 {
     /// <summary>
     /// <see cref="DbContext"/>

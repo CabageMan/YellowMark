@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using YellowMark.Domain.Base;
 
 namespace YellowMark.Infrastructure.Repository;
 
@@ -6,7 +7,7 @@ namespace YellowMark.Infrastructure.Repository;
 /// Basic repository.
 /// </summary>
 /// <typeparam name="TEntity"></typeparam>
-public interface IReadOnlyRepository<TEntity> where TEntity : class
+public interface IReadOnlyRepository<TEntity> where TEntity : BaseEntity
 {
 
     /// <summary>

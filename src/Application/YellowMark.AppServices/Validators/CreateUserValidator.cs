@@ -11,15 +11,15 @@ public class CreateUserValidator : AbstractValidator<CreateUserRequest>
         RuleFor(user => user.FirstName)
             .NotNull()
             .NotEmpty()
-            .MaximumLength(30);
+            .MaximumLength(100);
 
         RuleFor(user => user.MiddleName)
-            .MaximumLength(30);
+            .MaximumLength(100);
 
         RuleFor(user => user.LastName)
             .NotNull()
             .NotEmpty()
-            .MaximumLength(30);
+            .MaximumLength(100);
 
         RuleFor(user => user.Email)
             .NotEmpty()
@@ -30,6 +30,7 @@ public class CreateUserValidator : AbstractValidator<CreateUserRequest>
         int minPhoneLength = 11;
         int maxPhoneLength = 15;
         // TODO: Update phone regex if it needed. Check in w.
+        // Refactor on tests creating.
         // Phone format: 1(234)567-8901
         RuleFor(user => user.Phone)
             .NotEmpty()
