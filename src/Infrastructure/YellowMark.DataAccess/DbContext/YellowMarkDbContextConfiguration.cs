@@ -30,6 +30,8 @@ public class YellowMarkDbContextConfiguration : IDbContextOptionsConfigurator<Ye
         var readConnectionString = _configuration
             .GetConnectionString(PostgressReadConnectionStringName);
 
+        // TODO: Handle Exceptions in controllers when DB string is empty.
+        // TODO: Handle Exceptions when database does not exist.
         if (string.IsNullOrEmpty(writeConnectionString))
         {
             throw new InvalidOperationException(

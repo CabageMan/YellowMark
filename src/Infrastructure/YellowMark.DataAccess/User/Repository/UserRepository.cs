@@ -9,7 +9,6 @@ namespace YellowMark.DataAccess.User.Repository;
 /// <inheritdoc />
 public class UserRepository : IUserRepository
 {
-    /*
     private readonly IWriteOnlyRepository<Domain.Users.Entity.User> _writeOnlyrepository;
     private readonly IReadOnlyRepository<Domain.Users.Entity.User> _readOnlyrepository;
 
@@ -25,11 +24,11 @@ public class UserRepository : IUserRepository
         _writeOnlyrepository = writeOnlyRepository;
         _readOnlyrepository = readOnlyRepository;
     }
-    */
 
     /// <inheritdoc />
     public async Task<IEnumerable<UserDto>> GetAllAsync(CancellationToken cancellationToken)
     {
+        /*
         var users = UsersMockList();
 
         return await Task.Run(() => users.Select(user => new UserDto
@@ -43,7 +42,7 @@ public class UserRepository : IUserRepository
             Phone = user.Phone,
             BirthDate = user.BirthDate
         }), cancellationToken);
-        /*
+        */
         var users = await _readOnlyrepository.GetAll().ToListAsync(cancellationToken);
 
         return users.Select(user => new UserDto
@@ -57,7 +56,6 @@ public class UserRepository : IUserRepository
             Phone = user.Phone,
             BirthDate = user.BirthDate
         });
-        */
     }
 
     /// <inheritdoc />
