@@ -38,7 +38,7 @@ public class Program
             );
         });
 
-        // Add dependencies for repositories, services and DB contexts.
+        // Add dependencies DB contexts.
         // Research contextConfigurations. It may be userfull for connect several databases.
 
         var app = builder.Build();

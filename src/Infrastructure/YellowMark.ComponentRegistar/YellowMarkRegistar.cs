@@ -12,6 +12,7 @@ public static class YellowMarkRegistar
 {
     public static IServiceCollection AddDependencyGroup(this IServiceCollection services)
     {
+        // Db Context
 
         // Repositories
         services.AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>));

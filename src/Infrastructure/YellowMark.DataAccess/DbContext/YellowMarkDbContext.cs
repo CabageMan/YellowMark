@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
-namespace YellowMark.DataAccess;
+namespace YellowMark.DataAccess.YellowMarkDbContext;
 
 /// <summary>
 /// Data Base context.
