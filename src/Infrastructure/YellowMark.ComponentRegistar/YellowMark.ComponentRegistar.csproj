@@ -6,4 +6,15 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\YellowMark.DataAccess\YellowMark.DataAccess.csproj" />
+    <ProjectReference Include="..\..\Application\YellowMark.AppServices\YellowMark.AppServices.csproj" />
+    <ProjectReference Include="..\YellowMark.Infrastructure\YellowMark.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,13 +1,7 @@
-using FluentValidation;
 using Microsoft.OpenApi.Models;
 using YellowMark.Api.Controllers;
-using YellowMark.AppServices.Users.Repositories;
-using YellowMark.AppServices.Users.Services;
-using YellowMark.AppServices.Validators;
+using YellowMark.ComponentRegistar;
 using YellowMark.Contracts.Users;
-using YellowMark.DataAccess.User.Repository;
-using YellowMark.Domain.Users.Entity;
-using YellowMark.Infrastructure.Repository;
 
 namespace YellowMark.Api;
 
@@ -18,6 +12,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
+        builder.Services.AddDependencyGroup();
 
         builder.Services.AddControllers();
 
@@ -43,19 +38,8 @@ public class Program
             );
         });
 
-        // DI
-        // Validators
-        builder.Services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
-
-        // Repositories
-        // Check if we can add a dependency for DataAccess to inject UserRepository.
-        // Temporary implemented for test. Chect if it is right. 
-        builder.Services.AddSingleton<IUserRepository, UserRepository>();
-        // builder.Services.AddScoped<IWriteOnlyRepository<User>, WriteOnlyRepository<User>>();
-        // builder.Services.AddScoped<IReadOnlyRepository<User>, ReadOnlyRepository<User>>();
-
-        // Services
-        builder.Services.AddSingleton<IUserService, UserService>();
+        // Add dependencies for repositories, services and DB contexts.
+        // Research contextConfigurations. It may be userfull for connect several databases.
 
         var app = builder.Build();
 

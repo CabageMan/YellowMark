@@ -8,13 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Application\YellowMark.AppServices\YellowMark.AppServices.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\YellowMark.DataAccess\YellowMark.DataAccess.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\YellowMark.ComponentRegistar\YellowMark.ComponentRegistar.csproj" />
+    <ProjectReference Include="..\..\Contracts\YellowMark.Contracts\YellowMark.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
