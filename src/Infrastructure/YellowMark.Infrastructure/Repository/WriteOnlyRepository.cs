@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
 using YellowMark.Domain.Base;
 
 namespace YellowMark.Infrastructure.Repository;
@@ -30,11 +31,11 @@ public class WriteOnlyRepository<TEntity> : IWriteOnlyRepository<TEntity> where 
 
 
     /// <inheritdoc />
-    public Task AddAsync(TEntity model, CancellationToken cancellationToken)
+    public async Task AddAsync(TEntity model, CancellationToken cancellationToken)
     {
-        // return DbSet.AddAsync(model, cancellationToken);
-        DbSet.Add(model);
-        return DbContext.SaveChangesAsync(cancellationToken);
+        ArgumentNullException.ThrowIfNull(model);
+        await DbSet.AddAsync(model, cancellationToken);
+        await DbContext.SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc />

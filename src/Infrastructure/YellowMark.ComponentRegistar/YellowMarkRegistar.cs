@@ -10,8 +10,16 @@ using YellowMark.Infrastructure.Repository;
 
 namespace YellowMark.ComponentRegistar;
 
+/// <summary>
+/// Extension class for <see cref="IServiceCollection"/> to add dependecies.
+/// </summary>
 public static class YellowMarkRegistar
 {
+    /// <summary>
+    /// Add dependecies to the project. 
+    /// </summary>
+    /// <param name="services"><see cref="IServiceCollection"/></param>
+    /// <returns></returns>
     public static IServiceCollection AddDependencyGroup(this IServiceCollection services)
     {
         // Db Context
@@ -27,15 +35,15 @@ public static class YellowMarkRegistar
         services.AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>));
         services.AddScoped(typeof(IWriteOnlyRepository<>), typeof(WriteOnlyRepository<>));
 
-        // services.AddTransient<IUserRepository, UserRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddTransient<IUserRepository, UserRepository>();
+        // services.AddScoped<IUserRepository, UserRepository>();
 
         // Validators
         services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
             
         // Services 
-        // services.AddTransient<IUserService, UserService>();
-        services.AddScoped<IUserService, UserService>();
+        services.AddTransient<IUserService, UserService>();
+        // services.AddScoped<IUserService, UserService>();
 
         return services;
     }

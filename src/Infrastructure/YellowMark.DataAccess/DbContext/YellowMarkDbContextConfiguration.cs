@@ -30,8 +30,10 @@ public class YellowMarkDbContextConfiguration : IDbContextOptionsConfigurator<Ye
         var readConnectionString = _configuration
             .GetConnectionString(PostgressReadConnectionStringName);
 
-        // TODO: Handle Exceptions in controllers when DB string is empty.
-        // TODO: Handle Exceptions when database does not exist.
+        //  TODO: Handle Exceptions in controllers when DB string is empty.
+        //  TODO: Handle Exceptions when database does not exist.
+        //  Put username and passwords to user secrets.
+
         if (string.IsNullOrEmpty(writeConnectionString))
         {
             throw new InvalidOperationException(
@@ -47,6 +49,6 @@ public class YellowMarkDbContextConfiguration : IDbContextOptionsConfigurator<Ye
         }
 
         optionsBuilder.UseNpgsql(writeConnectionString);
-        optionsBuilder.UseNpgsql(readConnectionString);
+        // optionsBuilder.UseNpgsql(readConnectionString);
     }
 }
