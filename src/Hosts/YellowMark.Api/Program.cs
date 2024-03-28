@@ -1,12 +1,16 @@
 using Microsoft.OpenApi.Models;
 using YellowMark.Api.Controllers;
-using YellowMark.ComponentRegistar;
+using YellowMark.ComponentRegistrar;
 using YellowMark.Contracts.Users;
 
 namespace YellowMark.Api;
 
+/// <summary>
+/// Application entry point.
+/// </summary>
 public class Program
 {
+    /// <inheritdoc />
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);

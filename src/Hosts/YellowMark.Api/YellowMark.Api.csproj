@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Infrastructure\YellowMark.ComponentRegistar\YellowMark.ComponentRegistar.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\YellowMark.ComponentRegistrar\YellowMark.ComponentRegistrar.csproj" />
     <ProjectReference Include="..\..\Contracts\YellowMark.Contracts\YellowMark.Contracts.csproj" />
   </ItemGroup>
 

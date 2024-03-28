@@ -8,12 +8,12 @@ using YellowMark.DataAccess.User.Repository;
 using YellowMark.DataAccess.YellowMarkDbContext;
 using YellowMark.Infrastructure.Repository;
 
-namespace YellowMark.ComponentRegistar;
+namespace YellowMark.ComponentRegistrar;
 
 /// <summary>
 /// Extension class for <see cref="IServiceCollection"/> to add dependecies.
 /// </summary>
-public static class YellowMarkRegistar
+public static class YellowMarkRegistrar
 {
     /// <summary>
     /// Add dependecies to the project. 
