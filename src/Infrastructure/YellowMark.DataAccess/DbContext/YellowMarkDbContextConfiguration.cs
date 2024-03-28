@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Npgsql;
 
 namespace YellowMark.DataAccess.YellowMarkDbContext;
 
@@ -29,10 +30,15 @@ public class YellowMarkDbContextConfiguration : IDbContextOptionsConfigurator<Ye
             .GetConnectionString(PostgressWriteConnectionStringName);
         var readConnectionString = _configuration
             .GetConnectionString(PostgressReadConnectionStringName);
+        
+        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(writeConnectionString)
+        {
+            Username = _configuration.GetSection("DbConnection")["Username"],
+            Password = _configuration.GetSection("DbConnection")["Password"]
+        };
 
         //  TODO: Handle Exceptions in controllers when DB string is empty.
         //  TODO: Handle Exceptions when database does not exist.
-        //  Put username and passwords to user secrets.
 
         if (string.IsNullOrEmpty(writeConnectionString))
         {
@@ -48,7 +54,7 @@ public class YellowMarkDbContextConfiguration : IDbContextOptionsConfigurator<Ye
             );
         }
 
-        optionsBuilder.UseNpgsql(writeConnectionString);
-        // optionsBuilder.UseNpgsql(readConnectionString);
+        optionsBuilder.UseNpgsql(connectionStringBuilder.ConnectionString);
+        // TODO: Set write and read contexts.
     }
 }

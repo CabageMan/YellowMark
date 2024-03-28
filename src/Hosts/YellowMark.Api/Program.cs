@@ -42,9 +42,6 @@ public class Program
             );
         });
 
-        // Add dependencies DB contexts.
-        // Research contextConfigurations. It may be userfull for connect several databases.
-
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
