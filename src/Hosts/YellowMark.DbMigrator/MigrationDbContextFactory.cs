@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Npgsql;
 
 namespace YellowMark.DbMigrator;
 
@@ -21,9 +23,9 @@ public class MigrationDbContextFactory : IDesignTimeDbContextFactory<MigrationDb
     public MigrationDbContext CreateDbContext(string[] args)
     {
         var builder = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddUserSecrets(Assembly.GetExecutingAssembly());
         var configuration = builder.Build();
-
 
         var connectionString = configuration.GetConnectionString(PostgressWriteConnectionStringName);
 
@@ -34,8 +36,15 @@ public class MigrationDbContextFactory : IDesignTimeDbContextFactory<MigrationDb
             );
         }
 
+        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString)
+        {
+            Username = configuration.GetSection("DbConnection")["Username"],
+            Password = configuration.GetSection("DbConnection")["Password"]
+        };
+
         var dbContextOptionsBuilder = new DbContextOptionsBuilder<MigrationDbContext>();
-        dbContextOptionsBuilder.UseNpgsql(connectionString);
+        dbContextOptionsBuilder.UseNpgsql(connectionStringBuilder.ConnectionString);
+        
         return new MigrationDbContext(dbContextOptionsBuilder.Options);
     }
 }
