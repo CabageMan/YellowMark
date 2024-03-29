@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 
 namespace YellowMark.DbMigrator;
 
@@ -39,6 +40,12 @@ public static class ServiceCollectionExtension
             );
         }
 
+        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(writeConnectionString)
+        {
+            Username = configuration.GetSection("DbConnection")["Username"],
+            Password = configuration.GetSection("DbConnection")["Password"]
+        };
+
         /*
         if (string.IsNullOrEmpty(readConnectionString))
         {
@@ -48,7 +55,9 @@ public static class ServiceCollectionExtension
         }
         */
 
-        services.AddDbContext<MigrationDbContext>(options => options.UseNpgsql(writeConnectionString));
+        services.AddDbContext<MigrationDbContext>(options => 
+            options.UseNpgsql(connectionStringBuilder.ConnectionString)
+        );
 
         return services;
     }

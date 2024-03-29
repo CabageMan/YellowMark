@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace YellowMark.DbMigrator;
 
-class Program
+public class Program
 {
-    static async void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var host = Microsoft.Extensions.Hosting.Host
             .CreateDefaultBuilder(args)

@@ -1,5 +1,4 @@
-﻿using System.Xml.Schema;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
@@ -24,7 +23,16 @@ public class MigrationDbContextFactory : IDesignTimeDbContextFactory<MigrationDb
         var builder = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
         var configuration = builder.Build();
+
+
         var connectionString = configuration.GetConnectionString(PostgressWriteConnectionStringName);
+
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException(
+                $"Connection string '{PostgressWriteConnectionStringName}' not found."
+            );
+        }
 
         var dbContextOptionsBuilder = new DbContextOptionsBuilder<MigrationDbContext>();
         dbContextOptionsBuilder.UseNpgsql(connectionString);
