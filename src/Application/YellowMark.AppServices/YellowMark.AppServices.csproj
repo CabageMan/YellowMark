@@ -2,6 +2,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Contracts\YellowMark.Contracts\YellowMark.Contracts.csproj" />
+    <ProjectReference Include="..\..\Domain\YellowMark.Domain\YellowMark.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -13,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="FluentValidation" Version="11.9.0" />
   </ItemGroup>
 

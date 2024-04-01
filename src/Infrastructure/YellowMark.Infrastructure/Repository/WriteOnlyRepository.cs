@@ -29,11 +29,11 @@ public class WriteOnlyRepository<TEntity> : IWriteOnlyRepository<TEntity> where 
         DbSet = DbContext.Set<TEntity>();
     }
 
-
     /// <inheritdoc />
     public async Task AddAsync(TEntity model, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(model);
+
         await DbSet.AddAsync(model, cancellationToken);
         await DbContext.SaveChangesAsync(cancellationToken);
     }

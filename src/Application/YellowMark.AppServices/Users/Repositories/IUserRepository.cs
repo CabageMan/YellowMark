@@ -1,4 +1,3 @@
-using YellowMark.Contracts;
 using YellowMark.Contracts.Users;
 
 namespace YellowMark.AppServices.Users.Repositories;
@@ -21,5 +20,5 @@ public interface IUserRepository
     /// <param name="request">User request model <see cref="CreateUserRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Created user instance <see cref="UserDto"/></returns>
-    Task<UserDto> CreateUserAsync(CreateUserRequest request, CancellationToken cancellationToken);
+    Task AddAsync(Domain.Users.Entity.User entity, CancellationToken cancellationToken);
 }

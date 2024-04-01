@@ -54,7 +54,7 @@ public class UserController : ControllerBase
     /// <returns>Created user <see cref="UserDto"/></returns>
     [HttpPost]
     [Route("user")]
-    [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateUser(CreateUserRequest request, CancellationToken cancellationToken)
     {
@@ -64,7 +64,7 @@ public class UserController : ControllerBase
             return BadRequest(validationResult.ToString());
         }
         
-        var result = await _userService.CreateUserAsync(request, cancellationToken);
-        return Created(new Uri($"{Request.Path}/{result.Id}", UriKind.Relative), result);
+        var addedUserId = await _userService.AddUserAsync(request, cancellationToken);
+        return Created(new Uri($"{Request.Path}/{addedUserId}", UriKind.Relative), addedUserId);
     }
 }

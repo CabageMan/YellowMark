@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using YellowMark.AppServices.Users.Repositories;
@@ -22,29 +23,68 @@ public static class YellowMarkRegistrar
     /// <returns></returns>
     public static IServiceCollection AddDependencyGroup(this IServiceCollection services)
     {
-        // Db Context
+        services.ConfigureAutomapper();
+        services.ConfigureDbContext();
+        services.ConfigureRepositories();
+        services.ConfigureValidators();
+        services.ConfigureSrvices();
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureAutomapper(this IServiceCollection services)
+    {
+        return services.AddSingleton<IMapper>(new Mapper(GetMapperConfiguration()));
+    }
+
+    private static IServiceCollection ConfigureDbContext(this IServiceCollection services)
+    {
         services.AddSingleton<IDbContextOptionsConfigurator<YellowMarkDbContext>, YellowMarkDbContextConfiguration>();
 
         services.AddDbContext<YellowMarkDbContext>((Action<IServiceProvider, DbContextOptionsBuilder>)
             ((sp, dbOptions) => sp.GetRequiredService<IDbContextOptionsConfigurator<YellowMarkDbContext>>()
                 .Configure((DbContextOptionsBuilder<YellowMarkDbContext>)dbOptions)));
 
-        services.AddScoped((Func<IServiceProvider, DbContext>) (sp => sp.GetRequiredService<YellowMarkDbContext>()));
+        services.AddScoped((Func<IServiceProvider, DbContext>)(sp => sp.GetRequiredService<YellowMarkDbContext>()));
 
-        // Repositories
+        return services;
+    }
+    
+    private static IServiceCollection ConfigureRepositories(this IServiceCollection services)
+    {
         services.AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>));
         services.AddScoped(typeof(IWriteOnlyRepository<>), typeof(WriteOnlyRepository<>));
-
         services.AddTransient<IUserRepository, UserRepository>();
         // services.AddScoped<IUserRepository, UserRepository>();
 
-        // Validators
+        return services;
+    }
+
+    private static IServiceCollection ConfigureValidators(this IServiceCollection services)
+    {
         services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
-            
-        // Services 
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureSrvices(this IServiceCollection services)
+    {
         services.AddTransient<IUserService, UserService>();
         // services.AddScoped<IUserService, UserService>();
 
         return services;
+    }
+
+    // Helpers
+    private static MapperConfiguration GetMapperConfiguration()
+    {
+        var configuration = new MapperConfiguration(config =>
+        {
+            config.AddProfile<UserProfile>();
+        });
+
+        configuration.AssertConfigurationIsValid(); // Important to check automappers on App start.
+
+        return configuration;
     }
 }

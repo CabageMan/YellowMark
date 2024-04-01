@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using YellowMark.AppServices.Users.Repositories;
-using YellowMark.Contracts;
 using YellowMark.Contracts.Users;
 using YellowMark.Infrastructure.Repository;
 
@@ -59,45 +58,9 @@ public class UserRepository : IUserRepository
     }
 
     /// <inheritdoc />
-    public async Task<UserDto> CreateUserAsync(CreateUserRequest request, CancellationToken cancellationToken)
+    public async Task AddAsync(Domain.Users.Entity.User entity, CancellationToken cancellationToken)
     {
-        // TODO: write extension to add .Select or .Map to class entity.
-        Domain.Users.Entity.User requestUser = new() 
-        {
-            FirstName = request.FirstName,
-            MiddleName = request.MiddleName,
-            LastName = request.LastName,
-            Email = request.Email,
-            Phone = request.Phone,
-            BirthDate = request.BirthDate
-        };
-
-        return await Task.Run(() => new UserDto
-        {
-            Id = requestUser.Id,
-            FirstName = requestUser.FirstName,
-            MiddleName = requestUser.MiddleName,
-            LastName = requestUser.LastName,
-            FullName = $"{requestUser.LastName} {requestUser.MiddleName} {requestUser.FirstName}",
-            Email = requestUser.Email,
-            Phone = requestUser.Phone,
-            BirthDate = requestUser.BirthDate
-        });
-        /*
-        var user = await _writeOnlyrepository.AddAsync(requestUser, cancellationToken);
-
-        return new UserDto
-        {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            MiddleName = user.MiddleName,
-            LastName = user.LastName,
-            FullName = $"{user.LastName} {user.MiddleName} {user.FirstName}",
-            Email = user.Email,
-            Phone = user.Phone,
-            BirthDate = requestUser.BirthDate
-        };
-        */
+        await _writeOnlyrepository.AddAsync(entity, cancellationToken);
     }
 
     // Mock User's Data

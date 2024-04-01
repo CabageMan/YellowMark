@@ -17,8 +17,8 @@ public interface IUserService
     /// <summary>
     /// Create new User instance from request params. 
     /// </summary>
-    /// <param name="request">User request model <see cref="CreateUserRequest"/></param>
+    /// <param name="model">User request model <see cref="CreateUserRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Created user instance <see cref="UserDto"/></returns>
-    Task<UserDto> CreateUserAsync(CreateUserRequest request, CancellationToken cancellationToken);
+    Task<Guid> AddUserAsync(CreateUserRequest model, CancellationToken cancellationToken);
 }

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace YellowMark.Contracts;
+﻿namespace YellowMark.Contracts.Users;
 
 public class CreateUserRequest
 {

@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using FluentValidation;
-using YellowMark.Contracts;
+using YellowMark.Contracts.Users;
 
 namespace YellowMark.AppServices.Validators;
 
