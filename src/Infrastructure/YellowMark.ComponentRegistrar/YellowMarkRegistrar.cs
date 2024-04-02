@@ -6,7 +6,7 @@ using YellowMark.AppServices.Users.Repositories;
 using YellowMark.AppServices.Users.Services;
 using YellowMark.AppServices.Validators;
 using YellowMark.DataAccess.User.Repository;
-using YellowMark.DataAccess.YellowMarkDbContext;
+using YellowMark.DataAccess.DatabaseContext;
 using YellowMark.Infrastructure.Repository;
 
 namespace YellowMark.ComponentRegistrar;
@@ -39,13 +39,13 @@ public static class YellowMarkRegistrar
 
     private static IServiceCollection ConfigureDbContext(this IServiceCollection services)
     {
-        services.AddSingleton<IDbContextOptionsConfigurator<YellowMarkDbContext>, YellowMarkDbContextConfiguration>();
+        services.AddSingleton<IDbContextOptionsConfigurator<WriteDbContext>, DbContextOptionsConfiguration>();
 
-        services.AddDbContext<YellowMarkDbContext>((Action<IServiceProvider, DbContextOptionsBuilder>)
-            ((sp, dbOptions) => sp.GetRequiredService<IDbContextOptionsConfigurator<YellowMarkDbContext>>()
-                .Configure((DbContextOptionsBuilder<YellowMarkDbContext>)dbOptions)));
+        services.AddDbContext<WriteDbContext>((Action<IServiceProvider, DbContextOptionsBuilder>)
+            ((sp, dbOptions) => sp.GetRequiredService<IDbContextOptionsConfigurator<WriteDbContext>>()
+                .Configure((DbContextOptionsBuilder<WriteDbContext>)dbOptions)));
 
-        services.AddScoped((Func<IServiceProvider, DbContext>)(sp => sp.GetRequiredService<YellowMarkDbContext>()));
+        services.AddScoped((Func<IServiceProvider, DbContext>)(sp => sp.GetRequiredService<WriteDbContext>()));
 
         return services;
     }

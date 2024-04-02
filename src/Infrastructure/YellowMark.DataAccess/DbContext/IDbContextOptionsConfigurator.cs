@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace YellowMark.DataAccess.YellowMarkDbContext;
+namespace YellowMark.DataAccess.DatabaseContext;
 
 /// <summary>
-/// Data base context configurator
+/// Database context configurator.
 /// </summary>
 /// <typeparam name="TContext"></typeparam>
 public interface IDbContextOptionsConfigurator<TContext> where TContext : DbContext

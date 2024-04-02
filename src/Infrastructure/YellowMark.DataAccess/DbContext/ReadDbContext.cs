@@ -1,19 +1,19 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
-namespace YellowMark.DataAccess.YellowMarkDbContext;
+namespace YellowMark.DataAccess.DatabaseContext;
 
 /// <summary>
-/// Data Base context.
+/// Read-only database context.
 /// </summary>
-public class YellowMarkDbContext : DbContext
+public class ReadDbContext : DbContext
 {
 
     /// <summary>
-    /// Initialize an instance of <see cref="YellowMarkDbContext"/>
+    /// Initialize an instance of <see cref="ReadDbContext"/>
     /// </summary>
     /// <param name="dbContextOptions"></param>
-    public YellowMarkDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+    public ReadDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
     { }
 
     /// <inheritdoc />
@@ -26,5 +26,15 @@ public class YellowMarkDbContext : DbContext
                 i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)
             )
         );
+    }
+
+    /// <summary>
+    /// Read-only context does not provide saving changes functionality.
+    /// </summary>
+    /// <returns></returns>
+    /// <exception cref="InvalidOperationException"></exception>
+    public override int SaveChanges()
+    {
+        throw new InvalidOperationException("This context is read-only.");
     }
 }

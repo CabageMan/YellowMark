@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using YellowMark.DbMigrator.DbContext;
 
 namespace YellowMark.DbMigrator;
 
@@ -19,7 +20,7 @@ public class Program
     private static async Task MigrateDatabaseAsync(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<MigrationDbContext>();
+        var context = scope.ServiceProvider.GetRequiredService<MigrationWriteDbContext>();
         await context.Database.MigrateAsync();
     }
 }

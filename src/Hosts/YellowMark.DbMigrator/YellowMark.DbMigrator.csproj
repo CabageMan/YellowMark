@@ -39,8 +39,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference
-      Include="..\..\Infrastructure\YellowMark.DataAccess\YellowMark.DataAccess.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\YellowMark.DataAccess\YellowMark.DataAccess.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Factory/" />
   </ItemGroup>
 
 </Project>

@@ -2,12 +2,12 @@
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 
-namespace YellowMark.DataAccess.YellowMarkDbContext;
+namespace YellowMark.DataAccess.DatabaseContext;
 
 /// <summary>
-/// Data Base context configuration.
+/// Database context configuration.
 /// </summary>
-public class YellowMarkDbContextConfiguration : IDbContextOptionsConfigurator<YellowMarkDbContext>
+public class DbContextOptionsConfiguration : IDbContextOptionsConfigurator<WriteDbContext>
 {
     private const string PostgressWriteConnectionStringName = "WriteDB";
     private const string PostgressReadConnectionStringName = "ReadDB";
@@ -18,13 +18,13 @@ public class YellowMarkDbContextConfiguration : IDbContextOptionsConfigurator<Ye
     /// Creates instance of <see cref="YellowMarkDbContextConfiguration"/> 
     /// </summary>
     /// <param name="configuration"><see cref="IConfiguration"/></param>
-    public YellowMarkDbContextConfiguration(IConfiguration configuration)
+    public DbContextOptionsConfiguration(IConfiguration configuration)
     {
         _configuration = configuration;
     }
 
     /// <inheritdoc />
-    public void Configure(DbContextOptionsBuilder<YellowMarkDbContext> optionsBuilder)
+    public void Configure(DbContextOptionsBuilder<WriteDbContext> optionsBuilder)
     {
         var writeConnectionString = _configuration
             .GetConnectionString(PostgressWriteConnectionStringName);

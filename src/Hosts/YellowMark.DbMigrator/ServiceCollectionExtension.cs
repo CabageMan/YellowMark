@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
+using YellowMark.DbMigrator.DbContext;
 
 namespace YellowMark.DbMigrator;
 
@@ -11,11 +12,7 @@ namespace YellowMark.DbMigrator;
 public static class ServiceCollectionExtension
 {
     private const string PostgressWriteConnectionStringName = "WriteDB";
-    // TODO: Investigate how migrate read and whrite databases and how replicate them!
-    // For now use only write DB
-    /*
     private const string PostgressReadConnectionStringName = "ReadDB";
-    */
 
     /// <summary>
     /// Configure database context for migration.
@@ -23,15 +20,12 @@ public static class ServiceCollectionExtension
     /// <param name="services"><see cref="IServiceCollection"/></param>
     /// <param name="configuration"><see cref="IConfiguration"/></param>
     /// <returns></returns>
-    public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration) 
+    public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         var writeConnectionString = configuration
             .GetConnectionString(PostgressWriteConnectionStringName);
-
-        /*
         var readConnectionString = configuration
             .GetConnectionString(PostgressReadConnectionStringName);
-        */
 
         if (string.IsNullOrEmpty(writeConnectionString))
         {
@@ -39,24 +33,29 @@ public static class ServiceCollectionExtension
                 $"Connection string '{PostgressWriteConnectionStringName}' not found."
             );
         }
-
-        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(writeConnectionString)
-        {
-            Username = configuration.GetSection("DbConnection")["Username"],
-            Password = configuration.GetSection("DbConnection")["Password"]
-        };
-
-        /*
         if (string.IsNullOrEmpty(readConnectionString))
         {
             throw new InvalidOperationException(
                 $"Connection string '{PostgressReadConnectionStringName}' not found."
             );
         }
-        */
 
-        services.AddDbContext<MigrationDbContext>(options => 
-            options.UseNpgsql(connectionStringBuilder.ConnectionString)
+        var dbUserName = configuration.GetSection("DbConnection")["Username"];
+        var dbPassword = configuration.GetSection("DbConnection")["Password"]; 
+
+        var writeConnectionStringBuilder = new NpgsqlConnectionStringBuilder(writeConnectionString)
+        {
+            Username = dbUserName,
+            Password = dbPassword
+        };
+        var readConnectionStringBuilder = new NpgsqlConnectionStringBuilder(readConnectionString)
+        {
+            Username = dbUserName,
+            Password = dbPassword
+        };
+
+        services.AddDbContext<MigrationWriteDbContext>(options =>
+            options.UseNpgsql(writeConnectionStringBuilder.ConnectionString)
         );
 
         return services;
