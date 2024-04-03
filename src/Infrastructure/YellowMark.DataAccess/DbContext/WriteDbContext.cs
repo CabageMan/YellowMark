@@ -17,6 +17,8 @@ public class WriteDbContext : DbContext
         : base(dbContextOptions)
     { }
 
+    // Making the second constructor protected ensures that it will not get used by DI. 
+    // https://github.com/aspnet/EntityFrameworkCore/issues/7533#issuecomment-353669263
 
     /// <summary>
     /// A protected constructor that uses DbContextOptions without any type.

@@ -18,6 +18,7 @@ public class ReadDbContext : WriteDbContext
 
     /// <summary>
     /// A protected constructor that uses DbContextOptions without any type.
+    /// See <see cref="WriteDbContext"/> for more details.
     /// </summary>
     /// <param name="dbContextOptions">Without any type in <see cref="DbContextOptions"/></param>
     protected ReadDbContext(DbContextOptions dbContextOptions)

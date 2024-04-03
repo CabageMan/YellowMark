@@ -9,11 +9,11 @@ using YellowMark.DbMigrator.DatabaseContext;
 
 #nullable disable
 
-namespace YellowMark.DbMigrator.Migrations.MigrationReadDb
+namespace YellowMark.DbMigrator.Migrations
 {
-    [DbContext(typeof(MigrationReadDbContext))]
-    [Migration("20240403104436_Fix_Contexts_Inheritance")]
-    partial class Fix_Contexts_Inheritance
+    [DbContext(typeof(MigrationWriteDbContext))]
+    [Migration("20240403152010_Initial_Create")]
+    partial class Initial_Create
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -44,18 +44,18 @@ namespace YellowMark.DbMigrator.Migrations.MigrationReadDb
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("MiddleName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Phone")
                         .IsRequired()

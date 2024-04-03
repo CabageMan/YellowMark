@@ -18,17 +18,17 @@ public class UserConfiguration : IEntityTypeConfiguration<Domain.Users.Entity.Us
         builder
             .Property(user => user.FirstName)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(255);
 
         builder
             .Property(user => user.MiddleName)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(255);
 
         builder
             .Property(user => user.LastName)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(255);
 
         builder
             .Property(user => user.Email)
