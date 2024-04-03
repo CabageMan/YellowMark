@@ -13,7 +13,7 @@ public class ReadDbContext : DbContext
     /// Initialize an instance of <see cref="ReadDbContext"/>
     /// </summary>
     /// <param name="dbContextOptions"></param>
-    public ReadDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+    public ReadDbContext(DbContextOptions<ReadDbContext> dbContextOptions) : base(dbContextOptions)
     { }
 
     /// <inheritdoc />

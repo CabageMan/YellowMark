@@ -20,7 +20,11 @@ public class Program
     private static async Task MigrateDatabaseAsync(IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
-        var context = scope.ServiceProvider.GetRequiredService<MigrationWriteDbContext>();
-        await context.Database.MigrateAsync();
+
+        var writeContext = scope.ServiceProvider.GetRequiredService<MigrationWriteDbContext>();
+        await writeContext.Database.MigrateAsync();
+
+        var readContext = scope.ServiceProvider.GetRequiredService<MigrationReadDbContext>();
+        await readContext.Database.MigrateAsync();
     }
 }

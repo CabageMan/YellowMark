@@ -13,7 +13,7 @@ public class WriteDbContext : DbContext
     /// Initialize an instance of <see cref="WriteDbContext"/>
     /// </summary>
     /// <param name="dbContextOptions"></param>
-    public WriteDbContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+    public WriteDbContext(DbContextOptions<WriteDbContext> dbContextOptions) : base(dbContextOptions)
     { }
 
     /// <inheritdoc />
