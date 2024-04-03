@@ -3,37 +3,39 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
-using YellowMark.DbMigrator.DbContext;
+using YellowMark.DbMigrator.DatabaseContext;
 
 namespace YellowMark.DbMigrator.Factory;
 
 /// <summary>
 /// Migration database context factory.
 /// </summary>
-public class MigrationDbContextFactory : IDesignTimeDbContextFactory<MigrationWriteDbContext>
+public class MigrationDbContextFactory<TContext> : IDesignTimeDbContextFactory<TContext> where TContext : DbContext
 {
 
-    private const string PostgressWriteConnectionStringName = "WriteDB";
-    // TODO: Investigate how migrate read and whrite databases and how replicate them!
-    // For now use only write DB
-    /*
-    private const string PostgressReadConnectionStringName = "ReadDB";
-    */
+    private const string WriteConnectionStringName = "WriteDB";
+    private const string ReadConnectionStringName = "ReadDB";
 
     /// <inheritdoc />
-    public MigrationWriteDbContext CreateDbContext(string[] args)
+    public TContext CreateDbContext(string[] args)
     {
         var builder = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddUserSecrets(Assembly.GetExecutingAssembly());
+
         var configuration = builder.Build();
 
-        var connectionString = configuration.GetConnectionString(PostgressWriteConnectionStringName);
+        var connectionStringName = typeof(TContext) == typeof(MigrationWriteDbContext)
+            ? WriteConnectionStringName
+            : typeof(TContext) == typeof(MigrationReadDbContext)
+            ? ReadConnectionStringName : "";
+
+        var connectionString = configuration.GetConnectionString(connectionStringName);
 
         if (string.IsNullOrEmpty(connectionString))
         {
             throw new InvalidOperationException(
-                $"Connection string '{PostgressWriteConnectionStringName}' not found."
+                $"Connection string '{connectionString}' not found."
             );
         }
 
@@ -43,9 +45,17 @@ public class MigrationDbContextFactory : IDesignTimeDbContextFactory<MigrationWr
             Password = configuration.GetSection("DbConnection")["Password"]
         };
 
-        var dbContextOptionsBuilder = new DbContextOptionsBuilder<MigrationWriteDbContext>();
-        dbContextOptionsBuilder.UseNpgsql(connectionStringBuilder.ConnectionString);
-        
-        return new MigrationWriteDbContext(dbContextOptionsBuilder.Options);
+        var optionsBuilder = new DbContextOptionsBuilder<TContext>();
+        optionsBuilder.UseNpgsql(connectionStringBuilder.ConnectionString);
+
+        // return new MigrationWriteDbContext(optionsBuilder.Options);
+        var dbContext = (TContext?)Activator.CreateInstance(typeof(TContext), optionsBuilder.Options);
+
+        if (dbContext == null)
+        {
+            throw new InvalidOperationException($"Could not create dbContext of type {typeof(TContext).Name}.");
+        }
+
+        return dbContext;
     }
 }

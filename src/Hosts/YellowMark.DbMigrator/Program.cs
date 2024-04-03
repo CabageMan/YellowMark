@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using YellowMark.DbMigrator.DbContext;
+using YellowMark.DbMigrator.DatabaseContext;
 
 namespace YellowMark.DbMigrator;
 

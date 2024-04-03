@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using YellowMark.DbMigrator;
+using YellowMark.DbMigrator.DatabaseContext;
 
 #nullable disable
 
 namespace YellowMark.DbMigrator.Migrations
 {
-    [DbContext(typeof(MigrationDbContext))]
+    [DbContext(typeof(MigrationWriteDbContext))]
     [Migration("20240329180005_Initial_Create")]
     partial class Initial_Create
     {

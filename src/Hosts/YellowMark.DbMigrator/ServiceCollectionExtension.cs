@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
-using YellowMark.DbMigrator.DbContext;
+using YellowMark.DbMigrator.DatabaseContext;
 
 namespace YellowMark.DbMigrator;
 
@@ -56,6 +56,9 @@ public static class ServiceCollectionExtension
 
         services.AddDbContext<MigrationWriteDbContext>(options =>
             options.UseNpgsql(writeConnectionStringBuilder.ConnectionString)
+        );
+        services.AddDbContext<MigrationReadDbContext>(options =>
+            options.UseNpgsql(readConnectionStringBuilder.ConnectionString)
         );
 
         return services;
