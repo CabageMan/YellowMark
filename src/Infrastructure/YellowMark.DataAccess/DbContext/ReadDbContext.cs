@@ -6,7 +6,7 @@ namespace YellowMark.DataAccess.DatabaseContext;
 /// <summary>
 /// Read-only database context.
 /// </summary>
-public class ReadDbContext : DbContext
+public class ReadDbContext : WriteDbContext
 {
 
     /// <summary>
@@ -16,23 +16,19 @@ public class ReadDbContext : DbContext
     public ReadDbContext(DbContextOptions<ReadDbContext> dbContextOptions) : base(dbContextOptions)
     { }
 
-    /// <inheritdoc />
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.ApplyConfigurationsFromAssembly(
-            Assembly.GetExecutingAssembly(),
-            t => t.GetInterfaces().Any(i =>
-                i.IsGenericType &&
-                i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)
-            )
-        );
-    }
+    /// <summary>
+    /// A protected constructor that uses DbContextOptions without any type.
+    /// </summary>
+    /// <param name="dbContextOptions">Without any type in <see cref="DbContextOptions"/></param>
+    protected ReadDbContext(DbContextOptions dbContextOptions)
+        : base(dbContextOptions)
+    { }
 
     /// <summary>
     /// Read-only context does not provide saving changes functionality.
     /// </summary>
     /// <returns></returns>
-    /// <exception cref="InvalidOperationException"></exception>
+    /// <exception cref="InvalidOperationException">Exception thrown on write attempt.</exception>
     public override int SaveChanges()
     {
         throw new InvalidOperationException("This context is read-only.");

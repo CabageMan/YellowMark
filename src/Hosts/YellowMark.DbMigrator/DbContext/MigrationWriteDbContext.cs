@@ -1,28 +1,17 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using YellowMark.DataAccess.DatabaseContext;
 
 namespace YellowMark.DbMigrator.DatabaseContext;
 
 /// <summary>
-/// Database context for migration inherited from <see cref="YellowMarkDbContext"/>.
+/// Database context for migration inherited from <see cref="WriteDbContext"/>.
 /// </summary>
-public class MigrationWriteDbContext : DbContext
+public class MigrationWriteDbContext : WriteDbContext
 {
-
-    /// <inheritdoc />
+    /// <summary>
+    /// Initialize an instance of <see cref="MigrationWriteDbContext"/>
+    /// </summary>
+    /// <param name="dbContextOptions">With type of <see cref="MigrationWriteDbContext"/> in <see cref="DbContextOptions"/></param>
     public MigrationWriteDbContext(DbContextOptions<MigrationWriteDbContext> dbContextOptions) : base(dbContextOptions)
     { }
-
-    /// <inheritdoc />
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.ApplyConfigurationsFromAssembly(
-            Assembly.GetExecutingAssembly(),
-            t => t.GetInterfaces().Any(i =>
-                i.IsGenericType &&
-                i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)
-            )
-        );
-    }
 }

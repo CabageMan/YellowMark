@@ -12,11 +12,21 @@ public class WriteDbContext : DbContext
     /// <summary>
     /// Initialize an instance of <see cref="WriteDbContext"/>
     /// </summary>
-    /// <param name="dbContextOptions"></param>
-    public WriteDbContext(DbContextOptions<WriteDbContext> dbContextOptions) : base(dbContextOptions)
+    /// <param name="dbContextOptions">With type of <see cref="WriteDbContext"/> in <see cref="DbContextOptions"/></param>
+    public WriteDbContext(DbContextOptions<WriteDbContext> dbContextOptions) 
+        : base(dbContextOptions)
     { }
 
-    /// <inheritdoc />
+
+    /// <summary>
+    /// A protected constructor that uses DbContextOptions without any type.
+    /// </summary>
+    /// <param name="dbContextOptions">Without any type in <see cref="DbContextOptions"/></param>
+    protected WriteDbContext(DbContextOptions dbContextOptions)
+        : base(dbContextOptions)
+    { }
+
+    /// <inheritdoc/>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(
