@@ -1,18 +1,15 @@
-﻿using System.Data.Common;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using YellowMark.Domain.Base;
 
 namespace YellowMark.Infrastructure.Repository;
 
-/// <summary>
-/// Implementation of the basic repository.
-/// </summary>
-public class WriteOnlyRepository<TEntity> : IWriteOnlyRepository<TEntity> where TEntity : BaseEntity
+/// <inheritdoc/>
+public class WriteOnlyRepository<TEntity, TContext> : IWriteOnlyRepository<TEntity, TContext> where TEntity : BaseEntity where TContext : DbContext
 {
     /// <summary>
-    /// <see cref="DbContext"/>
+    /// Database context inherited from <see cref="DbContext"/>.
     /// </summary>
-    protected DbContext DbContext { get; }
+    protected TContext DbContext { get; }
 
     /// <summary>
     /// <see cref="DbSet"/>
@@ -22,8 +19,8 @@ public class WriteOnlyRepository<TEntity> : IWriteOnlyRepository<TEntity> where 
     /// <summary>
     /// Init <see cref="IWriteOnlyRepository"/> instance.
     /// </summary>
-    /// <param name="context">Data Base context</param>
-    public WriteOnlyRepository(DbContext context)
+    /// <param name="context">Database context</param>
+    public WriteOnlyRepository(TContext context)
     {
         DbContext = context;
         DbSet = DbContext.Set<TEntity>();
@@ -39,18 +36,18 @@ public class WriteOnlyRepository<TEntity> : IWriteOnlyRepository<TEntity> where 
     }
 
     /// <inheritdoc />
-    public Task UpdateAsync(TEntity model, CancellationToken cancellationToken)
+    public async Task UpdateAsync(TEntity model, CancellationToken cancellationToken)
     {
         DbSet.Update(model);
-        return DbContext.SaveChangesAsync(cancellationToken);
+        await DbContext.SaveChangesAsync(cancellationToken);
     }
 
     /// <inheritdoc />
-    public Task DeleteAsync(Guid id, CancellationToken cancellationToken)
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var entityToDelete = DbSet.Find(id);
         ArgumentNullException.ThrowIfNull(entityToDelete);
         DbSet.Remove(entityToDelete);
-        return DbContext.SaveChangesAsync(cancellationToken);
+        await DbContext.SaveChangesAsync(cancellationToken);
     }
 }

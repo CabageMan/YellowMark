@@ -35,7 +35,7 @@ public class MigrationDbContextFactory<TContext> : IDesignTimeDbContextFactory<T
         if (string.IsNullOrEmpty(connectionString))
         {
             throw new InvalidOperationException(
-                $"Connection string '{connectionString}' not found."
+                $"Connection string '{connectionStringName}' not found."
             );
         }
 
@@ -48,7 +48,6 @@ public class MigrationDbContextFactory<TContext> : IDesignTimeDbContextFactory<T
         var optionsBuilder = new DbContextOptionsBuilder<TContext>();
         optionsBuilder.UseNpgsql(connectionStringBuilder.ConnectionString);
 
-        // return new MigrationWriteDbContext(optionsBuilder.Options);
         var dbContext = (TContext?)Activator.CreateInstance(typeof(TContext), optionsBuilder.Options);
 
         if (dbContext == null)

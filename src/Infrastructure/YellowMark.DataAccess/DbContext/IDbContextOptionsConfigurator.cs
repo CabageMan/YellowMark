@@ -5,7 +5,7 @@ namespace YellowMark.DataAccess.DatabaseContext;
 /// <summary>
 /// Database context configurator.
 /// </summary>
-/// <typeparam name="TContext"></typeparam>
+/// <typeparam name="TContext">DbContext type inherited from <see cref="DbContext"/></typeparam>
 public interface IDbContextOptionsConfigurator<TContext> where TContext : DbContext
 {
     /// <summary>

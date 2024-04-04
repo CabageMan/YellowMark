@@ -7,10 +7,10 @@ namespace YellowMark.DataAccess.DatabaseContext;
 /// <summary>
 /// Database context configuration.
 /// </summary>
-public class DbContextOptionsConfiguration : IDbContextOptionsConfigurator<WriteDbContext>
+public class DbContextOptionsConfiguration<TContext> : IDbContextOptionsConfigurator<TContext> where TContext : DbContext
 {
-    private const string PostgressWriteConnectionStringName = "WriteDB";
-    private const string PostgressReadConnectionStringName = "ReadDB";
+    private const string WriteConnectionStringName = "WriteDB";
+    private const string ReadConnectionStringName = "ReadDB";
 
     private readonly IConfiguration _configuration;
 
@@ -24,14 +24,23 @@ public class DbContextOptionsConfiguration : IDbContextOptionsConfigurator<Write
     }
 
     /// <inheritdoc />
-    public void Configure(DbContextOptionsBuilder<WriteDbContext> optionsBuilder)
+    public void Configure(DbContextOptionsBuilder<TContext> optionsBuilder)
     {
-        var writeConnectionString = _configuration
-            .GetConnectionString(PostgressWriteConnectionStringName);
-        var readConnectionString = _configuration
-            .GetConnectionString(PostgressReadConnectionStringName);
+        var connectionStringName = typeof(TContext) == typeof(WriteDbContext)
+            ? WriteConnectionStringName
+            : typeof(TContext) == typeof(ReadDbContext)
+            ? ReadConnectionStringName : "";
+
+        var connectionString = _configuration.GetConnectionString(connectionStringName);
+
+        if (string.IsNullOrEmpty(connectionString))
+        {
+            throw new InvalidOperationException(
+                $"Connection string '{connectionStringName}' not found."
+            );
+        }
         
-        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(writeConnectionString)
+        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString)
         {
             Username = _configuration.GetSection("DbConnection")["Username"],
             Password = _configuration.GetSection("DbConnection")["Password"]
@@ -40,21 +49,6 @@ public class DbContextOptionsConfiguration : IDbContextOptionsConfigurator<Write
         //  TODO: Handle Exceptions in controllers when DB string is empty.
         //  TODO: Handle Exceptions when database does not exist.
 
-        if (string.IsNullOrEmpty(writeConnectionString))
-        {
-            throw new InvalidOperationException(
-                $"Connection string '{PostgressWriteConnectionStringName}' not found."
-            );
-        }
-
-        if (string.IsNullOrEmpty(readConnectionString))
-        {
-            throw new InvalidOperationException(
-                $"Connection string '{PostgressReadConnectionStringName}' not found."
-            );
-        }
-
         optionsBuilder.UseNpgsql(connectionStringBuilder.ConnectionString);
-        // TODO: Set write and read contexts.
     }
 }

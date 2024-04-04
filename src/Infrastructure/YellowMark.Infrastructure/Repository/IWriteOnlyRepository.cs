@@ -1,12 +1,14 @@
-﻿using YellowMark.Domain.Base;
+﻿using Microsoft.EntityFrameworkCore;
+using YellowMark.Domain.Base;
 
 namespace YellowMark.Infrastructure.Repository;
 
 /// <summary>
-/// Basic repository.
+/// Write-only basic repository.
 /// </summary>
-/// <typeparam name="TEntity"></typeparam>
-public interface IWriteOnlyRepository<TEntity> where TEntity : BaseEntity
+/// <typeparam name="TEntity">Entity type inherited from <see cref="BaseEntity"/></typeparam>
+/// <typeparam name="TContext">DbContext type inherited from <see cref="DbContext"/></typeparam>
+public interface IWriteOnlyRepository<TEntity, TContext> where TEntity : BaseEntity where TContext : DbContext
 {
     /// <summary>
     /// Add new instance of the entity.

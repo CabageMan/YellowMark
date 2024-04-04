@@ -1,13 +1,15 @@
 ﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using YellowMark.Domain.Base;
 
 namespace YellowMark.Infrastructure.Repository;
 
 /// <summary>
-/// Basic repository.
+/// Write-only repository.
 /// </summary>
-/// <typeparam name="TEntity"></typeparam>
-public interface IReadOnlyRepository<TEntity> where TEntity : BaseEntity
+/// <typeparam name="TEntity">Entity type inherited from <see cref="BaseEntity"/></typeparam>
+/// <typeparam name="TContext">DbContext type inherited from <see cref="DbContext"/></typeparam>
+public interface IReadOnlyRepository<TEntity, TContext> where TEntity : BaseEntity where TContext : DbContext
 {
 
     /// <summary>

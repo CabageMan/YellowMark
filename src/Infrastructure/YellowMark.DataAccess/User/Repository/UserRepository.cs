@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using YellowMark.AppServices.Users.Repositories;
 using YellowMark.Contracts.Users;
+using YellowMark.DataAccess.DatabaseContext;
 using YellowMark.Infrastructure.Repository;
 
 namespace YellowMark.DataAccess.User.Repository;
@@ -8,8 +9,8 @@ namespace YellowMark.DataAccess.User.Repository;
 /// <inheritdoc />
 public class UserRepository : IUserRepository
 {
-    private readonly IWriteOnlyRepository<Domain.Users.Entity.User> _writeOnlyrepository;
-    private readonly IReadOnlyRepository<Domain.Users.Entity.User> _readOnlyrepository;
+    private readonly IWriteOnlyRepository<Domain.Users.Entity.User, WriteDbContext> _writeOnlyrepository;
+    private readonly IReadOnlyRepository<Domain.Users.Entity.User, ReadDbContext> _readOnlyrepository;
 
     /// <summary>
     /// Init UserRepository (<see cref="IUserRepository"/>) instance.
@@ -17,8 +18,8 @@ public class UserRepository : IUserRepository
     /// <param name="writeOnlyRepository"><see cref="IWriteOnlyRepository"/></param>
     /// <param name="readOnlyRepository"><see cref="IReadOnlyRepository"/></param>
     public UserRepository (
-        IWriteOnlyRepository<Domain.Users.Entity.User> writeOnlyRepository,
-        IReadOnlyRepository<Domain.Users.Entity.User> readOnlyRepository)
+        IWriteOnlyRepository<Domain.Users.Entity.User, WriteDbContext> writeOnlyRepository,
+        IReadOnlyRepository<Domain.Users.Entity.User, ReadDbContext> readOnlyRepository)
     {
         _writeOnlyrepository = writeOnlyRepository;
         _readOnlyrepository = readOnlyRepository;

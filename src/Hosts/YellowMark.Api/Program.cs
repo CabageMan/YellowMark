@@ -19,6 +19,7 @@ public class Program
         builder.Services.AddDependencyGroup();
 
         builder.Services.AddControllers();
+        // TODO: Move as many as possible settings to registrar.
 
         // Swager
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -39,21 +39,16 @@ public static class YellowMarkRegistrar
 
     private static IServiceCollection ConfigureDbContext(this IServiceCollection services)
     {
-        services.AddSingleton<IDbContextOptionsConfigurator<WriteDbContext>, DbContextOptionsConfiguration>();
-
-        services.AddDbContext<WriteDbContext>((Action<IServiceProvider, DbContextOptionsBuilder>)
-            ((sp, dbOptions) => sp.GetRequiredService<IDbContextOptionsConfigurator<WriteDbContext>>()
-                .Configure((DbContextOptionsBuilder<WriteDbContext>)dbOptions)));
-
-        services.AddScoped((Func<IServiceProvider, DbContext>)(sp => sp.GetRequiredService<WriteDbContext>()));
+        services.AddDbContext<WriteDbContext>();
+        services.AddDbContext<ReadDbContext>();
 
         return services;
     }
-    
+
     private static IServiceCollection ConfigureRepositories(this IServiceCollection services)
     {
-        services.AddScoped(typeof(IReadOnlyRepository<>), typeof(ReadOnlyRepository<>));
-        services.AddScoped(typeof(IWriteOnlyRepository<>), typeof(WriteOnlyRepository<>));
+        services.AddScoped(typeof(IReadOnlyRepository<,>), typeof(ReadOnlyRepository<,>));
+        services.AddScoped(typeof(IWriteOnlyRepository<,>), typeof(WriteOnlyRepository<,>));
         services.AddTransient<IUserRepository, UserRepository>();
         // services.AddScoped<IUserRepository, UserRepository>();
 
@@ -86,5 +81,21 @@ public static class YellowMarkRegistrar
         configuration.AssertConfigurationIsValid(); // Important to check automappers on App start.
 
         return configuration;
+    }
+
+    private static IServiceCollection AddDbContext<TContext>(this IServiceCollection services) where TContext : DbContext
+    {
+        services.AddSingleton<
+            IDbContextOptionsConfigurator<TContext>,
+            DbContextOptionsConfiguration<TContext>
+        >();
+
+        services.AddDbContext<TContext>((Action<IServiceProvider, DbContextOptionsBuilder>)
+            ((sp, dbOptions) => sp.GetRequiredService<IDbContextOptionsConfigurator<TContext>>()
+                .Configure((DbContextOptionsBuilder<TContext>)dbOptions)));
+
+        services.AddScoped((Func<IServiceProvider, DbContext>)(sp => sp.GetRequiredService<TContext>()));
+
+        return services;
     }
 }

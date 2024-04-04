@@ -4,12 +4,13 @@ using YellowMark.Domain.Base;
 
 namespace YellowMark.Infrastructure.Repository;
 
-public class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntity : BaseEntity
+/// <inheritdoc/>
+public class ReadOnlyRepository<TEntity, TContext> : IReadOnlyRepository<TEntity, TContext> where TEntity : BaseEntity where TContext : DbContext 
 {
     /// <summary>
-    /// <see cref="DbContext"/>
+    /// Ratabase context inherited from <see cref="DbContext"/>. 
     /// </summary>
-    protected DbContext DbContext { get; }
+    protected TContext DbContext { get; }
 
     /// <summary>
     /// <see cref="DbSet"/>
@@ -19,8 +20,8 @@ public class ReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity> where TE
     /// <summary>
     /// Init <see cref="IReadOnlyRepository"/> instance.
     /// </summary>
-    /// <param name="context">Data Base context</param>
-    public ReadOnlyRepository(DbContext context)
+    /// <param name="context">Database context</param>
+    public ReadOnlyRepository(TContext context)
     {
         DbContext = context;
         DbSet = DbContext.Set<TEntity>();
