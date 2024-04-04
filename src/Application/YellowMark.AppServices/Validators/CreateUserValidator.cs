@@ -4,22 +4,28 @@ using YellowMark.Contracts.Users;
 
 namespace YellowMark.AppServices.Validators;
 
+/// <summary>
+/// Validator for <see cref="CreateUserRequest"/> user model.
+/// </summary>
 public class CreateUserValidator : AbstractValidator<CreateUserRequest>
 {
+    /// <summary>
+    /// CreateUser validator.
+    /// </summary>
     public CreateUserValidator()
     {
         RuleFor(user => user.FirstName)
             .NotNull()
             .NotEmpty()
-            .MaximumLength(100);
+            .Length(0, 255);
 
         RuleFor(user => user.MiddleName)
-            .MaximumLength(100);
+            .Length(0, 255);
 
         RuleFor(user => user.LastName)
             .NotNull()
             .NotEmpty()
-            .MaximumLength(100);
+            .Length(0, 255);
 
         RuleFor(user => user.Email)
             .NotEmpty()
@@ -42,14 +48,15 @@ public class CreateUserValidator : AbstractValidator<CreateUserRequest>
             .Matches(new Regex(@"((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}"))
             .WithMessage("PhoneNumber not valid");
 
-
-
-
-        var eighteenYearsAgo = DateOnly.FromDateTime(DateTime.Now.AddYears(-18));
         RuleFor(user => user.BirthDate)
             .NotEmpty()
             .NotNull()
-            .LessThanOrEqualTo(eighteenYearsAgo)
+            .Must(BeOver18)
             .WithMessage("You must be at least 18 years old.");
+    }
+
+    protected bool BeOver18(DateOnly date)
+    {
+        return date <= DateOnly.FromDateTime(DateTime.Now.AddYears(-18));
     }
 }

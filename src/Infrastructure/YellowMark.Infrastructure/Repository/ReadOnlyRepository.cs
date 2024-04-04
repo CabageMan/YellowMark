@@ -27,20 +27,20 @@ public class ReadOnlyRepository<TEntity, TContext> : IReadOnlyRepository<TEntity
         DbSet = DbContext.Set<TEntity>();
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public IQueryable<TEntity> GetAll()
     {
         return DbSet.AsNoTracking();
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public IQueryable<TEntity> GetFiltered(Expression<Func<TEntity, bool>> predicate)
     {
         ArgumentNullException.ThrowIfNull(predicate);
         return DbSet.Where(predicate).AsNoTracking();
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public ValueTask<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return DbSet.FindAsync(id, cancellationToken);

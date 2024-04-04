@@ -3,7 +3,7 @@ using YellowMark.Domain.Base;
 namespace YellowMark.Domain.Users.Entity;
 
 /// <summary>
-/// Class for User.
+/// User entity.
 /// </summary>
 public class User : BaseEntity
 {

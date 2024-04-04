@@ -28,11 +28,29 @@ public class UserService : IUserService
     }
 
     /// <inheritdoc />
+    public async Task<UserDto> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await _userRepository.GetByIdAsync(id, cancellationToken);
+    }
+
+    /// <inheritdoc />
     public async Task<Guid> AddUserAsync(CreateUserRequest model, CancellationToken cancellationToken)
     {
         var entity = _mapper.Map<CreateUserRequest, User>(model);
         await _userRepository.AddAsync(entity, cancellationToken);
 
         return entity.Id;
+    }
+
+    /// <inheritdoc />
+    public Task UpdateUserAsync(User entity, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public Task DeleteUserByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }

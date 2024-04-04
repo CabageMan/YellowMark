@@ -18,16 +18,21 @@ public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly IValidator<CreateUserRequest> _userValidator;
+    private readonly IValidator<Guid> _guidValidator;
 
     /// <summary>
     /// Init instance of <see cref="UserController"/>.
     /// </summary>
     /// <param name="userService">User service.</param>
     /// <param name="userValidator">Creation User validator.</param>
-    public UserController(IUserService userService, IValidator<CreateUserRequest> userValidator)
+    public UserController(
+        IUserService userService, 
+        IValidator<CreateUserRequest> userValidator,
+        IValidator<Guid> guidValidator)
     {
         _userService = userService;
         _userValidator = userValidator;
+        _guidValidator = guidValidator;
     }
 
     /// <summary>
@@ -43,6 +48,28 @@ public class UserController : ControllerBase
     {
         // TODO: Implement all possible returning status codes.
         var result = await _userService.GetUsersAsync(cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Return user by id.
+    /// </summary>
+    /// <param name="id">User id <see cref="Guid"/></param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>User.</returns>
+    [HttpGet]
+    [Route("id")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> GetUserById(Guid id, CancellationToken cancellationToken)
+    {
+        var validationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.ToString());
+        }
+
+        var result = await _userService.GetUserByIdAsync(id, cancellationToken);
         return Ok(result);
     }
 

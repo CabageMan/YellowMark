@@ -1,4 +1,8 @@
+using System.Linq.Expressions;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using Npgsql.TypeMapping;
 using YellowMark.AppServices.Users.Repositories;
 using YellowMark.Contracts.Users;
 using YellowMark.DataAccess.DatabaseContext;
@@ -6,11 +10,12 @@ using YellowMark.Infrastructure.Repository;
 
 namespace YellowMark.DataAccess.User.Repository;
 
-/// <inheritdoc />
+/// <inheritdoc/>
 public class UserRepository : IUserRepository
 {
     private readonly IWriteOnlyRepository<Domain.Users.Entity.User, WriteDbContext> _writeOnlyrepository;
     private readonly IReadOnlyRepository<Domain.Users.Entity.User, ReadDbContext> _readOnlyrepository;
+    private readonly IMapper _mapper;
 
     /// <summary>
     /// Init UserRepository (<see cref="IUserRepository"/>) instance.
@@ -19,76 +24,56 @@ public class UserRepository : IUserRepository
     /// <param name="readOnlyRepository"><see cref="IReadOnlyRepository"/></param>
     public UserRepository (
         IWriteOnlyRepository<Domain.Users.Entity.User, WriteDbContext> writeOnlyRepository,
-        IReadOnlyRepository<Domain.Users.Entity.User, ReadDbContext> readOnlyRepository)
+        IReadOnlyRepository<Domain.Users.Entity.User, ReadDbContext> readOnlyRepository,
+        IMapper mapper)
     {
         _writeOnlyrepository = writeOnlyRepository;
         _readOnlyrepository = readOnlyRepository;
+        _mapper = mapper;
     }
 
     /// <inheritdoc />
     public async Task<IEnumerable<UserDto>> GetAllAsync(CancellationToken cancellationToken)
     {
-        /*
-        var users = UsersMockList();
-
-        return await Task.Run(() => users.Select(user => new UserDto
-        {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            MiddleName = user.MiddleName,
-            LastName = user.LastName,
-            FullName = $"{user.LastName} {user.MiddleName} {user.FirstName}",
-            Email = user.Email,
-            Phone = user.Phone,
-            BirthDate = user.BirthDate
-        }), cancellationToken);
-        */
-        var users = await _readOnlyrepository.GetAll().ToListAsync(cancellationToken);
-
-        return users.Select(user => new UserDto
-        {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            MiddleName = user.MiddleName,
-            LastName = user.LastName,
-            FullName = $"{user.LastName} {user.MiddleName} {user.FirstName}",
-            Email = user.Email,
-            Phone = user.Phone,
-            BirthDate = user.BirthDate
-        });
+        return await _readOnlyrepository
+            .GetAll()
+            .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
+    public IQueryable<UserDto> GetFiltered(Expression<Func<UserDto, bool>> predicate)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public Task<UserDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return _readOnlyrepository
+            .GetAll()
+            .Where(s => s.Id == id)
+            .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public async Task AddAsync(Domain.Users.Entity.User entity, CancellationToken cancellationToken)
     {
         await _writeOnlyrepository.AddAsync(entity, cancellationToken);
     }
 
-    // Mock User's Data
-    private static List<Domain.Users.Entity.User> UsersMockList()
+    /// <inheritdoc/>
+    public async Task UpdateAsync(Domain.Users.Entity.User entity, CancellationToken cancellationToken)
     {
-        return
-        [
-            new()
-            {
-                Id = Guid.NewGuid(),
-                FirstName = "Blob",
-                MiddleName = "Jr.",
-                LastName = "Awesome",
-                Email = "blob.awesome@email.com",
-                Phone = "+71112345678",
-                BirthDate = new DateOnly(2013, 9, 23)
-            },
-            new()
-            {
-                Id = Guid.NewGuid(),
-                FirstName = "Jack",
-                MiddleName = "Captain",
-                LastName = "Sparrow",
-                Email = "captain.jack@blackpearl.com",
-                Phone = "+76669876543",
-                BirthDate = new DateOnly(1970, 6, 18)
-            }
-        ];
+        // TODO: Make it works. Need update entity before update.
+        var user = await _readOnlyrepository.GetByIdAsync(entity.Id, cancellationToken);
+        await _writeOnlyrepository.UpdateAsync(user, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public Task DeleteAsync(Guid id, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
     }
 }
