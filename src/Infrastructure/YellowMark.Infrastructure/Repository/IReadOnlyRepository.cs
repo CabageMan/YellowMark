@@ -19,13 +19,6 @@ public interface IReadOnlyRepository<TEntity, TContext> where TEntity : BaseEnti
     IQueryable<TEntity> GetAll();
 
     /// <summary>
-    /// Returns all instances of the entity <see cref="TEntity"/> by predicate.
-    /// </summary>
-    /// <param name="predicate"></param>
-    /// <returns></returns>
-    IQueryable<TEntity> GetFiltered(Expression<Func<TEntity, bool>> predicate);
-
-    /// <summary>
     /// Returns an instance of the entity by id.
     /// </summary>
     /// <param name="id">Entity id</param>

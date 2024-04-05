@@ -1,4 +1,5 @@
 using YellowMark.Contracts;
+using YellowMark.Contracts.Pagination;
 using YellowMark.Contracts.Users;
 
 namespace YellowMark.AppServices.Users.Services;
@@ -11,9 +12,10 @@ public interface IUserService
     /// <summary>
     /// Returns all users.
     /// </summary>
+    /// <param name="request">Pagination params <see cref="GetAllRequestWithPagination"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Users collection of <see cref="UserDto"/>.</returns>
-    Task<IEnumerable<UserDto>> GetUsersAsync(CancellationToken cancellationToken);
+    Task<ResultWithPagination<UserDto>> GetUsersAsync(GetAllRequestWithPagination request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns an instance of the <see cref="UserDto"/> by id.
@@ -23,12 +25,20 @@ public interface IUserService
     Task<UserDto> GetUserByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Returns all users matched the name.
+    /// </summary>
+    /// <param name="request">User request model <see cref="UserByNameRequest"/></param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Users collection of <see cref="UserDto"/>.</returns>
+    Task<IEnumerable<UserDto>> GetUsersByNameAsync(UserByNameRequest request, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Create new User instance from request params. 
     /// </summary>
-    /// <param name="model">User request model <see cref="CreateUserRequest"/></param>
+    /// <param name="request">User request model <see cref="CreateUserRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Created user instance <see cref="UserDto"/></returns>
-    Task<Guid> AddUserAsync(CreateUserRequest model, CancellationToken cancellationToken);
+    Task<Guid> AddUserAsync(CreateUserRequest request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Update current User.

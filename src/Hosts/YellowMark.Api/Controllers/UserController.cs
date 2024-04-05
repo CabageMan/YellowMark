@@ -1,9 +1,10 @@
 using YellowMark.AppServices.Users.Services;
 using Microsoft.AspNetCore.Mvc;
 using YellowMark.Contracts.Users;
+using YellowMark.Contracts.Pagination;
 using System.Net;
-using YellowMark.Contracts;
 using FluentValidation;
+using Microsoft.AspNetCore.Server.HttpSys;
 
 namespace YellowMark.Api.Controllers;
 
@@ -25,6 +26,7 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="userService">User service.</param>
     /// <param name="userValidator">Creation User validator.</param>
+    /// <param name="guidValidator">Guid validator.</param>
     public UserController(
         IUserService userService, 
         IValidator<CreateUserRequest> userValidator,
@@ -38,16 +40,17 @@ public class UserController : ControllerBase
     /// <summary>
     /// Returns users list.
     /// </summary>
+    /// <param name="request">Paginationa params <see cref="GetAllRequestWithPagination"/>.</param>
     /// <param name="cancellationToken">Operation cancelation token.</param>
     /// <returns>Users list.</returns>
     [HttpGet]
     [Route("all")]
-    [ProducesResponseType(typeof(IEnumerable<UserDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ResultWithPagination<UserDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> GetAllUsers(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllUsers([FromQuery] GetAllRequestWithPagination request, CancellationToken cancellationToken)
     {
         // TODO: Implement all possible returning status codes.
-        var result = await _userService.GetUsersAsync(cancellationToken);
+        var result = await _userService.GetUsersAsync(request, cancellationToken);
         return Ok(result);
     }
 
@@ -70,6 +73,23 @@ public class UserController : ControllerBase
         }
 
         var result = await _userService.GetUserByIdAsync(id, cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Returns users list filtered by name.
+    /// </summary>
+    /// <param name="request">Request <see cref="UserByNameRequest"/></param> 
+    /// <param name="cancellationToken">Operation cancelation token.</param>
+    /// <returns>Users list.</returns>
+    [HttpGet]
+    [Route("by-name")]
+    [ProducesResponseType(typeof(IEnumerable<UserDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<IActionResult> GetAllByName([FromQuery] UserByNameRequest request, CancellationToken cancellationToken)
+    {
+        // TODO: Implement all possible returning status codes.
+        var result = await _userService.GetUsersByNameAsync(request, cancellationToken);
         return Ok(result);
     }
 

@@ -1,5 +1,9 @@
 using AutoMapper;
+using YellowMark.AppServices.Specifications;
 using YellowMark.AppServices.Users.Repositories;
+using YellowMark.AppServices.Users.Specifications;
+using YellowMark.Contracts;
+using YellowMark.Contracts.Pagination;
 using YellowMark.Contracts.Users;
 using YellowMark.Domain.Users.Entity;
 
@@ -22,9 +26,9 @@ public class UserService : IUserService
     }
 
     /// <inheritdoc />
-    public Task<IEnumerable<UserDto>> GetUsersAsync(CancellationToken cancellationToken)
+    public Task<ResultWithPagination<UserDto>> GetUsersAsync(GetAllRequestWithPagination request, CancellationToken cancellationToken)
     {
-        return _userRepository.GetAllAsync(cancellationToken);
+        return _userRepository.GetAllAsync(request, cancellationToken);
     }
 
     /// <inheritdoc />
@@ -34,9 +38,20 @@ public class UserService : IUserService
     }
 
     /// <inheritdoc />
-    public async Task<Guid> AddUserAsync(CreateUserRequest model, CancellationToken cancellationToken)
+    public Task<IEnumerable<UserDto>> GetUsersByNameAsync(UserByNameRequest request, CancellationToken cancellationToken)
     {
-        var entity = _mapper.Map<CreateUserRequest, User>(model);
+        Specification<User> specification = new ByNameSpecification(request.Name);
+        if (request.BeOver18)
+        {
+            specification = specification.And(new BeOver18Specification());
+        }
+        return _userRepository.GetFiltered(specification, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public async Task<Guid> AddUserAsync(CreateUserRequest request, CancellationToken cancellationToken)
+    {
+        var entity = _mapper.Map<CreateUserRequest, User>(request);
         await _userRepository.AddAsync(entity, cancellationToken);
 
         return entity.Id;

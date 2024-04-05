@@ -1,9 +1,9 @@
-using System.Linq.Expressions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using Npgsql.TypeMapping;
+using YellowMark.AppServices.Specifications;
 using YellowMark.AppServices.Users.Repositories;
+using YellowMark.Contracts.Pagination;
 using YellowMark.Contracts.Users;
 using YellowMark.DataAccess.DatabaseContext;
 using YellowMark.Infrastructure.Repository;
@@ -22,7 +22,7 @@ public class UserRepository : IUserRepository
     /// </summary>
     /// <param name="writeOnlyRepository"><see cref="IWriteOnlyRepository"/></param>
     /// <param name="readOnlyRepository"><see cref="IReadOnlyRepository"/></param>
-    public UserRepository (
+    public UserRepository(
         IWriteOnlyRepository<Domain.Users.Entity.User, WriteDbContext> writeOnlyRepository,
         IReadOnlyRepository<Domain.Users.Entity.User, ReadDbContext> readOnlyRepository,
         IMapper mapper)
@@ -33,18 +33,36 @@ public class UserRepository : IUserRepository
     }
 
     /// <inheritdoc />
-    public async Task<IEnumerable<UserDto>> GetAllAsync(CancellationToken cancellationToken)
+    public async Task<ResultWithPagination<UserDto>> GetAllAsync(GetAllRequestWithPagination request, CancellationToken cancellationToken)
     {
-        return await _readOnlyrepository
-            .GetAll()
+        var result = new ResultWithPagination<UserDto>();
+
+        var query = _readOnlyrepository.GetAll();
+
+        var elementsCount = await query.CountAsync(cancellationToken);
+        result.AvailablePages = (int)Math.Ceiling((double)(elementsCount / request.BatchSize));
+
+        var pagesToSkip = request.BatchSize * Math.Max((request.PageNumber - 1), 0);
+        var paginationQuery = await query
+            .OrderBy(user => user.Id)
+            .Skip(pagesToSkip)
+            .Take(request.BatchSize)
             .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
-            .ToListAsync(cancellationToken);
+            .ToArrayAsync(cancellationToken);
+
+        result.Result = paginationQuery;
+
+        return result;
     }
 
     /// <inheritdoc/>
-    public IQueryable<UserDto> GetFiltered(Expression<Func<UserDto, bool>> predicate)
+    public async Task<IEnumerable<UserDto>> GetFiltered(Specification<Domain.Users.Entity.User> specification, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        return await _readOnlyrepository
+            .GetAll()
+            .Where(specification.ToExpression())
+            .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
+            .ToArrayAsync(cancellationToken);
     }
 
     /// <inheritdoc/>

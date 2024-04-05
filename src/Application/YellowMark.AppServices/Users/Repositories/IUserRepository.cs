@@ -1,5 +1,8 @@
 using System.Linq.Expressions;
+using YellowMark.AppServices.Specifications;
+using YellowMark.Contracts.Pagination;
 using YellowMark.Contracts.Users;
+using YellowMark.Domain.Users.Entity;
 
 namespace YellowMark.AppServices.Users.Repositories;
 
@@ -9,18 +12,20 @@ namespace YellowMark.AppServices.Users.Repositories;
 public interface IUserRepository
 {
     /// <summary>
-    /// Returns all instances of the UserDto. 
+    /// Returns all instances of the UserDto with pagination info. 
     /// </summary>
+    /// <param name="request"><see cref="GetAllRequestWithPagination"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
-    /// <returns>List of <see cref="UserDto"/></returns>
-    Task<IEnumerable<UserDto>> GetAllAsync(CancellationToken cancellationToken);
+    /// <returns>Result with pagination params <see cref="ResultWithPagination"/> with <see cref="UserDto"/></returns>
+    Task<ResultWithPagination<UserDto>> GetAllAsync(GetAllRequestWithPagination request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns all instances of the <see cref="UserDto"/> by predicate.
     /// </summary>
-    /// <param name="predicate">Filtering predicate</param>
-    /// <returns><see cref="UserDto"/></returns>
-    IQueryable<UserDto> GetFiltered(Expression<Func<UserDto, bool>> predicate);
+    /// <param name="specification">Filtering specification <see cref="Specification"/></param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Collection of <see cref="UserDto"/></returns>
+    Task<IEnumerable<UserDto>> GetFiltered(Specification<Domain.Users.Entity.User> specification, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns an instance of the <see cref="UserDto"/> by id.

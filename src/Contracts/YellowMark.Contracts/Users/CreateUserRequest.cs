@@ -1,5 +1,8 @@
 ﻿namespace YellowMark.Contracts.Users;
 
+/// <summary>
+/// Request data model for user creation.
+/// </summary>
 public class CreateUserRequest
 {
     /// <summary>
