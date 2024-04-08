@@ -97,7 +97,6 @@ public class AdRepository : IAdRepository
             {
                 Id = Guid.NewGuid(),
                 UserId = Guid.NewGuid(),
-                CategoryId = Guid.NewGuid(),
                 SubcategoryId = Guid.NewGuid(),
                 Title = "Awesome iron horse.",
                 Description = "Almost new motobike!",
@@ -108,7 +107,6 @@ public class AdRepository : IAdRepository
             {
                 Id = Guid.NewGuid(),
                 UserId = Guid.NewGuid(),
-                CategoryId = Guid.NewGuid(),
                 SubcategoryId = Guid.NewGuid(),
                 Title = "Mock Ad",
                 Description = "Some mock description...",

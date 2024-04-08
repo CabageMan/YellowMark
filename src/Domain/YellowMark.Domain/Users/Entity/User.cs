@@ -1,4 +1,6 @@
+using YellowMark.Domain.Ads.Entity;
 using YellowMark.Domain.Base;
+using YellowMark.Domain.Comments.Entity;
 
 namespace YellowMark.Domain.Users.Entity;
 
@@ -43,4 +45,14 @@ public class User : BaseEntity
     /// User's birth date.
     /// </summary>
     public DateOnly BirthDate { get; set; }
+
+    /// <summary>
+    /// Collection of ads.
+    /// </summary>
+    public virtual List<Ad> Ads { get; set; }
+
+    /// <summary>
+    /// Collection of comments <see cref="Comment"/>.
+    /// </summary>
+    public virtual List<Comment> Comments { get; set; }
 }

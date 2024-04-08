@@ -16,6 +16,8 @@ public class UserProfile : Profile
         CreateMap<CreateUserRequest, User>()
             .ForMember(s => s.Id, map => map.MapFrom(s => Guid.NewGuid()))
             .ForMember(s => s.CreatedAt, map => map.MapFrom(s => DateTime.UtcNow))
-            .ForMember(s => s.UpdatedAt, map => map.MapFrom(s => DateTime.UtcNow));
+            .ForMember(s => s.UpdatedAt, map => map.MapFrom(s => DateTime.UtcNow))
+            .ForMember(s => s.Ads, map => map.Ignore())
+            .ForMember(s => s.Comments, map => map.Ignore());
     }
 }

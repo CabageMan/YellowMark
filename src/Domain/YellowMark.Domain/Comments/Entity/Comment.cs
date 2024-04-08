@@ -1,4 +1,6 @@
+using YellowMark.Domain.Ads.Entity;
 using YellowMark.Domain.Base;
+using YellowMark.Domain.Users.Entity;
 
 namespace YellowMark.Domain.Comments.Entity;
 
@@ -18,7 +20,17 @@ public class Comment : BaseEntity
     public Guid UserId { get; set; }
 
     /// <summary>
+    /// Author <see cref="User"/>
+    /// </summary>
+    public virtual User User { get; set; }
+
+    /// <summary>
     /// Ad Id.
     /// </summary>
     public Guid AdId { get; set; }
+
+    /// <summary>
+    /// <see cref="Ad"/>
+    /// </summary>
+    public virtual Ad Ad { get; set; }
 }
