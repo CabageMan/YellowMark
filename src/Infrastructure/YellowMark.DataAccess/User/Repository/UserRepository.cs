@@ -10,7 +10,7 @@ using YellowMark.Infrastructure.Repository;
 
 namespace YellowMark.DataAccess.User.Repository;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IUserRepository"/>
 public class UserRepository : IUserRepository
 {
     private readonly IWriteOnlyRepository<Domain.Users.Entity.User, WriteDbContext> _writeOnlyrepository;
@@ -22,6 +22,7 @@ public class UserRepository : IUserRepository
     /// </summary>
     /// <param name="writeOnlyRepository"><see cref="IWriteOnlyRepository"/></param>
     /// <param name="readOnlyRepository"><see cref="IReadOnlyRepository"/></param>
+    /// <param name="mapper"><see cref="IMapper"/></param>
     public UserRepository(
         IWriteOnlyRepository<Domain.Users.Entity.User, WriteDbContext> writeOnlyRepository,
         IReadOnlyRepository<Domain.Users.Entity.User, ReadDbContext> readOnlyRepository,
@@ -32,7 +33,13 @@ public class UserRepository : IUserRepository
         _mapper = mapper;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
+    public async Task AddAsync(Domain.Users.Entity.User entity, CancellationToken cancellationToken)
+    {
+        await _writeOnlyrepository.AddAsync(entity, cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public async Task<ResultWithPagination<UserDto>> GetAllAsync(GetAllRequestWithPagination request, CancellationToken cancellationToken)
     {
         var result = new ResultWithPagination<UserDto>();
@@ -76,22 +83,14 @@ public class UserRepository : IUserRepository
     }
 
     /// <inheritdoc/>
-    public async Task AddAsync(Domain.Users.Entity.User entity, CancellationToken cancellationToken)
-    {
-        await _writeOnlyrepository.AddAsync(entity, cancellationToken);
-    }
-
-    /// <inheritdoc/>
     public async Task UpdateAsync(Domain.Users.Entity.User entity, CancellationToken cancellationToken)
     {
-        // TODO: Make it works. Need update entity before update.
-        var user = await _readOnlyrepository.GetByIdAsync(entity.Id, cancellationToken);
-        await _writeOnlyrepository.UpdateAsync(user, cancellationToken);
+        await _writeOnlyrepository.UpdateAsync(entity, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public Task DeleteAsync(Guid id, CancellationToken cancellationToken)
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await _writeOnlyrepository.DeleteAsync(id, cancellationToken);
     }
 }

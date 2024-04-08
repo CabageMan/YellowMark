@@ -3,7 +3,7 @@ using YellowMark.Domain.Base;
 
 namespace YellowMark.Infrastructure.Repository;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IWriteOnlyRepository"/>
 public class WriteOnlyRepository<TEntity, TContext> : IWriteOnlyRepository<TEntity, TContext> where TEntity : BaseEntity where TContext : DbContext
 {
     /// <summary>
@@ -26,23 +26,22 @@ public class WriteOnlyRepository<TEntity, TContext> : IWriteOnlyRepository<TEnti
         DbSet = DbContext.Set<TEntity>();
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public async Task AddAsync(TEntity model, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(model);
-
         await DbSet.AddAsync(model, cancellationToken);
         await DbContext.SaveChangesAsync(cancellationToken);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public async Task UpdateAsync(TEntity model, CancellationToken cancellationToken)
     {
         DbSet.Update(model);
         await DbContext.SaveChangesAsync(cancellationToken);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var entityToDelete = DbSet.Find(id);

@@ -9,7 +9,7 @@ using YellowMark.Domain.Users.Entity;
 
 namespace YellowMark.AppServices.Users.Services;
 
-/// <inheritdoc />
+/// <inheritdoc cref="IUserService"/>
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
@@ -25,19 +25,28 @@ public class UserService : IUserService
         _mapper = mapper;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
+    public async Task<Guid> AddUserAsync(CreateUserRequest request, CancellationToken cancellationToken)
+    {
+        var entity = _mapper.Map<CreateUserRequest, User>(request);
+        await _userRepository.AddAsync(entity, cancellationToken);
+
+        return entity.Id;
+    }
+
+    /// <inheritdoc/>
     public Task<ResultWithPagination<UserDto>> GetUsersAsync(GetAllRequestWithPagination request, CancellationToken cancellationToken)
     {
         return _userRepository.GetAllAsync(request, cancellationToken);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public async Task<UserDto> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _userRepository.GetByIdAsync(id, cancellationToken);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public Task<IEnumerable<UserDto>> GetUsersByNameAsync(UserByNameRequest request, CancellationToken cancellationToken)
     {
         Specification<User> specification = new ByNameSpecification(request.Name);
@@ -48,24 +57,21 @@ public class UserService : IUserService
         return _userRepository.GetFiltered(specification, cancellationToken);
     }
 
+
     /// <inheritdoc />
-    public async Task<Guid> AddUserAsync(CreateUserRequest request, CancellationToken cancellationToken)
+    public async Task<UserDto> UpdateUserAsync(Guid id, CreateUserRequest request, CancellationToken cancellationToken)
     {
         var entity = _mapper.Map<CreateUserRequest, User>(request);
-        await _userRepository.AddAsync(entity, cancellationToken);
+        entity.Id = id;
 
-        return entity.Id;
+        await _userRepository.UpdateAsync(entity, cancellationToken);
+
+        return _mapper.Map<User, UserDto>(entity);
     }
 
     /// <inheritdoc />
-    public Task UpdateUserAsync(User entity, CancellationToken cancellationToken)
+    public async Task DeleteUserByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public Task DeleteUserByIdAsync(Guid id, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
+        await _userRepository.DeleteAsync(id, cancellationToken);
     }
 }

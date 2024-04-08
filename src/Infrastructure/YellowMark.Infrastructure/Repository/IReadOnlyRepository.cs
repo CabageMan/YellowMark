@@ -5,7 +5,7 @@ using YellowMark.Domain.Base;
 namespace YellowMark.Infrastructure.Repository;
 
 /// <summary>
-/// Write-only repository.
+/// Read-only repository.
 /// </summary>
 /// <typeparam name="TEntity">Entity type inherited from <see cref="BaseEntity"/></typeparam>
 /// <typeparam name="TContext">DbContext type inherited from <see cref="DbContext"/></typeparam>
@@ -21,7 +21,7 @@ public interface IReadOnlyRepository<TEntity, TContext> where TEntity : BaseEnti
     /// <summary>
     /// Returns an instance of the entity by id.
     /// </summary>
-    /// <param name="id">Entity id</param>
-    /// <returns><see cref="TEntity?"/></returns>
-    ValueTask<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    /// <param name="id">Entity id <see cref="Guid"/></param>
+    /// <returns><see cref="TEntity"/></returns>
+    Task<TEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 }

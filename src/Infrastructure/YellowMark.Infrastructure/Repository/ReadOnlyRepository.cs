@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 using YellowMark.Domain.Base;
 
 namespace YellowMark.Infrastructure.Repository;
 
-/// <inheritdoc/>
+/// <inheritdoc cref="IReadOnlyRepository"/>
 public class ReadOnlyRepository<TEntity, TContext> : IReadOnlyRepository<TEntity, TContext> where TEntity : BaseEntity where TContext : DbContext 
 {
     /// <summary>
@@ -34,8 +33,13 @@ public class ReadOnlyRepository<TEntity, TContext> : IReadOnlyRepository<TEntity
     }
 
     /// <inheritdoc/>
-    public ValueTask<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<TEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return DbSet.FindAsync(id, cancellationToken);
+        var entity = await DbSet.FindAsync(id, cancellationToken);
+        if (entity == null)
+        {
+            throw new InvalidOperationException($"Instance of {typeof(TEntity).Name} not found");
+        }
+        return entity;
     }
 }

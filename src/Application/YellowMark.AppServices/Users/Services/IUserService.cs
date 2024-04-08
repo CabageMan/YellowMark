@@ -10,11 +10,19 @@ namespace YellowMark.AppServices.Users.Services;
 public interface IUserService
 {
     /// <summary>
+    /// Create new User instance from request params. 
+    /// </summary>
+    /// <param name="request">User request model <see cref="CreateUserRequest"/></param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Created user id <see cref="Guid"/></returns>
+    Task<Guid> AddUserAsync(CreateUserRequest request, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Returns all users.
     /// </summary>
     /// <param name="request">Pagination params <see cref="GetAllRequestWithPagination"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
-    /// <returns>Users collection of <see cref="UserDto"/>.</returns>
+    /// <returns>Result with pagination params <see cref="ResultWithPagination"/>.</returns>
     Task<ResultWithPagination<UserDto>> GetUsersAsync(GetAllRequestWithPagination request, CancellationToken cancellationToken);
 
     /// <summary>
@@ -33,25 +41,18 @@ public interface IUserService
     Task<IEnumerable<UserDto>> GetUsersByNameAsync(UserByNameRequest request, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Create new User instance from request params. 
-    /// </summary>
-    /// <param name="request">User request model <see cref="CreateUserRequest"/></param>
-    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
-    /// <returns>Created user instance <see cref="UserDto"/></returns>
-    Task<Guid> AddUserAsync(CreateUserRequest request, CancellationToken cancellationToken);
-
-    /// <summary>
     /// Update current User.
     /// </summary>
-    /// <param name="entity">Entity model <see cref="Domain.Users.Entity.User"/></param>
+    /// <param name="id">User id</param>
+    /// <param name="request">Entity model <see cref="CreateUserRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
-    /// <returns><see cref="Task"/></returns>
-    Task UpdateUserAsync(Domain.Users.Entity.User entity, CancellationToken cancellationToken);
+    /// <returns>Updated user <see cref="UserDto"/></returns>
+    Task<UserDto> UpdateUserAsync(Guid id, CreateUserRequest request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete the User by id.
     /// </summary>
-    /// <param name="id">User <see cref="Guid"/></param>
+    /// <param name="id">User id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns><see cref="Task"/></returns>
     Task DeleteUserByIdAsync(Guid id, CancellationToken cancellationToken);
