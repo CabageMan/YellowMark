@@ -31,7 +31,7 @@ public class Ad : BaseEntity
     /// <summary>
     /// Goods price specified in the ad.
     /// </summary>
-    public double Price { get; set; }
+    public decimal? Price { get; set; }
 
     /// <summary>
     /// Ad owner (<see cref="User"/>) id.
@@ -56,7 +56,7 @@ public class Ad : BaseEntity
     /// <summary>
     /// Goods Currency id specified in the ad (<see cref="Guid"/>). 
     /// </summary>
-    public Guid CurrencyId { get; set; }
+    public Guid? CurrencyId { get; set; }
 
     /// <summary>
     /// Goods <see cref="Currency"/> specified in the ad. 

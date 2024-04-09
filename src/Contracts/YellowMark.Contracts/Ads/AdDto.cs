@@ -54,10 +54,10 @@ public class AdDto
     /// <summary>
     /// Goods currency <see cref="CurrencyDto"/> specified in the ad. 
     /// </summary>
-    public CurrencyDto Currency { get; set; }
+    public CurrencyDto? Currency { get; set; }
 
     /// <summary>
     /// Goods price.
     /// </summary>
-    public Double Price { get; set; }
+    public decimal? Price { get; set; }
 }

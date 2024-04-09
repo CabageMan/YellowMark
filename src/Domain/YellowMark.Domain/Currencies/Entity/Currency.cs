@@ -18,5 +18,8 @@ public class Currency : BaseEntity
     /// </summary>
     public int NumericCode { get; set; }
 
+    /// <summary>
+    /// Collection of <see cref="Ad"/> using current currency.
+    /// </summary>
     public virtual List<Ad> Ads { get; set; }
 }

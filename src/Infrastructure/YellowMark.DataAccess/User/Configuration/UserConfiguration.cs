@@ -8,7 +8,7 @@ namespace YellowMark.DataAccess.User.Configuration;
 /// </summary>
 public class UserConfiguration : IEntityTypeConfiguration<Domain.Users.Entity.User>
 {
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public void Configure(EntityTypeBuilder<Domain.Users.Entity.User> builder)
     {
         builder
@@ -43,5 +43,19 @@ public class UserConfiguration : IEntityTypeConfiguration<Domain.Users.Entity.Us
         builder
             .Property(user => user.BirthDate)
             .IsRequired();
+        
+        builder
+            .HasMany(user => user.Ads)
+            .WithOne(ad => ad.User)
+            .HasForeignKey(ad => ad.UserId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasMany(user => user.Comments)
+            .WithOne(comment => comment.User)
+            .HasForeignKey(comment => comment.UserId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

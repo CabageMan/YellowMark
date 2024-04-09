@@ -111,7 +111,7 @@ public class AdRepository : IAdRepository
                 Title = "Mock Ad",
                 Description = "Some mock description...",
                 CurrencyId = Guid.NewGuid(),
-                Price = 1.36
+                Price = (decimal?)1.36
             },
         ];
     }
