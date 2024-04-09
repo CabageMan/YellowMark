@@ -16,6 +16,14 @@ public class SubcategoryConfiguration : IEntityTypeConfiguration<Domain.Subcateg
             .HasKey(s => s.Id);
 
         builder
+            .Property(s => s.CreatedAt)
+            .HasConversion(s => s, s => DateTime.SpecifyKind(s, DateTimeKind.Utc));
+
+        builder
+            .Property(user => user.UpdatedAt)
+            .HasConversion(s => s, s => DateTime.SpecifyKind(s, DateTimeKind.Utc));
+
+        builder
             .Property(s => s.Name)
             .IsRequired()
             .HasMaxLength(255);

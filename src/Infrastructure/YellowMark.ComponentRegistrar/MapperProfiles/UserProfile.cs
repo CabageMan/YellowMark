@@ -4,8 +4,14 @@ using YellowMark.Domain.Users.Entity;
 
 namespace YellowMark.ComponentRegistrar;
 
+/// <summary>
+/// User mapping profile.
+/// </summary>
 public class UserProfile : Profile
 {
+    /// <summary>
+    /// Constructor for user mapping profile.
+    /// </summary>
     public UserProfile()
     {
         CreateMap<User, UserDto>()

@@ -10,7 +10,7 @@
     <Folder Include="Categories/Services/" />
     <Folder Include="Comments/Services/" />
     <Folder Include="Currencies/Services/" />
-    <Folder Include="Subcategories/Services/" />
+    <Folder Include="Subcategories/Specifications/" />
   </ItemGroup>
 
   <ItemGroup>

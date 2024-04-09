@@ -16,6 +16,14 @@ public class AdConfiguration : IEntityTypeConfiguration<Domain.Ads.Entity.Ad>
             .HasKey(ad => ad.Id);
 
         builder
+            .Property(ad => ad.CreatedAt)
+            .HasConversion(s => s, s => DateTime.SpecifyKind(s, DateTimeKind.Utc));
+
+        builder
+            .Property(ad => ad.UpdatedAt)
+            .HasConversion(s => s, s => DateTime.SpecifyKind(s, DateTimeKind.Utc));
+
+        builder
             .Property(ad => ad.Title)
             .IsRequired()
             .HasMaxLength(255);

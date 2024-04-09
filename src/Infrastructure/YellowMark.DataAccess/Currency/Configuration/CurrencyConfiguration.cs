@@ -16,6 +16,14 @@ public class CurrencyConfiguration : IEntityTypeConfiguration<Domain.Currencies.
             .HasKey(c => c.Id);
 
         builder
+            .Property(c => c.CreatedAt)
+            .HasConversion(s => s, s => DateTime.SpecifyKind(s, DateTimeKind.Utc));
+
+        builder
+            .Property(c => c.UpdatedAt)
+            .HasConversion(s => s, s => DateTime.SpecifyKind(s, DateTimeKind.Utc));
+
+        builder
             .Property(c => c.AlphabeticCode)
             .IsRequired()
             .HasMaxLength(10);

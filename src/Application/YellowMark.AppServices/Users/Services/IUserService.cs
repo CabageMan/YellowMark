@@ -10,7 +10,7 @@ namespace YellowMark.AppServices.Users.Services;
 public interface IUserService
 {
     /// <summary>
-    /// Create new User instance from request params. 
+    /// Create new User instance from the request params. 
     /// </summary>
     /// <param name="request">User request model <see cref="CreateUserRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -44,7 +44,7 @@ public interface IUserService
     /// Update current User.
     /// </summary>
     /// <param name="id">User id</param>
-    /// <param name="request">Entity model <see cref="CreateUserRequest"/></param>
+    /// <param name="request">Creation model <see cref="CreateUserRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Updated user <see cref="UserDto"/></returns>
     Task<UserDto> UpdateUserAsync(Guid id, CreateUserRequest request, CancellationToken cancellationToken);

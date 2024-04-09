@@ -1,8 +1,6 @@
-using System.Linq.Expressions;
 using YellowMark.AppServices.Specifications;
 using YellowMark.Contracts.Pagination;
 using YellowMark.Contracts.Users;
-using YellowMark.Domain.Users.Entity;
 
 namespace YellowMark.AppServices.Users.Repositories;
 
@@ -12,9 +10,9 @@ namespace YellowMark.AppServices.Users.Repositories;
 public interface IUserRepository
 {
     /// <summary>
-    /// Add new User instance and return created user id.
+    /// Add new User instance.
     /// </summary>
-    /// <param name="entity">User request model <see cref="Domain.Users.Entity.User"/></param>
+    /// <param name="entity">User model <see cref="Domain.Users.Entity.User"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns><see cref="Task"/></returns>
     Task AddAsync(Domain.Users.Entity.User entity, CancellationToken cancellationToken);

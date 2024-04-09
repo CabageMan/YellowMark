@@ -2,7 +2,6 @@ using AutoMapper;
 using YellowMark.AppServices.Specifications;
 using YellowMark.AppServices.Users.Repositories;
 using YellowMark.AppServices.Users.Specifications;
-using YellowMark.Contracts;
 using YellowMark.Contracts.Pagination;
 using YellowMark.Contracts.Users;
 using YellowMark.Domain.Users.Entity;
@@ -19,6 +18,7 @@ public class UserService : IUserService
     /// Init <see cref="IUserRepository"/> instance.
     /// </summary>
     /// <param name="userRepository">Users repository</param>
+    /// <param name="mapper">Users mapper.</param>
     public UserService(IUserRepository userRepository, IMapper mapper)
     {
         _userRepository = userRepository;
@@ -30,7 +30,6 @@ public class UserService : IUserService
     {
         var entity = _mapper.Map<CreateUserRequest, User>(request);
         await _userRepository.AddAsync(entity, cancellationToken);
-
         return entity.Id;
     }
 

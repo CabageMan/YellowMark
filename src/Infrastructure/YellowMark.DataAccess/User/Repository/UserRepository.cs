@@ -73,9 +73,9 @@ public class UserRepository : IUserRepository
     }
 
     /// <inheritdoc/>
-    public Task<UserDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<UserDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return _readOnlyrepository
+        return await _readOnlyrepository
             .GetAll()
             .Where(s => s.Id == id)
             .ProjectTo<UserDto>(_mapper.ConfigurationProvider)

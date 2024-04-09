@@ -9,11 +9,11 @@ using YellowMark.DbMigrator.DatabaseContext;
 
 #nullable disable
 
-namespace YellowMark.DbMigrator.Migrations.MigrationReadDb
+namespace YellowMark.DbMigrator.Migrations
 {
-    [DbContext(typeof(MigrationReadDbContext))]
-    [Migration("20240409101939_Add-More-Configurations")]
-    partial class AddMoreConfigurations
+    [DbContext(typeof(MigrationWriteDbContext))]
+    [Migration("20240409155753_Add-Create-And-Update-Timestamps")]
+    partial class AddCreateAndUpdateTimestamps
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

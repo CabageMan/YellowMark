@@ -12,8 +12,8 @@ using YellowMark.DbMigrator.DatabaseContext;
 namespace YellowMark.DbMigrator.Migrations.MigrationReadDb
 {
     [DbContext(typeof(MigrationReadDbContext))]
-    [Migration("20240409101939_Add-More-Configurations")]
-    partial class AddMoreConfigurations
+    [Migration("20240409155831_Add-Create-And-Update-Timestamps")]
+    partial class AddCreateAndUpdateTimestamps
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

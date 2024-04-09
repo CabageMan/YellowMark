@@ -4,17 +4,14 @@ using YellowMark.Contracts.Users;
 using YellowMark.Contracts.Pagination;
 using System.Net;
 using FluentValidation;
-using Microsoft.AspNetCore.Server.HttpSys;
-using System.Globalization;
 
 namespace YellowMark.Api.Controllers;
 
 /// <summary>
 /// User controller.
 /// </summary>
-// TODO: Check API versioning and route. For example: ...api/v1/users/...
 [ApiController]
-[Route("users")]
+[Route("v1/users")]
 [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
 public class UserController : ControllerBase
 {

@@ -8,6 +8,9 @@ using YellowMark.AppServices.Validators;
 using YellowMark.DataAccess.User.Repository;
 using YellowMark.DataAccess.DatabaseContext;
 using YellowMark.Infrastructure.Repository;
+using YellowMark.AppServices.Subcategories.Repositories;
+using YellowMark.DataAccess.Subcategory.Repository;
+using YellowMark.AppServices.Subcategories.Services;
 
 namespace YellowMark.ComponentRegistrar;
 
@@ -50,6 +53,7 @@ public static class YellowMarkRegistrar
         services.AddScoped(typeof(IReadOnlyRepository<,>), typeof(ReadOnlyRepository<,>));
         services.AddScoped(typeof(IWriteOnlyRepository<,>), typeof(WriteOnlyRepository<,>));
         services.AddTransient<IUserRepository, UserRepository>();
+        services.AddTransient<ISubcategoryRepository, SubcategoryRepository>();
         // services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
@@ -65,6 +69,7 @@ public static class YellowMarkRegistrar
     private static IServiceCollection ConfigureSrvices(this IServiceCollection services)
     {
         services.AddTransient<IUserService, UserService>();
+        services.AddTransient<ISubcategoryService, SubcategoryService>();
         // services.AddScoped<IUserService, UserService>();
 
         return services;
@@ -76,6 +81,7 @@ public static class YellowMarkRegistrar
         var configuration = new MapperConfiguration(config =>
         {
             config.AddProfile<UserProfile>();
+            config.AddProfile<SubcategoryProfile>();
         });
 
         configuration.AssertConfigurationIsValid(); // Important to check automappers on App start.

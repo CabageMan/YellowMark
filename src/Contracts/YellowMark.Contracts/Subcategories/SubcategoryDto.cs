@@ -15,4 +15,14 @@ public class SubcategoryDto
     /// Subcategory name.
     /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// Subcategory creation date.
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
+
+    /// <summary>
+    /// Subcategory update date.
+    /// </summary>
+    public DateTime UpdatedAt { get; set; }
 }
