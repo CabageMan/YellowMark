@@ -5,12 +5,12 @@ using YellowMark.Domain.Subcategories.Entity;
 namespace YellowMark.ComponentRegistrar;
 
 /// <summary>
-/// User mapping profile.
+/// Subcategory mapping profile.
 /// </summary>
 public class SubcategoryProfile : Profile
 {
     /// <summary>
-    /// Constructor for user mapping profile.
+    /// Constructor for subcategory mapping profile.
     /// </summary>
     public SubcategoryProfile()
     {

@@ -1,3 +1,5 @@
+using YellowMark.Contracts.Subcategories;
+
 namespace YellowMark.Contracts.Categories;
 
 /// <summary>
@@ -11,10 +13,22 @@ public class CategoryDto
     public Guid Id { get; set; }
 
     /// <summary>
+    /// Category creation date.
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
+
+    /// <summary>
+    /// Category update date.
+    /// </summary>
+    public DateTime UpdatedAt { get; set; }
+
+    /// <summary>
     /// Category name.
     /// </summary>
     public string Name { get; set; }
 
-    // Think if it needed in the future.
-    // public IEnumerable<Subcategory> Subcategories;
+    /// <summary>
+    /// Subcategories collection <see cref="SubcategoryDto"/>.
+    /// </summary>
+    public virtual List<SubcategoryDto> Subcategories { get; set; }
 }

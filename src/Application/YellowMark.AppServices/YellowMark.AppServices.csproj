@@ -7,7 +7,7 @@
 
   <ItemGroup>
     <Folder Include="Ads/Services/" />
-    <Folder Include="Categories/Services/" />
+    <Folder Include="Categories/Soecifications/" />
     <Folder Include="Comments/Services/" />
     <Folder Include="Currencies/Services/" />
     <Folder Include="Subcategories/Specifications/" />

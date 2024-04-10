@@ -12,11 +12,6 @@ public class SubcategoryDto
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Subcategory name.
-    /// </summary>
-    public string Name { get; set; }
-
-    /// <summary>
     /// Subcategory creation date.
     /// </summary>
     public DateTime CreatedAt { get; set; }
@@ -25,4 +20,9 @@ public class SubcategoryDto
     /// Subcategory update date.
     /// </summary>
     public DateTime UpdatedAt { get; set; }
+
+    /// <summary>
+    /// Subcategory name.
+    /// </summary>
+    public string Name { get; set; }
 }
