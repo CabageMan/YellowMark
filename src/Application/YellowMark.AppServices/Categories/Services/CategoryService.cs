@@ -45,6 +45,7 @@ public class CategoryService : ICategoryService
     /// <inheritdoc/>
     public async Task<CategoryDto> UpdateCategoryAsync(Guid id, CreateCategoryRequest request, CancellationToken cancellationToken)
     {
+        // TODO: Need to fix. Get previous record and update it (Created at id wrong).
         var entity = _mapper.Map<CreateCategoryRequest, Category>(request);
         entity.Id = id;
 

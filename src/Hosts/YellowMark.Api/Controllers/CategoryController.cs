@@ -45,6 +45,7 @@ public class CategoryController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateCategory(CreateCategoryRequest request, CancellationToken cancellationToken)
     {
+        // TODO: This method is available only for Admin.
         var validationResult = await _categoryValidator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid) 
         {
@@ -53,5 +54,97 @@ public class CategoryController : ControllerBase
         
         var addedCategoryId = await _categoryService.AddCategoryAsync(request, cancellationToken);
         return Created(new Uri($"{Request.Path}/{addedCategoryId}", UriKind.Relative), addedCategoryId);
+    }
+
+    /// <summary>
+    /// Returns all categories list.
+    /// </summary>
+    /// <param name="cancellationToken">Operation cancelation token.</param>
+    /// <returns>Categories list.</returns>
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<CategoryDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<IActionResult> GetAllCategories(CancellationToken cancellationToken)
+    {
+        // TODO: Implement all possible returning status codes.
+        var result = await _categoryService.GetCategoriesAsync(cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Return category by id.
+    /// </summary>
+    /// <param name="id">Category id <see cref="Guid"/></param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Category <see cref="CategoryDto"/>.</returns>
+    [HttpGet("{id:Guid}")]
+    [ProducesResponseType(typeof(CategoryDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> GetCategoryById(Guid id, CancellationToken cancellationToken)
+    {
+        var validationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.ToString());
+        }
+
+        var result = await _categoryService.GetCategoryByIdAsync(id, cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Update Category by Id.
+    /// </summary>
+    /// <param name="id">Needed to update category id.</param>
+    /// <param name="request">Category request model <see cref="CreateCategoryRequest"/></param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Updated category <see cref="CategoryDto"/></returns>
+    [HttpPut("{id:Guid}")]
+    [ProducesResponseType(typeof(CategoryDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<IActionResult> UpdateCategory(Guid id, CreateCategoryRequest request, CancellationToken cancellationToken)
+    {
+        // TODO: Should be available only for admin.
+        var guidValidationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
+        if (!guidValidationResult.IsValid) 
+        {
+            return BadRequest(guidValidationResult.ToString());
+        }
+
+        var categoryValidationResult = await _categoryValidator.ValidateAsync(request, cancellationToken);
+        if (!categoryValidationResult.IsValid) 
+        {
+            return BadRequest(categoryValidationResult.ToString());
+        }
+        // TODO: Handle exceptions
+
+        var updatedCategory = await _categoryService.UpdateCategoryAsync(id, request, cancellationToken);
+        return Ok(updatedCategory);
+    }
+
+    /// <summary>
+    /// Delete Category by Id.
+    /// </summary>
+    /// <param name="id">Category id <see cref="Guid"/></param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Task</returns>
+    [HttpDelete("{id:Guid}")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<IActionResult> DeleteCategory(Guid id, CancellationToken cancellationToken)
+    {
+        // TODO: Should be available only for admin.
+        var validationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.ToString());
+        }
+
+        await _categoryService.DeleteCategoryByIdAsync(id, cancellationToken);
+        // TODO: Handle exceptions
+
+        return NoContent();
     }
 }

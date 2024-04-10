@@ -25,4 +25,9 @@ public class SubcategoryDto
     /// Subcategory name.
     /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// Parent category id.
+    /// </summary>
+    public Guid CategoryId { get; set; }
 }

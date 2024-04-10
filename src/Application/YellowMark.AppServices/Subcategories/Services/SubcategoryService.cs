@@ -46,6 +46,7 @@ public class SubcategoryService : ISubcategoryService
     /// <inheritdoc/>
     public async Task<SubcategoryDto> UpdateSubcategoryAsync(Guid id, CreateSubcategoryRequest request, CancellationToken cancellationToken)
     {
+        // TODO: Need to fix. Get previous record and update it (Created at id wrong).
         var entity = _mapper.Map<CreateSubcategoryRequest, Subcategory>(request);
         entity.Id = id;
 

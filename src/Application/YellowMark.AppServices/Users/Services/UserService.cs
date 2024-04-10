@@ -60,6 +60,7 @@ public class UserService : IUserService
     /// <inheritdoc />
     public async Task<UserDto> UpdateUserAsync(Guid id, CreateUserRequest request, CancellationToken cancellationToken)
     {
+        // TODO: Need to fix. Get previous record and update it (Created at id wrong).
         var entity = _mapper.Map<CreateUserRequest, User>(request);
         entity.Id = id;
 

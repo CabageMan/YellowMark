@@ -81,7 +81,7 @@ public class UserController : ControllerBase
     /// <returns>User.</returns>
     [HttpGet("{id:Guid}")]
     // [Route("{id:Guid}")]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> GetUserById(Guid id, CancellationToken cancellationToken)
     {
@@ -115,6 +115,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Update User by Id.
     /// </summary>
+    /// <param name="id">Needed to update user id.</param>
     /// <param name="request">User request model <see cref="CreateUserRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Updated user <see cref="UserDto"/></returns>
@@ -146,9 +147,9 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="id">User id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
-    /// <returns>Updated user <see cref="UserDto"/></returns>
+    /// <returns>Task</returns>
     [HttpDelete("{id:Guid}")]
-    [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteUser(Guid id, CancellationToken cancellationToken)

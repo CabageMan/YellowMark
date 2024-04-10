@@ -54,4 +54,96 @@ public class SubcategoryController : ControllerBase
         var addedSubcategoryId = await _subcategoryService.AddSubcategoryAsync(request, cancellationToken);
         return Created(new Uri($"{Request.Path}/{addedSubcategoryId}", UriKind.Relative), addedSubcategoryId);
     }
+
+    /// <summary>
+    /// Returns all subcategories list.
+    /// </summary>
+    /// <param name="cancellationToken">Operation cancelation token.</param>
+    /// <returns>Subcategories list.</returns>
+    [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<SubcategoryDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<IActionResult> GetAllSubcategories(CancellationToken cancellationToken)
+    {
+        // TODO: Implement all possible returning status codes.
+        var result = await _subcategoryService.GetSubcategoriesAsync(cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Return subcategory by id.
+    /// </summary>
+    /// <param name="id">Subcategory id <see cref="Guid"/></param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Subcategory <see cref="SubcategoryDto"/>.</returns>
+    [HttpGet("{id:Guid}")]
+    [ProducesResponseType(typeof(SubcategoryDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> GetSubcategoryById(Guid id, CancellationToken cancellationToken)
+    {
+        var validationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.ToString());
+        }
+
+        var result = await _subcategoryService.GetSubcategoryByIdAsync(id, cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Update Subcategory by Id.
+    /// </summary>
+    /// <param name="id">Needed to update subcategory id.</param>
+    /// <param name="request">Subcategory request model <see cref="CreateSubcategoryRequest"/></param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Updated subcategory <see cref="SubcategoryDto"/></returns>
+    [HttpPut("{id:Guid}")]
+    [ProducesResponseType(typeof(SubcategoryDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<IActionResult> UpdateSubcategory(Guid id, CreateSubcategoryRequest request, CancellationToken cancellationToken)
+    {
+        // TODO: Should be available only for admin.
+        var guidValidationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
+        if (!guidValidationResult.IsValid) 
+        {
+            return BadRequest(guidValidationResult.ToString());
+        }
+
+        var subcategoryValidationResult = await _subcategoryValidator.ValidateAsync(request, cancellationToken);
+        if (!subcategoryValidationResult.IsValid) 
+        {
+            return BadRequest(subcategoryValidationResult.ToString());
+        }
+        // TODO: Handle exceptions
+
+        var updatedCategory = await _subcategoryService.UpdateSubcategoryAsync(id, request, cancellationToken);
+        return Ok(updatedCategory);
+    }
+
+    /// <summary>
+    /// Delete Subcategory by Id.
+    /// </summary>
+    /// <param name="id">Subcategory id <see cref="Guid"/></param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Task</returns>
+    [HttpDelete("{id:Guid}")]
+    [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<IActionResult> DeleteSubcategory(Guid id, CancellationToken cancellationToken)
+    {
+        // TODO: Should be available only for admin.
+        var validationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.ToString());
+        }
+
+        await _subcategoryService.DeleteSubcategoryByIdAsync(id, cancellationToken);
+        // TODO: Handle exceptions
+
+        return NoContent();
+    }
 }

@@ -28,6 +28,7 @@ public class SubcategoryRepository : ISubcategoryRepository
     {
         _writeOnlyrepository = writeOnlyRepository;
         _readOnlyrepository = readOnlyRepository;
+        _mapper = mapper;
     }
 
     /// <inheritdoc/>
