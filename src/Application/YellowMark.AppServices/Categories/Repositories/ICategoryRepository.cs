@@ -11,7 +11,7 @@ public interface ICategoryRepository
     /// <summary>
     /// Add new Category instance.
     /// </summary>
-    /// <param name="entity">Subcategory model <see cref="Domain.Categories.Entity.Category"/></param>
+    /// <param name="entity">Category model <see cref="Domain.Categories.Entity.Category"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns><see cref="Task"/></returns>
     Task AddAsync(Domain.Categories.Entity.Category entity, CancellationToken cancellationToken);

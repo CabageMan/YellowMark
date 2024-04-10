@@ -14,6 +14,10 @@ using YellowMark.AppServices.Subcategories.Services;
 using YellowMark.AppServices.Categories.Services;
 using YellowMark.DataAccess.Category.Repository;
 using YellowMark.AppServices.Categories.Repositories;
+using YellowMark.AppServices.Currencies.Repositories;
+using YellowMark.DataAccess.Currency.Repository;
+using YellowMark.AppServices.Ads.Repositories;
+using YellowMark.DataAccess.Ad.Repository;
 
 namespace YellowMark.ComponentRegistrar;
 
@@ -58,6 +62,8 @@ public static class YellowMarkRegistrar
         services.AddTransient<IUserRepository, UserRepository>();
         services.AddTransient<ISubcategoryRepository, SubcategoryRepository>();
         services.AddTransient<ICategoryRepository, CategoryRepository>();
+        services.AddTransient<ICurrencyRepository, CurrencyRepository>();
+        services.AddTransient<IAdRepository, AdRepository>();
         // services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
@@ -88,6 +94,8 @@ public static class YellowMarkRegistrar
             config.AddProfile<UserProfile>();
             config.AddProfile<SubcategoryProfile>();
             config.AddProfile<CategoryProfile>();
+            config.AddProfile<CurrencyProfile>();
+            config.AddProfile<AdProfile>();
         });
 
         configuration.AssertConfigurationIsValid(); // Important to check automappers on App start.

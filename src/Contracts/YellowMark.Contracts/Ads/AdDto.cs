@@ -25,12 +25,6 @@ public class AdDto
     /// </summary>
     public DateTime UpdatedAt { get; set; }
 
-    // TODO: Check, may be use part of user data, or other DTO.
-    /// <summary>
-    /// Ad owner <see cref="UserDto"/>
-    /// </summary>
-    public UserDto Owner { get; set; }
-
     /// <summary>
     /// Ad title.
     /// </summary>
@@ -40,6 +34,17 @@ public class AdDto
     /// Ad description.
     /// </summary>
     public string Description { get; set; }
+
+    /// <summary>
+    /// Goods price.
+    /// </summary>
+    public decimal? Price { get; set; }
+
+    // TODO: Check, may be use part of user data, or other DTO.
+    /// <summary>
+    /// Ad owner <see cref="UserDto"/>
+    /// </summary>
+    public UserDto Owner { get; set; }
 
     /// <summary>
     /// Ad category <see cref="CategoryDto"/>.
@@ -54,10 +59,5 @@ public class AdDto
     /// <summary>
     /// Goods currency <see cref="CurrencyDto"/> specified in the ad. 
     /// </summary>
-    public CurrencyDto? Currency { get; set; }
-
-    /// <summary>
-    /// Goods price.
-    /// </summary>
-    public decimal? Price { get; set; }
+    public CurrencyDto Currency { get; set; }
 }

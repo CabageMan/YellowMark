@@ -12,8 +12,8 @@ namespace YellowMark.DataAccess.Subcategory.Repository;
 /// <inheritdoc cref="ISubcategoryRepository"/>
 public class SubcategoryRepository : ISubcategoryRepository
 {
-    private readonly IWriteOnlyRepository<Domain.Subcategories.Entity.Subcategory, WriteDbContext> _writeOnlyrepository;
-    private readonly IReadOnlyRepository<Domain.Subcategories.Entity.Subcategory, ReadDbContext> _readOnlyrepository;
+    private readonly IWriteOnlyRepository<Domain.Subcategories.Entity.Subcategory, WriteDbContext> _writeOnlyRepository;
+    private readonly IReadOnlyRepository<Domain.Subcategories.Entity.Subcategory, ReadDbContext> _readOnlyRepository;
     private readonly IMapper _mapper;
 
     /// <summary>
@@ -21,26 +21,27 @@ public class SubcategoryRepository : ISubcategoryRepository
     /// </summary>
     /// <param name="writeOnlyRepository"><see cref="IWriteOnlyRepository"/></param>
     /// <param name="readOnlyRepository"><see cref="IReadOnlyRepository"/></param>
+    /// <param name="mapper"><see cref="IMapper"/></param>
     public SubcategoryRepository(
         IWriteOnlyRepository<Domain.Subcategories.Entity.Subcategory, WriteDbContext> writeOnlyRepository,
         IReadOnlyRepository<Domain.Subcategories.Entity.Subcategory, ReadDbContext> readOnlyRepository,
         IMapper mapper)
     {
-        _writeOnlyrepository = writeOnlyRepository;
-        _readOnlyrepository = readOnlyRepository;
+        _writeOnlyRepository = writeOnlyRepository;
+        _readOnlyRepository = readOnlyRepository;
         _mapper = mapper;
     }
 
     /// <inheritdoc/>
     public async Task AddAsync(Domain.Subcategories.Entity.Subcategory entity, CancellationToken cancellationToken)
     {
-        await _writeOnlyrepository.AddAsync(entity, cancellationToken);
+        await _writeOnlyRepository.AddAsync(entity, cancellationToken);
     }
 
     /// <inheritdoc/>
     public async Task<IEnumerable<SubcategoryDto>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return await _readOnlyrepository
+        return await _readOnlyRepository
             .GetAll()
             .ProjectTo<SubcategoryDto>(_mapper.ConfigurationProvider)
             .ToArrayAsync(cancellationToken);
@@ -49,7 +50,7 @@ public class SubcategoryRepository : ISubcategoryRepository
     /// <inheritdoc/>
     public async Task<SubcategoryDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _readOnlyrepository
+        return await _readOnlyRepository
             .GetAll()
             .Where(s => s.Id == id)
             .ProjectTo<SubcategoryDto>(_mapper.ConfigurationProvider)
@@ -59,7 +60,7 @@ public class SubcategoryRepository : ISubcategoryRepository
     /// <inheritdoc/>
     public async Task<IEnumerable<SubcategoryDto>> GetFiltered(Specification<Domain.Subcategories.Entity.Subcategory> specification, CancellationToken cancellationToken)
     {
-        return await _readOnlyrepository
+        return await _readOnlyRepository
             .GetAll()
             .Where(specification.ToExpression())
             .ProjectTo<SubcategoryDto>(_mapper.ConfigurationProvider)
@@ -69,12 +70,12 @@ public class SubcategoryRepository : ISubcategoryRepository
     /// <inheritdoc/>
     public async Task UpdateAsync(Domain.Subcategories.Entity.Subcategory entity, CancellationToken cancellationToken)
     {
-        await _writeOnlyrepository.UpdateAsync(entity, cancellationToken);
+        await _writeOnlyRepository.UpdateAsync(entity, cancellationToken);
     }
 
     /// <inheritdoc/>
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        await _writeOnlyrepository.DeleteAsync(id, cancellationToken);
+        await _writeOnlyRepository.DeleteAsync(id, cancellationToken);
     }
 }

@@ -12,8 +12,8 @@ namespace YellowMark.DataAccess.Category.Repository;
 /// <inheritdoc cref="ICategoryRepository"/>
 public class CategoryRepository : ICategoryRepository
 {
-    private readonly IWriteOnlyRepository<Domain.Categories.Entity.Category, WriteDbContext> _writeOnlyrepository;
-    private readonly IReadOnlyRepository<Domain.Categories.Entity.Category, ReadDbContext> _readOnlyrepository;
+    private readonly IWriteOnlyRepository<Domain.Categories.Entity.Category, WriteDbContext> _writeOnlyRepository;
+    private readonly IReadOnlyRepository<Domain.Categories.Entity.Category, ReadDbContext> _readOnlyRepository;
     private readonly IMapper _mapper;
 
     /// <summary>
@@ -27,21 +27,21 @@ public class CategoryRepository : ICategoryRepository
         IReadOnlyRepository<Domain.Categories.Entity.Category, ReadDbContext> readOnlyRepository,
         IMapper mapper)
     {
-        _writeOnlyrepository = writeOnlyRepository;
-        _readOnlyrepository = readOnlyRepository;
+        _writeOnlyRepository = writeOnlyRepository;
+        _readOnlyRepository = readOnlyRepository;
         _mapper = mapper;
     }
 
     /// <inheritdoc/>
     public async Task AddAsync(Domain.Categories.Entity.Category entity, CancellationToken cancellationToken)
     {
-        await _writeOnlyrepository.AddAsync(entity, cancellationToken);
+        await _writeOnlyRepository.AddAsync(entity, cancellationToken);
     }
 
     /// <inheritdoc/>
     public async Task<IEnumerable<CategoryDto>> GetAllAsync(CancellationToken cancellationToken)
     {
-        return await _readOnlyrepository
+        return await _readOnlyRepository
             .GetAll()
             .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
             .ToArrayAsync(cancellationToken);
@@ -50,7 +50,7 @@ public class CategoryRepository : ICategoryRepository
     /// <inheritdoc/>
     public async Task<CategoryDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _readOnlyrepository
+        return await _readOnlyRepository
             .GetAll()
             .Where(s => s.Id == id)
             .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
@@ -60,7 +60,7 @@ public class CategoryRepository : ICategoryRepository
     /// <inheritdoc/>
     public async Task<IEnumerable<CategoryDto>> GetFiltered(Specification<Domain.Categories.Entity.Category> specification, CancellationToken cancellationToken)
     {
-        return await _readOnlyrepository
+        return await _readOnlyRepository
             .GetAll()
             .Where(specification.ToExpression())
             .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
@@ -70,12 +70,12 @@ public class CategoryRepository : ICategoryRepository
     /// <inheritdoc/>
     public async Task UpdateAsync(Domain.Categories.Entity.Category entity, CancellationToken cancellationToken)
     {
-        await _writeOnlyrepository.UpdateAsync(entity, cancellationToken);
+        await _writeOnlyRepository.UpdateAsync(entity, cancellationToken);
     }
 
     /// <inheritdoc/>
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        await _writeOnlyrepository.DeleteAsync(id, cancellationToken);
+        await _writeOnlyRepository.DeleteAsync(id, cancellationToken);
     }
 }

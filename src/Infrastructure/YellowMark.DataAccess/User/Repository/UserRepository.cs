@@ -13,8 +13,8 @@ namespace YellowMark.DataAccess.User.Repository;
 /// <inheritdoc cref="IUserRepository"/>
 public class UserRepository : IUserRepository
 {
-    private readonly IWriteOnlyRepository<Domain.Users.Entity.User, WriteDbContext> _writeOnlyrepository;
-    private readonly IReadOnlyRepository<Domain.Users.Entity.User, ReadDbContext> _readOnlyrepository;
+    private readonly IWriteOnlyRepository<Domain.Users.Entity.User, WriteDbContext> _writeOnlyRepository;
+    private readonly IReadOnlyRepository<Domain.Users.Entity.User, ReadDbContext> _readOnlyRepository;
     private readonly IMapper _mapper;
 
     /// <summary>
@@ -28,15 +28,15 @@ public class UserRepository : IUserRepository
         IReadOnlyRepository<Domain.Users.Entity.User, ReadDbContext> readOnlyRepository,
         IMapper mapper)
     {
-        _writeOnlyrepository = writeOnlyRepository;
-        _readOnlyrepository = readOnlyRepository;
+        _writeOnlyRepository = writeOnlyRepository;
+        _readOnlyRepository = readOnlyRepository;
         _mapper = mapper;
     }
 
     /// <inheritdoc/>
     public async Task AddAsync(Domain.Users.Entity.User entity, CancellationToken cancellationToken)
     {
-        await _writeOnlyrepository.AddAsync(entity, cancellationToken);
+        await _writeOnlyRepository.AddAsync(entity, cancellationToken);
     }
 
     /// <inheritdoc/>
@@ -44,7 +44,7 @@ public class UserRepository : IUserRepository
     {
         var result = new ResultWithPagination<UserDto>();
 
-        var query = _readOnlyrepository.GetAll();
+        var query = _readOnlyRepository.GetAll();
 
         var elementsCount = await query.CountAsync(cancellationToken);
         result.AvailablePages = (int)Math.Ceiling((double)(elementsCount / request.BatchSize));
@@ -65,7 +65,8 @@ public class UserRepository : IUserRepository
     /// <inheritdoc/>
     public async Task<IEnumerable<UserDto>> GetFiltered(Specification<Domain.Users.Entity.User> specification, CancellationToken cancellationToken)
     {
-        return await _readOnlyrepository
+        // TODO: Add pagination
+        return await _readOnlyRepository
             .GetAll()
             .Where(specification.ToExpression())
             .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
@@ -75,7 +76,7 @@ public class UserRepository : IUserRepository
     /// <inheritdoc/>
     public async Task<UserDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _readOnlyrepository
+        return await _readOnlyRepository
             .GetAll()
             .Where(s => s.Id == id)
             .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
@@ -85,12 +86,12 @@ public class UserRepository : IUserRepository
     /// <inheritdoc/>
     public async Task UpdateAsync(Domain.Users.Entity.User entity, CancellationToken cancellationToken)
     {
-        await _writeOnlyrepository.UpdateAsync(entity, cancellationToken);
+        await _writeOnlyRepository.UpdateAsync(entity, cancellationToken);
     }
 
     /// <inheritdoc/>
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        await _writeOnlyrepository.DeleteAsync(id, cancellationToken);
+        await _writeOnlyRepository.DeleteAsync(id, cancellationToken);
     }
 }

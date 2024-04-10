@@ -57,7 +57,7 @@ public class UserService : IUserService
     }
 
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public async Task<UserDto> UpdateUserAsync(Guid id, CreateUserRequest request, CancellationToken cancellationToken)
     {
         // TODO: Need to fix. Get previous record and update it (Created at id wrong).
@@ -69,7 +69,7 @@ public class UserService : IUserService
         return _mapper.Map<User, UserDto>(entity);
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public async Task DeleteUserByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         await _userRepository.DeleteAsync(id, cancellationToken);
