@@ -18,6 +18,8 @@ using YellowMark.AppServices.Currencies.Repositories;
 using YellowMark.DataAccess.Currency.Repository;
 using YellowMark.AppServices.Ads.Repositories;
 using YellowMark.DataAccess.Ad.Repository;
+using YellowMark.AppServices.Currencies.Services;
+using YellowMark.AppServices.Ads.Services;
 
 namespace YellowMark.ComponentRegistrar;
 
@@ -81,6 +83,8 @@ public static class YellowMarkRegistrar
         services.AddTransient<IUserService, UserService>();
         services.AddTransient<ISubcategoryService, SubcategoryService>();
         services.AddTransient<ICategoryService, CategoryService>();
+        services.AddTransient<ICurrencyService, CurrencyService>();
+        services.AddTransient<IAdService, AdService>();
         // services.AddScoped<IUserService, UserService>();
 
         return services;

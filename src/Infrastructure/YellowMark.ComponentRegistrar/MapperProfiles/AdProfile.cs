@@ -15,7 +15,8 @@ public class AdProfile : Profile
     public AdProfile()
     {
         CreateMap<Ad, AdDto>()
-            .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.User));
+            .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.User))
+            .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Subcategory.Category));
 
         CreateMap<CreateAdRequest, Ad>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))

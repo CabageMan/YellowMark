@@ -1,7 +1,7 @@
 ﻿namespace YellowMark.Contracts.Users;
 
 /// <summary>
-/// Reqques data model for getting users by name.
+/// Request data model for getting users by name.
 /// </summary>
 public class UserByNameRequest
 {

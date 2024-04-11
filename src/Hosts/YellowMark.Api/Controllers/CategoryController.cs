@@ -21,9 +21,9 @@ public class CategoryController : ControllerBase
     /// <summary>
     /// Init instance of <see cref="CategoryController"/>
     /// </summary>
-    /// <param name="categoryService"></param>
-    /// <param name="categoryValidator"></param>
-    /// <param name="guidValidator"></param>
+    /// <param name="categoryService">Category service <see cref="ICategoryService"/></param>
+    /// <param name="categoryValidator">Categories validator <see cref="IValidator"/></param>
+    /// <param name="guidValidator">Guid validator <see cref="IValidator"/></param>
     public CategoryController(
         ICategoryService categoryService,
         IValidator<CreateCategoryRequest> categoryValidator,

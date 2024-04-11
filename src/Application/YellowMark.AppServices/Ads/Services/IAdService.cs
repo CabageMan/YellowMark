@@ -1,4 +1,5 @@
 ﻿using YellowMark.Contracts.Ads;
+using YellowMark.Contracts.Pagination;
 
 namespace YellowMark.AppServices.Ads.Services;
 
@@ -16,11 +17,12 @@ public interface IAdService
     Task<Guid> AddAdAsync(CreateAdRequest request, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Returns all ads.
+    /// Returns all ads with pagination.
     /// </summary>
+    /// <param name="request">Pagination params <see cref="GetAllRequestWithPagination"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
-    /// <returns>Ads collection <see cref="AdDto"/>.</returns>
-    Task<IEnumerable<AdDto>> GetAdsAsync(CancellationToken cancellationToken);
+    /// <returns>Result with pagination params <see cref="ResultWithPagination"/>.</returns>
+    Task<ResultWithPagination<AdDto>> GetAdsAsync(GetAllRequestWithPagination request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns an instance of the <see cref="AdDto"/> by id.
@@ -28,6 +30,14 @@ public interface IAdService
     /// <param name="id">Ad id</param>
     /// <returns><see cref="AdDto"/></returns>
     Task<AdDto> GetAdByIdAsync(Guid id, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Returns all ads matched the title.
+    /// </summary>
+    /// <param name="request">Ad request model <see cref="AdByTitleRequest"/></param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Ads collection of <see cref="AdDto"/>.</returns>
+    Task<IEnumerable<AdDto>> GetAdsByTitleAsync(AdByTitleRequest request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Update current Ad.

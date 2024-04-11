@@ -15,7 +15,7 @@ public class UserService : IUserService
     private readonly IMapper _mapper;
 
     /// <summary>
-    /// Init <see cref="IUserRepository"/> instance.
+    /// Init <see cref="UserService"/> instance.
     /// </summary>
     /// <param name="userRepository">Users repository</param>
     /// <param name="mapper">Users mapper.</param>

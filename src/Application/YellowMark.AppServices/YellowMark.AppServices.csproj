@@ -6,7 +6,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Ads/Specifications/" />
     <Folder Include="Categories/Specifications/" />
     <Folder Include="Comments/Services/" />
     <Folder Include="Currencies/Specifications/" />

@@ -21,9 +21,9 @@ public class SubcategoryController : ControllerBase
     /// <summary>
     /// Init instance of <see cref="SubcategoryController"/>
     /// </summary>
-    /// <param name="subcategoryService"></param>
-    /// <param name="subcategoryValidator"></param>
-    /// <param name="guidValidator"></param>
+    /// <param name="subcategoryService">Subcatergory service <see cref="ISubcategoryService"/></param>
+    /// <param name="subcategoryValidator">Subcategory validator <see cref="IValidator"/></param>
+    /// <param name="guidValidator">Guid validato <see cref="IValidator"/></param>
     public SubcategoryController(
         ISubcategoryService subcategoryService,
         IValidator<CreateSubcategoryRequest> subcategoryValidator,

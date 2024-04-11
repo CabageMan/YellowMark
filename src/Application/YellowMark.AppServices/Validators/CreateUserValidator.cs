@@ -55,7 +55,7 @@ public class CreateUserValidator : AbstractValidator<CreateUserRequest>
             .WithMessage("You must be at least 18 years old.");
     }
 
-    protected bool BeOver18(DateOnly date)
+    private static bool BeOver18(DateOnly date)
     {
         return date <= DateOnly.FromDateTime(DateTime.Now.AddYears(-18));
     }

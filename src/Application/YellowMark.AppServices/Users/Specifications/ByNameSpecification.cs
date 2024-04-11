@@ -7,12 +7,12 @@ namespace YellowMark.AppServices.Users.Specifications;
 /// <summary>
 /// Get User by name implementation of the Specification.
 /// </summary>
-public class ByNameSpecification : Specification<Domain.Users.Entity.User>
+public class ByNameSpecification : Specification<User>
 {
     private readonly string _name;
 
     /// <summary>
-    /// 
+    /// Constructor of specification.
     /// </summary>
     /// <param name="name">Target user param.</param>
     public ByNameSpecification(string name)
