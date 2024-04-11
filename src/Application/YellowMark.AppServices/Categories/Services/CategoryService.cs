@@ -15,7 +15,7 @@ public class CategoryService : ICategoryService
     /// Init <see cref="CategoryService"/> instance.
     /// </summary>
     /// <param name="categoryRepository">Category Repository (<see cref="ICategoryRepository"/>)</param>
-    /// <param name="mapper">Subcategory mapper</param>
+    /// <param name="mapper">Category mapper</param>
     public CategoryService(ICategoryRepository categoryRepository, IMapper mapper)
     {
         _categoryRepository = categoryRepository;

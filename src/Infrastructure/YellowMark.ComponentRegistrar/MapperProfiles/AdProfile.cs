@@ -14,9 +14,18 @@ public class AdProfile : Profile
     /// </summary>
     public AdProfile()
     {
-        // CreateMap<Ad, AdDto>()
-        //     .ForMember(s => s.Owner, map => map.MapFrom(s =>
-        //         s.User
-        //     ));
+        CreateMap<Ad, AdDto>()
+            .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.User));
+
+        CreateMap<CreateAdRequest, Ad>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.OwnerId))
+            .ForMember(dest => dest.User, opt => opt.Ignore())
+            .ForMember(dest => dest.Subcategory, opt => opt.Ignore())
+            .ForMember(dest => dest.Currency, opt => opt.Ignore())
+            .ForMember(dest => dest.Comments, opt => opt.Ignore());
     }
 }

@@ -17,9 +17,9 @@ public class CategoryProfile : Profile
         CreateMap<Category, CategoryDto>();
 
         CreateMap<CreateCategoryRequest, Category>()
-            .ForMember(s => s.Id, map => map.MapFrom(s => Guid.NewGuid()))
-            .ForMember(s => s.CreatedAt, map => map.MapFrom(s => DateTime.UtcNow))
-            .ForMember(s => s.UpdatedAt, map => map.MapFrom(s => DateTime.UtcNow))
-            .ForMember(s => s.Subcategories, map => map.Ignore());
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.Subcategories, opt => opt.Ignore());
     }
 }

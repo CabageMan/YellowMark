@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using YellowMark.AppServices.Currencies.Repositories;
 using YellowMark.AppServices.Specifications;
 using YellowMark.Contracts.Currnecies;

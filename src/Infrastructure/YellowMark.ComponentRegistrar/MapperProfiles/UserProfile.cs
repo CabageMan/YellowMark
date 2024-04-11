@@ -15,15 +15,15 @@ public class UserProfile : Profile
     public UserProfile()
     {
         CreateMap<User, UserDto>()
-            .ForMember(s => s.FullName, map => map.MapFrom(s => 
-                $"{s.LastName} {s.MiddleName} {s.FirstName}"
+            .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => 
+                $"{src.LastName} {src.MiddleName} {src.FirstName}"
             ));
 
         CreateMap<CreateUserRequest, User>()
-            .ForMember(s => s.Id, map => map.MapFrom(s => Guid.NewGuid()))
-            .ForMember(s => s.CreatedAt, map => map.MapFrom(s => DateTime.UtcNow))
-            .ForMember(s => s.UpdatedAt, map => map.MapFrom(s => DateTime.UtcNow))
-            .ForMember(s => s.Ads, map => map.Ignore())
-            .ForMember(s => s.Comments, map => map.Ignore());
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.Ads, opt => opt.Ignore())
+            .ForMember(dest => dest.Comments, opt => opt.Ignore());
     }
 }
