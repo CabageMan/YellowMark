@@ -1,6 +1,3 @@
-using YellowMark.Contracts.Ads;
-using YellowMark.Contracts.Users;
-
 namespace YellowMark.Contracts.Comments;
 
 /// <summary>
@@ -26,30 +23,30 @@ public class CommentDto
     /// <summary>
     /// Comment update date.
     /// </summary>
-    public DateTime UpdatedAt { get; set; }
+    public bool IsEdited { get; set; }
 
     /// <summary>
-    /// Comment author first name (<see cref="UserDto"/>).
-    /// </summary>
-    public String AuthorFirstName { get; set; }
-
-    /// <summary>
-    /// Comment author last name (<see cref="UserDto"/>).
-    /// </summary>
-    public String AuthorLastName { get; set; }
-    
-    /// <summary>
-    /// Comment author (<see cref="UserDto"/>) Id.
+    /// Comment author Id.
     /// </summary>
     public Guid AuthorId { get; set; }
 
     /// <summary>
-    /// Commented ad Id (<see cref="AdDto"/>).
+    /// Comment author first name.
+    /// </summary>
+    public String AuthorName { get; set; }
+
+    /// <summary>
+    /// Comment author last name.
+    /// </summary>
+    public String AuthorLastName { get; set; }
+
+    /// <summary>
+    /// Commented ad Id.
     /// </summary>
     public Guid AdId { get; set; }
 
     /// <summary>
-    /// Ad title (<see cref="AdDto"/>).
+    /// Ad title.
     /// </summary>
     public string AdTitle { get; set; }
 }

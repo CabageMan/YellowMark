@@ -1,7 +1,7 @@
 ﻿namespace YellowMark.Contracts.Ads;
 
 /// <summary>
-/// Request data model for ad creation.
+/// Request data model for Ad creation.
 /// </summary>
 public class CreateAdRequest
 {
