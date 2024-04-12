@@ -7,9 +7,8 @@ namespace YellowMark.AppServices.Users.Specifications;
 /// <summary>
 /// Get User older 18 years implementation of the Specification.
 /// </summary>
-public class BeOver18Specification : Specification<User>
+public class UserMustBeOver18Specification : Specification<User>
 {
-
     /// <summary>
     /// Get user older 18 years implementation of ToExpression method.
     /// </summary>

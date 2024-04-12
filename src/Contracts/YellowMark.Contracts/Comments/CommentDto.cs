@@ -11,14 +11,14 @@ public class CommentDto
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Comment text.
-    /// </summary>
-    public string Text { get; set; }
-
-    /// <summary>
     /// Comment creation date.
     /// </summary>
     public DateTime CreatedAt { get; set; }
+
+    /// <summary>
+    /// Comment text.
+    /// </summary>
+    public string Text { get; set; }
 
     /// <summary>
     /// Comment update date.

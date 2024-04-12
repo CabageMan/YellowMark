@@ -2,7 +2,7 @@
 using YellowMark.Contracts.Users;
 using YellowMark.Domain.Users.Entity;
 
-namespace YellowMark.ComponentRegistrar;
+namespace YellowMark.ComponentRegistrar.MapperProfiles;
 
 /// <summary>
 /// User mapping profile.

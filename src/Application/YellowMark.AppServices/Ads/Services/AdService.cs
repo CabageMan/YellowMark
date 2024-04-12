@@ -48,7 +48,7 @@ public class AdService : IAdService
     /// <inheritdoc/>
     public Task<IEnumerable<AdDto>> GetAdsByTitleAsync(AdByTitleRequest request, CancellationToken cancellationToken)
     {
-        Specification<Ad> specification = new ByTitleSpecification(request.Title);
+        Specification<Ad> specification = new AdByTitleSpecification(request.Title);
         return _adRepository.GetFiltered(specification, cancellationToken);
     }
 

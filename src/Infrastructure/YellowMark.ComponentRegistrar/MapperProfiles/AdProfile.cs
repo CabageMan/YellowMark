@@ -2,7 +2,7 @@
 using YellowMark.Contracts.Ads;
 using YellowMark.Domain.Ads.Entity;
 
-namespace YellowMark.ComponentRegistrar;
+namespace YellowMark.ComponentRegistrar.MapperProfiles;
 
 /// <summary>
 /// Ad mapping profile.
@@ -21,7 +21,6 @@ public class AdProfile : Profile
         CreateMap<CreateAdRequest, Ad>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
-            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.OwnerId))
             .ForMember(dest => dest.User, opt => opt.Ignore())

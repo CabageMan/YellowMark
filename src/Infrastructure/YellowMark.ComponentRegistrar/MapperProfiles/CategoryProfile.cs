@@ -2,7 +2,7 @@
 using YellowMark.Contracts.Categories;
 using YellowMark.Domain.Categories.Entity;
 
-namespace YellowMark.ComponentRegistrar;
+namespace YellowMark.ComponentRegistrar.MapperProfiles;
 
 /// <summary>
 /// Category mapping profile.

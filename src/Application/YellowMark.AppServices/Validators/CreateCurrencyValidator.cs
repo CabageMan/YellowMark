@@ -21,7 +21,6 @@ public class CreateCurrencyValidator : AbstractValidator<CreateCurrencyRequest>
             .Length(0, maxAlphabeticCodeLength)
             .WithMessage($"Alphabetic code should not be grated than {maxAlphabeticCodeLength} characters.");
 
-        int maxNumericValue = 1000;
         RuleFor(s => s.NumericCode)
             .NotNull()
             .NotEmpty()

@@ -48,10 +48,10 @@ public class UserService : IUserService
     /// <inheritdoc/>
     public Task<IEnumerable<UserDto>> GetUsersByNameAsync(UserByNameRequest request, CancellationToken cancellationToken)
     {
-        Specification<User> specification = new ByNameSpecification(request.Name);
+        Specification<User> specification = new UserByNameSpecification(request.Name);
         if (request.BeOver18)
         {
-            specification = specification.And(new BeOver18Specification());
+            specification = specification.And(new UserMustBeOver18Specification());
         }
         return _userRepository.GetFiltered(specification, cancellationToken);
     }

@@ -12,7 +12,7 @@ public interface ICommentService
     /// <summary>
     /// Create new Comment instance from the request params. 
     /// </summary>
-    /// <param name="request">Ad request model <see cref="CreateCommentRequest"/></param>
+    /// <param name="request">Comment request model <see cref="CreateCommentRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Created Comment id <see cref="Guid"/></returns>
     Task<Guid> AddCommentAsync(CreateCommentRequest request, CancellationToken cancellationToken);

@@ -2,7 +2,7 @@
 using YellowMark.Contracts.Currnecies;
 using YellowMark.Domain.Currencies.Entity;
 
-namespace YellowMark.ComponentRegistrar;
+namespace YellowMark.ComponentRegistrar.MapperProfiles;
 
 /// <summary>
 /// Currency mapping profile.

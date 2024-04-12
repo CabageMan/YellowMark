@@ -7,7 +7,7 @@ namespace YellowMark.AppServices.Ads.Specifications;
 /// <summary>
 /// Get Ad by title implementation of the Specification.
 /// </summary>
-public class ByTitleSpecification : Specification<Ad>
+public class AdByTitleSpecification : Specification<Ad>
 {
     private readonly string _title;
 
@@ -15,13 +15,13 @@ public class ByTitleSpecification : Specification<Ad>
     /// Constructor of specification.
     /// </summary>
     /// <param name="title">Target ad param.</param>
-    public ByTitleSpecification(string title)
+    public AdByTitleSpecification(string title)
     {
         _title = title;
     }
 
     /// <summary>
-    /// Get user by name implementation of ToExpression method.
+    /// Get Ad by title implementation of ToExpression method.
     /// </summary>
     /// <returns>Expression</returns>
     public override Expression<Func<Ad, bool>> ToExpression()

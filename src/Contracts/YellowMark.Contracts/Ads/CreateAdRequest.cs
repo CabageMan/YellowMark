@@ -26,7 +26,7 @@ public class CreateAdRequest
     public Guid? CurrencyId { get; set; }
 
     /// <summary>
-    /// Ad owner (<see cref="User"/>) id.
+    /// Ad owner id.
     /// </summary>
     public Guid OwnerId { get; set; }
 

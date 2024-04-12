@@ -2,7 +2,7 @@
 using YellowMark.Contracts.Subcategories;
 using YellowMark.Domain.Subcategories.Entity;
 
-namespace YellowMark.ComponentRegistrar;
+namespace YellowMark.ComponentRegistrar.MapperProfiles;
 
 /// <summary>
 /// Subcategory mapping profile.
