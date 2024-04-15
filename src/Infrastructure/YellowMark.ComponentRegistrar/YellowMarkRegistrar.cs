@@ -24,6 +24,9 @@ using YellowMark.ComponentRegistrar.MapperProfiles;
 using YellowMark.AppServices.Comments.Repositories;
 using YellowMark.DataAccess.Comment.Repository;
 using YellowMark.AppServices.Comments.Services;
+using YellowMark.AppServices.Files.Repositories;
+using YellowMark.DataAccess.File.Repository;
+using YellowMark.AppServices.Files.Services;
 
 namespace YellowMark.ComponentRegistrar;
 
@@ -65,13 +68,13 @@ public static class YellowMarkRegistrar
     {
         services.AddScoped(typeof(IReadOnlyRepository<,>), typeof(ReadOnlyRepository<,>));
         services.AddScoped(typeof(IWriteOnlyRepository<,>), typeof(WriteOnlyRepository<,>));
-        services.AddTransient<IUserRepository, UserRepository>();
-        services.AddTransient<ISubcategoryRepository, SubcategoryRepository>();
-        services.AddTransient<ICategoryRepository, CategoryRepository>();
-        services.AddTransient<ICurrencyRepository, CurrencyRepository>();
-        services.AddTransient<IAdRepository, AdRepository>();
-        services.AddTransient<ICommentRepository, CommentRepository>();
-        // services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<ICurrencyRepository, CurrencyRepository>();
+        services.AddScoped<IAdRepository, AdRepository>();
+        services.AddScoped<ICommentRepository, CommentRepository>();
+        services.AddScoped<IFileRepository, FileRepository>();
 
         return services;
     }
@@ -91,7 +94,7 @@ public static class YellowMarkRegistrar
         services.AddTransient<ICurrencyService, CurrencyService>();
         services.AddTransient<IAdService, AdService>();
         services.AddTransient<ICommentService, CommentService>();
-        // services.AddScoped<IUserService, UserService>();
+        services.AddTransient<IFileService, FileService>();
 
         return services;
     }
@@ -107,6 +110,7 @@ public static class YellowMarkRegistrar
             config.AddProfile<CurrencyProfile>();
             config.AddProfile<AdProfile>();
             config.AddProfile<CommentProfile>();
+            config.AddProfile<FileProfile>();
         });
 
         configuration.AssertConfigurationIsValid(); // Important to check automappers on App start.

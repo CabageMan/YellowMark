@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using YellowMark.DbMigrator.DatabaseContext;
@@ -11,9 +12,11 @@ using YellowMark.DbMigrator.DatabaseContext;
 namespace YellowMark.DbMigrator.Migrations.MigrationReadDb
 {
     [DbContext(typeof(MigrationReadDbContext))]
-    partial class MigrationReadDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240415093826_Add-Files")]
+    partial class AddFiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

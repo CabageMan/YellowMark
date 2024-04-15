@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace YellowMark.DataAccess.Ad.Configuration;
 
 /// <summary>
-/// Ads table configuration.
+/// Ads entity configuration.
 /// </summary>
 public class AdConfiguration : IEntityTypeConfiguration<Domain.Ads.Entity.Ad>
 {
