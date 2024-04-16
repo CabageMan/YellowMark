@@ -20,4 +20,9 @@ public class FileDto
     /// File content type.
     /// </summary>
     public string ContentType { get; set; }
+
+    /// <summary>
+    /// Ad Id.
+    /// </summary>
+    public Guid AdId { get; set; }
 }

@@ -34,18 +34,27 @@ public class FileController : ControllerBase
     /// Upload file.
     /// </summary>
     /// <param name="file">File from form <see cref="IFormFile"/></param>
+    /// <param name="adId">Ad id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Uploaded file id <see cref="Guid"/></returns>
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.Created)]
-    public async Task<IActionResult> UploadFile(IFormFile file, CancellationToken cancellationToken)
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> UploadFile(IFormFile file, Guid adId, CancellationToken cancellationToken)
     {
+        var validationResult = await _guidValidator.ValidateAsync(adId, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.ToString());
+        }
+
         var bytes = await GetBytesAsync(file, cancellationToken);
         var fileDto = new FileDto
         {
             Name = file.FileName,
             Content = bytes,
-            ContentType = file.ContentType
+            ContentType = file.ContentType,
+            AdId = adId
         };
         var result = await _fileService.UploadFileAsync(fileDto, cancellationToken);
         return StatusCode((int)HttpStatusCode.Created, result);
