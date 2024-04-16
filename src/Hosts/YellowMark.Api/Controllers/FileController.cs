@@ -38,7 +38,6 @@ public class FileController : ControllerBase
     /// <returns>Uploaded file id <see cref="Guid"/></returns>
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.Created)]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> UploadFile(IFormFile file, CancellationToken cancellationToken)
     {
         var bytes = await GetBytesAsync(file, cancellationToken);
@@ -48,7 +47,7 @@ public class FileController : ControllerBase
             Content = bytes,
             ContentType = file.ContentType
         };
-        var result = _fileService.UploadFileAsync(fileDto, cancellationToken);
+        var result = await _fileService.UploadFileAsync(fileDto, cancellationToken);
         return StatusCode((int)HttpStatusCode.Created, result);
     }
 
