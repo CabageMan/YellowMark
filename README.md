@@ -27,7 +27,9 @@ For development mode it's important to pass 'Development' as --environment argum
 
 ## Database Migrations
 
-Application uses **two** databases: for writing and reading. So it's needed create two migrations respectively. First for write db context and second for read.
+Application uses database with replication. Primary database is used for write and read operations (mostly write), and replica - for read only. 
+To run databases in Docker see:
+[repository](https://github.com/eremeykin/pg-primary-replica?source=post_page-----98c48f233bbf--------------------------------)
 
 ### Linux
 
@@ -36,7 +38,7 @@ Application uses **two** databases: for writing and reading. So it's needed crea
 ```
 dotnet ef migrations add <migration_name> --project YellowMark.DbMigrator.csproj --context <DbContext>
 ```
-As DbContext for --context argument you should pass MigrationWriteDbContext and MigrationReadDbContext.
+MigrationDbContextFactory is implemented to apply different database contexts, but for now is available only one, so as DbContext for --context argument you should pass MigrationDbContext.
 
 **To add changes to database just run the YellowMark.DbMigrator project:**
 

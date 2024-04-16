@@ -11,8 +11,7 @@ namespace YellowMark.DbMigrator;
 /// </summary>
 public static class ServiceCollectionExtension
 {
-    private const string PostgressWriteConnectionStringName = "WriteDB";
-    private const string PostgressReadConnectionStringName = "ReadDB";
+    private const string PostgressConnectionStringName = "WriteDB";
 
     /// <summary>
     /// Configure database context for migration.
@@ -22,43 +21,24 @@ public static class ServiceCollectionExtension
     /// <returns></returns>
     public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var writeConnectionString = configuration
-            .GetConnectionString(PostgressWriteConnectionStringName);
-        var readConnectionString = configuration
-            .GetConnectionString(PostgressReadConnectionStringName);
+        var connectionString = configuration
+            .GetConnectionString(PostgressConnectionStringName);
 
-        if (string.IsNullOrEmpty(writeConnectionString))
+        if (string.IsNullOrEmpty(connectionString))
         {
             throw new InvalidOperationException(
-                $"Connection string '{PostgressWriteConnectionStringName}' not found."
-            );
-        }
-        if (string.IsNullOrEmpty(readConnectionString))
-        {
-            throw new InvalidOperationException(
-                $"Connection string '{PostgressReadConnectionStringName}' not found."
+                $"Connection string '{PostgressConnectionStringName}' not found."
             );
         }
 
-        var dbUserName = configuration.GetSection("DbConnection")["Username"];
-        var dbPassword = configuration.GetSection("DbConnection")["Password"]; 
-
-        var writeConnectionStringBuilder = new NpgsqlConnectionStringBuilder(writeConnectionString)
+        var connectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString)
         {
-            Username = dbUserName,
-            Password = dbPassword
-        };
-        var readConnectionStringBuilder = new NpgsqlConnectionStringBuilder(readConnectionString)
-        {
-            Username = dbUserName,
-            Password = dbPassword
+            Username = configuration.GetSection("DbConnection")["Username"],
+            Password = configuration.GetSection("DbConnection")["Password"]
         };
 
-        services.AddDbContext<MigrationWriteDbContext>(options =>
-            options.UseNpgsql(writeConnectionStringBuilder.ConnectionString)
-        );
-        services.AddDbContext<MigrationReadDbContext>(options =>
-            options.UseNpgsql(readConnectionStringBuilder.ConnectionString)
+        services.AddDbContext<MigrationDbContext>(options =>
+            options.UseNpgsql(connectionStringBuilder.ConnectionString)
         );
 
         return services;

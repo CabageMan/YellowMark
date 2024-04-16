@@ -8,7 +8,6 @@ namespace YellowMark.DataAccess.DatabaseContext;
 /// </summary>
 public class WriteDbContext : DbContext
 {
-
     /// <summary>
     /// Initialize an instance of <see cref="WriteDbContext"/>
     /// </summary>

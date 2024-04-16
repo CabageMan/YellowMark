@@ -3,18 +3,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
-using YellowMark.DbMigrator.DatabaseContext;
 
 namespace YellowMark.DbMigrator.Factory;
 
 /// <summary>
-/// Migration database context factory.
+/// Generic migration database context factory.
 /// </summary>
 public class MigrationDbContextFactory<TContext> : IDesignTimeDbContextFactory<TContext> where TContext : DbContext
 {
-
-    private const string WriteConnectionStringName = "WriteDB";
-    private const string ReadConnectionStringName = "ReadDB";
+    private const string ConnectionStringName = "WriteDB";
 
     /// <inheritdoc />
     public TContext CreateDbContext(string[] args)
@@ -25,17 +22,12 @@ public class MigrationDbContextFactory<TContext> : IDesignTimeDbContextFactory<T
 
         var configuration = builder.Build();
 
-        var connectionStringName = typeof(TContext) == typeof(MigrationWriteDbContext)
-            ? WriteConnectionStringName
-            : typeof(TContext) == typeof(MigrationReadDbContext)
-            ? ReadConnectionStringName : "";
-
-        var connectionString = configuration.GetConnectionString(connectionStringName);
+        var connectionString = configuration.GetConnectionString(ConnectionStringName);
 
         if (string.IsNullOrEmpty(connectionString))
         {
             throw new InvalidOperationException(
-                $"Connection string '{connectionStringName}' not found."
+                $"Connection string '{ConnectionStringName}' not found."
             );
         }
 

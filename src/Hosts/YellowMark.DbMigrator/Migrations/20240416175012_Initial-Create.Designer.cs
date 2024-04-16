@@ -9,11 +9,11 @@ using YellowMark.DbMigrator.DatabaseContext;
 
 #nullable disable
 
-namespace YellowMark.DbMigrator.Migrations.MigrationReadDb
+namespace YellowMark.DbMigrator.Migrations
 {
-    [DbContext(typeof(MigrationReadDbContext))]
-    [Migration("20240409101939_Add-More-Configurations")]
-    partial class AddMoreConfigurations
+    [DbContext(typeof(MigrationDbContext))]
+    [Migration("20240416175012_Initial-Create")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -149,6 +149,44 @@ namespace YellowMark.DbMigrator.Migrations.MigrationReadDb
                     b.ToTable("Currencies", (string)null);
                 });
 
+            modelBuilder.Entity("YellowMark.Domain.Files.Entity.File", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("AdId")
+                        .HasColumnType("uuid");
+
+                    b.Property<byte[]>("Content")
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Length")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdId");
+
+                    b.ToTable("Files", (string)null);
+                });
+
             modelBuilder.Entity("YellowMark.Domain.Subcategories.Entity.Subcategory", b =>
                 {
                     b.Property<Guid>("Id")
@@ -267,6 +305,16 @@ namespace YellowMark.DbMigrator.Migrations.MigrationReadDb
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("YellowMark.Domain.Files.Entity.File", b =>
+                {
+                    b.HasOne("YellowMark.Domain.Ads.Entity.Ad", "Ad")
+                        .WithMany("Files")
+                        .HasForeignKey("AdId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Ad");
+                });
+
             modelBuilder.Entity("YellowMark.Domain.Subcategories.Entity.Subcategory", b =>
                 {
                     b.HasOne("YellowMark.Domain.Categories.Entity.Category", "Category")
@@ -281,6 +329,8 @@ namespace YellowMark.DbMigrator.Migrations.MigrationReadDb
             modelBuilder.Entity("YellowMark.Domain.Ads.Entity.Ad", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Files");
                 });
 
             modelBuilder.Entity("YellowMark.Domain.Categories.Entity.Category", b =>
