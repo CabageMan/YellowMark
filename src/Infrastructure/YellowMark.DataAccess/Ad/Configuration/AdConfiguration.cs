@@ -42,10 +42,20 @@ public class AdConfiguration : IEntityTypeConfiguration<Domain.Ads.Entity.Ad>
             .IsRequired(false);
 
         builder
+            .HasMany(ad => ad.Files)
+            .WithOne(file => file.Ad)
+            .HasForeignKey(file => file.AdId)
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
             .HasMany(ad => ad.Comments)
             .WithOne(comment => comment.Ad)
             .HasForeignKey(comment => comment.AdId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
+        // Fix migration issue with users (stored in sublime)
+        // Fix Issue with uploading files.
+        // Add relationships between file and ad
     }
 }

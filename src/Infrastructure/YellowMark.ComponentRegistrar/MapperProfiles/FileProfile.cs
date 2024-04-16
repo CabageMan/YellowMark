@@ -22,6 +22,8 @@ public class FileProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
-            .ForMember(dest => dest.Length, opt => opt.MapFrom(src => src.Content.Length));
+            .ForMember(dest => dest.Length, opt => opt.MapFrom(src => src.Content.Length))
+            .ForMember(dest => dest.AdId, opt => opt.Ignore())
+            .ForMember(dest => dest.Ad, opt => opt.Ignore()); // Ignore for now.
     }
 }

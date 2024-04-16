@@ -2,7 +2,6 @@ using YellowMark.Domain.Base;
 using YellowMark.Domain.Comments.Entity;
 using YellowMark.Domain.Currencies.Entity;
 using YellowMark.Domain.Subcategories.Entity;
-using YellowMark.Domain.Users.Entity;
 
 namespace YellowMark.Domain.Ads.Entity;
 
@@ -21,12 +20,10 @@ public class Ad : BaseEntity
     /// </summary>
     public string Description { get; set; }
 
-    // Investigate a better way to store images.
-    // - Store in data base.
-    // - Store in S3 and get Image URL. For example https://min.io/
-    // - Store with MongoDB GridFS https://www.mongodb.com/docs/manual/core/gridfs/.
-    // See User.cs Avatar
-    // public Image Image { get; set; }
+    /// <summary>
+    /// Collection of comments <see cref="Domain.Files.Entity.File"/>.
+    /// </summary>
+    public virtual List<Domain.Files.Entity.File> Files { get; set; }
 
     /// <summary>
     /// Goods price specified in the ad.
@@ -41,7 +38,7 @@ public class Ad : BaseEntity
     /// <summary>
     /// Ad owner instance.
     /// </summary>
-    public virtual User User { get; set; }
+    public virtual Domain.Users.Entity.User User { get; set; }
 
     /// <summary>
     /// Ad Subcategory id <see cref="Guid"/>.

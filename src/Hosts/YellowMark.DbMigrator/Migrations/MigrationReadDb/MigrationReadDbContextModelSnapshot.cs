@@ -152,6 +152,9 @@ namespace YellowMark.DbMigrator.Migrations.MigrationReadDb
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("AdId")
+                        .HasColumnType("uuid");
+
                     b.Property<byte[]>("Content")
                         .HasColumnType("bytea");
 
@@ -175,6 +178,8 @@ namespace YellowMark.DbMigrator.Migrations.MigrationReadDb
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AdId");
 
                     b.ToTable("Files", (string)null);
                 });
@@ -297,6 +302,16 @@ namespace YellowMark.DbMigrator.Migrations.MigrationReadDb
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("YellowMark.Domain.Files.Entity.File", b =>
+                {
+                    b.HasOne("YellowMark.Domain.Ads.Entity.Ad", "Ad")
+                        .WithMany("Files")
+                        .HasForeignKey("AdId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Ad");
+                });
+
             modelBuilder.Entity("YellowMark.Domain.Subcategories.Entity.Subcategory", b =>
                 {
                     b.HasOne("YellowMark.Domain.Categories.Entity.Category", "Category")
@@ -311,6 +326,8 @@ namespace YellowMark.DbMigrator.Migrations.MigrationReadDb
             modelBuilder.Entity("YellowMark.Domain.Ads.Entity.Ad", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Files");
                 });
 
             modelBuilder.Entity("YellowMark.Domain.Categories.Entity.Category", b =>

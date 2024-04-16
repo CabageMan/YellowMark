@@ -1,4 +1,5 @@
-﻿using YellowMark.Domain.Base;
+﻿using YellowMark.Domain.Ads.Entity;
+using YellowMark.Domain.Base;
 
 namespace YellowMark.Domain.Files.Entity;
 
@@ -26,4 +27,14 @@ public class File : BaseEntity
     /// File size.
     /// </summary>
     public int Length { get; set; }
+
+    /// <summary>
+    /// Ad Id.
+    /// </summary>
+    public Guid AdId { get; set; }
+
+    /// <summary>
+    /// <see cref="Ad"/>
+    /// </summary>
+    public virtual Ad Ad { get; set; }
 }
