@@ -6,6 +6,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Accounts/Repositories/" />
     <Folder Include="Categories/Specifications/" />
     <Folder Include="Currencies/Specifications/" />
     <Folder Include="Files/Specifications/" />

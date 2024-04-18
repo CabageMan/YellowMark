@@ -31,7 +31,7 @@ public class Program
                     var issuer = builder.Configuration["Jwt:Issuer"];
                     var audience = builder.Configuration["Jwt:Audience"]; 
                     // TODO: Check for null value.
-                    var secretKey = builder.Configuration["Jwt:Key"] ?? "";
+                    var secretKey = builder.Configuration.GetSection("Jwt")["SecretKey"] ?? "";
 
                     options.SaveToken = true;
                     options.RequireHttpsMetadata = true;
