@@ -1,4 +1,7 @@
-﻿namespace YellowMark.AppServices.Accounts.Services;
+﻿using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Configuration;
+
+namespace YellowMark.AppServices.Accounts.Services;
 
 public class AccountService : IAccountService
 {
