@@ -6,7 +6,7 @@ using YellowMark.Domain.Subcategories.Entity;
 namespace YellowMark.Domain.Ads.Entity;
 
 /// <summary>
-/// Class for Ad.
+/// Class for Ad Entity.
 /// </summary>
 public class Ad : BaseEntity
 {

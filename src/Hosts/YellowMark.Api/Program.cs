@@ -1,6 +1,3 @@
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using YellowMark.Api.Controllers;
 using YellowMark.ComponentRegistrar;
@@ -19,36 +16,9 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        builder.Services.AddDependencyGroup();
+        builder.Services.AddDependencyGroup(builder.Configuration);
 
         builder.Services.AddControllers();
-
-        // Add Authentication and Authorization.
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(
-                options => 
-                {
-                    var issuer = builder.Configuration["Jwt:Issuer"];
-                    var audience = builder.Configuration["Jwt:Audience"]; 
-                    // TODO: Check for null value.
-                    var secretKey = builder.Configuration.GetSection("Jwt")["SecretKey"] ?? "";
-
-                    options.SaveToken = true;
-                    options.RequireHttpsMetadata = true;
-                    options.TokenValidationParameters = new TokenValidationParameters()
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = issuer,
-                        ValidAudience = audience,
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(secretKey)
-                        )
-                    };
-                }
-            );
-        builder.Services.AddAuthorization();
 
         // Swager
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

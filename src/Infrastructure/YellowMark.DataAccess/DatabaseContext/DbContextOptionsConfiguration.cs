@@ -15,7 +15,7 @@ public class DbContextOptionsConfiguration<TContext> : IDbContextOptionsConfigur
     private readonly IConfiguration _configuration;
 
     /// <summary>
-    /// Creates instance of <see cref="YellowMarkDbContextConfiguration"/> 
+    /// Creates instance of <see cref="DbContextOptionsConfiguration"/> 
     /// </summary>
     /// <param name="configuration"><see cref="IConfiguration"/></param>
     public DbContextOptionsConfiguration(IConfiguration configuration)
@@ -23,7 +23,7 @@ public class DbContextOptionsConfiguration<TContext> : IDbContextOptionsConfigur
         _configuration = configuration;
     }
 
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public void Configure(DbContextOptionsBuilder<TContext> optionsBuilder)
     {
         var connectionStringName = typeof(TContext) == typeof(WriteDbContext)

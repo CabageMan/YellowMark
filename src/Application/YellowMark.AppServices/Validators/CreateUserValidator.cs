@@ -27,26 +27,26 @@ public class CreateUserValidator : AbstractValidator<CreateUserRequest>
             .NotEmpty()
             .Length(0, 255);
 
-        RuleFor(user => user.Email)
-            .NotEmpty()
-            .NotNull()
-            .EmailAddress()
-            .WithMessage("A valid email address is required.");
+        // RuleFor(user => user.Email)
+        //     .NotEmpty()
+        //     .NotNull()
+        //     .EmailAddress()
+        //     .WithMessage("A valid email address is required.");
 
         int minPhoneLength = 11;
         int maxPhoneLength = 15;
         // TODO: Update phone regex if it needed. Check in w.
         // Refactor on tests creating.
         // Phone format: 1(234)567-8901
-        RuleFor(user => user.Phone)
-            .NotEmpty()
-            .NotNull()
-            .MinimumLength(minPhoneLength)
-            .WithMessage($"The phone number must be at least {minPhoneLength} characters.")
-            .MaximumLength(maxPhoneLength)
-            .WithMessage($"The phonae number must not exceed {maxPhoneLength} characters.")
-            .Matches(new Regex(@"((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}"))
-            .WithMessage("PhoneNumber not valid");
+        // RuleFor(user => user.Phone)
+        //     .NotEmpty()
+        //     .NotNull()
+        //     .MinimumLength(minPhoneLength)
+        //     .WithMessage($"The phone number must be at least {minPhoneLength} characters.")
+        //     .MaximumLength(maxPhoneLength)
+        //     .WithMessage($"The phonae number must not exceed {maxPhoneLength} characters.")
+        //     .Matches(new Regex(@"((\(\d{3}\) ?)|(\d{3}-))?\d{3}-\d{4}"))
+        //     .WithMessage("PhoneNumber not valid");
 
         RuleFor(user => user.BirthDate)
             .NotEmpty()

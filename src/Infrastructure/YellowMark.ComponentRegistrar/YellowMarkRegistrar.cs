@@ -27,6 +27,13 @@ using YellowMark.AppServices.Comments.Services;
 using YellowMark.AppServices.Files.Repositories;
 using YellowMark.DataAccess.File.Repository;
 using YellowMark.AppServices.Files.Services;
+using YellowMark.DataAccess.DatabaseContext.AuthContext;
+using YellowMark.DataAccess;
+using YellowMark.Domain.Accounts.Entity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
+using YellowMark.ComponentRegistrar.JwtConfigurator;
 
 namespace YellowMark.ComponentRegistrar;
 
@@ -40,10 +47,13 @@ public static class YellowMarkRegistrar
     /// </summary>
     /// <param name="services"><see cref="IServiceCollection"/></param>
     /// <returns></returns>
-    public static IServiceCollection AddDependencyGroup(this IServiceCollection services)
+    public static IServiceCollection AddDependencyGroup(
+        this IServiceCollection services,
+        ConfigurationManager configuration)
     {
         services.ConfigureAutomapper();
         services.ConfigureDbContext();
+        services.ConfigureAuthServices(configuration);
         services.ConfigureRepositories();
         services.ConfigureValidators();
         services.ConfigureSrvices();
@@ -60,6 +70,7 @@ public static class YellowMarkRegistrar
     {
         services.AddDbContext<WriteDbContext>();
         services.AddDbContext<ReadDbContext>();
+        services.AddIdentityDbContext();
 
         return services;
     }
@@ -126,10 +137,61 @@ public static class YellowMarkRegistrar
         >();
 
         services.AddDbContext<TContext>((Action<IServiceProvider, DbContextOptionsBuilder>)
-            ((sp, dbOptions) => sp.GetRequiredService<IDbContextOptionsConfigurator<TContext>>()
-                .Configure((DbContextOptionsBuilder<TContext>)dbOptions)));
+            ((sp, dbOptions) => sp
+                .GetRequiredService<IDbContextOptionsConfigurator<TContext>>()
+                .Configure((DbContextOptionsBuilder<TContext>)dbOptions)
+            )
+        );
 
-        services.AddScoped((Func<IServiceProvider, DbContext>)(sp => sp.GetRequiredService<TContext>()));
+        services
+            .AddScoped((Func<IServiceProvider, DbContext>)(sp =>
+                    sp.GetRequiredService<TContext>()
+                )
+            );
+
+        return services;
+    }
+
+    private static IServiceCollection AddIdentityDbContext(this IServiceCollection services)
+    {
+        services.AddSingleton<
+            IAuthDbContextOptionsConfigurator,
+            AuthDbContextOptionsConfigurator
+        >();
+        services.AddDbContext<AuthDbContext>((Action<IServiceProvider, DbContextOptionsBuilder>)
+            ((sp, dbOptions) => sp
+                .GetRequiredService<IAuthDbContextOptionsConfigurator>()
+                .Configure((DbContextOptionsBuilder<AuthDbContext>)dbOptions)
+            )
+        );
+
+        services
+            .AddScoped((Func<IServiceProvider, AuthDbContext>)(sp =>
+                    sp.GetRequiredService<AuthDbContext>()
+                )
+            );
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureAuthServices(
+        this IServiceCollection services,
+        ConfigurationManager configuration)
+    {
+        // Identity
+        services
+            .AddIdentity<Account, IdentityRole>()
+            .AddEntityFrameworkStores<AuthDbContext>();
+
+        // Authentication
+        services
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer((Action<JwtBearerOptions>)
+                (options => JwtBearerOptionsConfigurator.Configure(options, configuration))
+            );
+
+        // Authorization.
+        services.AddAuthorization();
 
         return services;
     }

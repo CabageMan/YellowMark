@@ -1,3 +1,4 @@
+using YellowMark.Domain.Accounts.Entity;
 using YellowMark.Domain.Ads.Entity;
 using YellowMark.Domain.Base;
 using YellowMark.Domain.Comments.Entity;
@@ -9,6 +10,16 @@ namespace YellowMark.Domain.Users.Entity;
 /// </summary>
 public class User : BaseEntity
 {
+    /// <summary>
+    /// Account id related to the current user info.
+    /// </summary>
+    public string AccountId { get; set; }
+
+    /// <summary>
+    /// Account related to the current user info.
+    /// </summary>
+    public virtual Account Account { get; set; }
+
     /// <summary>
     /// User's first name.
     /// </summary>
@@ -26,16 +37,6 @@ public class User : BaseEntity
 
     // See Ad.cs Image
     // public Image Avatar { get; set; }
-
-    /// <summary>
-    /// User's email.
-    /// </summary>
-    public string Email { get; set; }
-    
-    /// <summary>
-    /// User's phone.
-    /// </summary>
-    public string Phone { get; set; }
 
     /// <summary>
     /// User's birth date.

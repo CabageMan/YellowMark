@@ -23,12 +23,12 @@ public class CreateUserRequest
     /// <summary>
     /// User's email. 
     /// </summary>
-    public string Email { get; set; }
+    // public string Email { get; set; }
 
     /// <summary>
     /// User's phone. 
     /// </summary>
-    public string Phone { get; set; }
+    // public string Phone { get; set; }
 
     /// <summary>
     /// User's birth date.

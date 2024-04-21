@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using YellowMark.Domain.Users.Entity;
 
 namespace YellowMark.DataAccess.User.Configuration;
 
@@ -39,18 +40,14 @@ public class UserConfiguration : IEntityTypeConfiguration<Domain.Users.Entity.Us
             .HasMaxLength(255);
 
         builder
-            .Property(user => user.Email)
-            .IsRequired()
-            .HasMaxLength(100);
-
-        builder
-            .Property(user => user.Phone)
-            .IsRequired()
-            .HasMaxLength(15);
-
-        builder
             .Property(user => user.BirthDate)
             .IsRequired();
+
+        // builder
+        //     .HasOne(user => user.Account)
+        //     .WithOne(acc => acc.User)
+        //     .HasForeignKey<Domain.Users.Entity.User>(user => user.AccountId)
+        //     .IsRequired();
         
         builder
             .HasMany(user => user.Ads)
