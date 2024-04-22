@@ -3,9 +3,8 @@
 /// <summary>
 /// Request data model for sign in.
 /// </summary>
-public class LoginAccountRequest
+public class SignInRequest
 {
-
     /// <summary>
     /// Account email.
     /// </summary>

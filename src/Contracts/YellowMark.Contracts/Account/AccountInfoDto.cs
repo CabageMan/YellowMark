@@ -1,42 +1,47 @@
-﻿namespace YellowMark.Contracts.Account;
+﻿namespace YellowMark.Contracts;
 
 /// <summary>
-/// Request data model for registration.
+/// Account info Data Transfer Object.
 /// </summary>
-public class CreateAccountRequest
+public class AccountInfoDto
 {
     /// <summary>
-    /// User's first name.
+    /// User record identifier. 
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// User first name.
     /// </summary>
     public string FirstName { get; set; }
 
     /// <summary>
-    /// User's middle name.
+    /// User middle name.
     /// </summary>
     public string MiddleName { get; set; }
 
     /// <summary>
-    /// User's last name.
+    /// User last name.
     /// </summary>
     public string LastName { get; set; }
 
     /// <summary>
-    /// User's birth date.
+    /// User full name. 
     /// </summary>
-    public DateOnly BirthDate { get; set; }
+    public string FullName { get; set; }
 
     /// <summary>
-    /// Account email.
+    /// User email. 
     /// </summary>
     public string Email { get; set; }
 
     /// <summary>
-    /// Account Phone number.
+    /// User phone. 
     /// </summary>
     public string Phone { get; set; }
 
     /// <summary>
-    /// Account password.
+    /// User birth date.
     /// </summary>
-    public string Password { get; set; } // TODO: Remove in future authentication with password and authentication with email/phone. 
+    public DateOnly BirthDate { get; set; }
 }

@@ -57,7 +57,6 @@ public class UserInfoService : IUserInfoService
         return _userRepository.GetFiltered(specification, cancellationToken);
     }
 
-
     /// <inheritdoc/>
     public async Task<UserInfoDto> UpdateUserAsync(Guid id, CreateUserInfoRequest request, CancellationToken cancellationToken)
     {

@@ -42,7 +42,7 @@ public class AdDto
 
     // TODO: Check, may be use part of user data, or other DTO.
     /// <summary>
-    /// Ad owner <see cref="UserDto"/>
+    /// Ad owner <see cref="UserInfoDto"/>
     /// </summary>
     public UserInfoDto Owner { get; set; }
 

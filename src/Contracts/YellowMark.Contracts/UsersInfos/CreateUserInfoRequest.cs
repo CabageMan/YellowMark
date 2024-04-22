@@ -21,16 +21,6 @@ public class CreateUserInfoRequest
     public string LastName { get; set; }
 
     /// <summary>
-    /// User's email. 
-    /// </summary>
-    // public string Email { get; set; }
-
-    /// <summary>
-    /// User's phone. 
-    /// </summary>
-    // public string Phone { get; set; }
-
-    /// <summary>
     /// User's birth date.
     /// </summary>
     public DateOnly BirthDate { get; set; }
