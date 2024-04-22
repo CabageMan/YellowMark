@@ -3,22 +3,22 @@ using YellowMark.Domain.Ads.Entity;
 using YellowMark.Domain.Base;
 using YellowMark.Domain.Comments.Entity;
 
-namespace YellowMark.Domain.Users.Entity;
+namespace YellowMark.Domain.UsersInfos.Entity;
 
 /// <summary>
 /// User entity.
 /// </summary>
-public class User : BaseEntity
+public class UserInfo : BaseEntity
 {
     /// <summary>
     /// Account id related to the current user info.
     /// </summary>
-    public string AccountId { get; set; }
+    // public Guid AccountId { get; set; }
 
     /// <summary>
     /// Account related to the current user info.
     /// </summary>
-    public virtual Account Account { get; set; }
+    // public virtual Account Account { get; set; }
 
     /// <summary>
     /// User's first name.

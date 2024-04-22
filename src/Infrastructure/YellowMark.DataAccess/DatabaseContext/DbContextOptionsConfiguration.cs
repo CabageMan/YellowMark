@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 
@@ -7,7 +9,7 @@ namespace YellowMark.DataAccess.DatabaseContext;
 /// <summary>
 /// Database context configuration.
 /// </summary>
-public class DbContextOptionsConfiguration<TContext> : IDbContextOptionsConfigurator<TContext> where TContext : DbContext
+public class DbContextOptionsConfiguration<TContext> : IDbContextOptionsConfigurator<TContext> where TContext : IdentityDbContext<YellowMark.Domain.Accounts.Entity.Account, IdentityRole<Guid>, Guid>
 {
     private const string WriteConnectionStringName = "WriteDB";
     private const string ReadConnectionStringName = "ReadDB";

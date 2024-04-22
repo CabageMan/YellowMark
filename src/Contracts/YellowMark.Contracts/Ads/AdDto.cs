@@ -1,7 +1,7 @@
 using YellowMark.Contracts.Categories;
 using YellowMark.Contracts.Currnecies;
 using YellowMark.Contracts.Subcategories;
-using YellowMark.Contracts.Users;
+using YellowMark.Contracts.UsersInfos;
 
 namespace YellowMark.Contracts.Ads;
 
@@ -44,7 +44,7 @@ public class AdDto
     /// <summary>
     /// Ad owner <see cref="UserDto"/>
     /// </summary>
-    public UserDto Owner { get; set; }
+    public UserInfoDto Owner { get; set; }
 
     /// <summary>
     /// Ad category <see cref="CategoryDto"/>.

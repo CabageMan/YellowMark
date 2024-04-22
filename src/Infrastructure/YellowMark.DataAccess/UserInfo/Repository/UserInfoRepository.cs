@@ -2,19 +2,19 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using YellowMark.AppServices.Specifications;
-using YellowMark.AppServices.Users.Repositories;
+using YellowMark.AppServices.UsersInfos.Repositories;
 using YellowMark.Contracts.Pagination;
-using YellowMark.Contracts.Users;
+using YellowMark.Contracts.UsersInfos;
 using YellowMark.DataAccess.DatabaseContext;
 using YellowMark.Infrastructure.Repository;
 
-namespace YellowMark.DataAccess.User.Repository;
+namespace YellowMark.DataAccess.UserInfo.Repository;
 
 /// <inheritdoc cref="IUserRepository"/>
-public class UserRepository : IUserRepository
+public class UserInfoRepository : IUserInfoRepository
 {
-    private readonly IWriteOnlyRepository<Domain.Users.Entity.User, WriteDbContext> _writeOnlyRepository;
-    private readonly IReadOnlyRepository<Domain.Users.Entity.User, ReadDbContext> _readOnlyRepository;
+    private readonly IWriteOnlyRepository<Domain.UsersInfos.Entity.UserInfo, WriteDbContext> _writeOnlyRepository;
+    private readonly IReadOnlyRepository<Domain.UsersInfos.Entity.UserInfo, ReadDbContext> _readOnlyRepository;
     private readonly IMapper _mapper;
 
     /// <summary>
@@ -23,9 +23,9 @@ public class UserRepository : IUserRepository
     /// <param name="writeOnlyRepository"><see cref="IWriteOnlyRepository"/></param>
     /// <param name="readOnlyRepository"><see cref="IReadOnlyRepository"/></param>
     /// <param name="mapper"><see cref="IMapper"/></param>
-    public UserRepository(
-        IWriteOnlyRepository<Domain.Users.Entity.User, WriteDbContext> writeOnlyRepository,
-        IReadOnlyRepository<Domain.Users.Entity.User, ReadDbContext> readOnlyRepository,
+    public UserInfoRepository(
+        IWriteOnlyRepository<Domain.UsersInfos.Entity.UserInfo, WriteDbContext> writeOnlyRepository,
+        IReadOnlyRepository<Domain.UsersInfos.Entity.UserInfo, ReadDbContext> readOnlyRepository,
         IMapper mapper)
     {
         _writeOnlyRepository = writeOnlyRepository;
@@ -34,15 +34,15 @@ public class UserRepository : IUserRepository
     }
 
     /// <inheritdoc/>
-    public async Task AddAsync(Domain.Users.Entity.User entity, CancellationToken cancellationToken)
+    public async Task AddAsync(Domain.UsersInfos.Entity.UserInfo entity, CancellationToken cancellationToken)
     {
         await _writeOnlyRepository.AddAsync(entity, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<ResultWithPagination<UserDto>> GetAllAsync(GetAllRequestWithPagination request, CancellationToken cancellationToken)
+    public async Task<ResultWithPagination<UserInfoDto>> GetAllAsync(GetAllRequestWithPagination request, CancellationToken cancellationToken)
     {
-        var result = new ResultWithPagination<UserDto>();
+        var result = new ResultWithPagination<UserInfoDto>();
 
         var query = _readOnlyRepository.GetAll();
 
@@ -54,7 +54,7 @@ public class UserRepository : IUserRepository
             .OrderBy(user => user.Id)
             .Skip(pagesToSkip)
             .Take(request.BatchSize)
-            .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
+            .ProjectTo<UserInfoDto>(_mapper.ConfigurationProvider)
             .ToArrayAsync(cancellationToken);
 
         result.Result = paginationQuery;
@@ -63,28 +63,28 @@ public class UserRepository : IUserRepository
     }
 
     /// <inheritdoc/>
-    public async Task<IEnumerable<UserDto>> GetFiltered(Specification<Domain.Users.Entity.User> specification, CancellationToken cancellationToken)
+    public async Task<IEnumerable<UserInfoDto>> GetFiltered(Specification<Domain.UsersInfos.Entity.UserInfo> specification, CancellationToken cancellationToken)
     {
         // TODO: Add pagination
         return await _readOnlyRepository
             .GetAll()
             .Where(specification.ToExpression())
-            .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
+            .ProjectTo<UserInfoDto>(_mapper.ConfigurationProvider)
             .ToArrayAsync(cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<UserDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<UserInfoDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _readOnlyRepository
             .GetAll()
             .Where(s => s.Id == id)
-            .ProjectTo<UserDto>(_mapper.ConfigurationProvider)
+            .ProjectTo<UserInfoDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task UpdateAsync(Domain.Users.Entity.User entity, CancellationToken cancellationToken)
+    public async Task UpdateAsync(Domain.UsersInfos.Entity.UserInfo entity, CancellationToken cancellationToken)
     {
         await _writeOnlyRepository.UpdateAsync(entity, cancellationToken);
     }

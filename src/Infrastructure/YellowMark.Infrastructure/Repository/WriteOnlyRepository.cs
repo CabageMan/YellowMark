@@ -1,13 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using YellowMark.Domain.Base;
 
 namespace YellowMark.Infrastructure.Repository;
 
 /// <inheritdoc cref="IWriteOnlyRepository"/>
-public class WriteOnlyRepository<TEntity, TContext> : IWriteOnlyRepository<TEntity, TContext> where TEntity : BaseEntity where TContext : DbContext
+public class WriteOnlyRepository<TEntity, TContext> : IWriteOnlyRepository<TEntity, TContext> where TEntity : BaseEntity where TContext : IdentityDbContext<YellowMark.Domain.Accounts.Entity.Account, IdentityRole<Guid>, Guid>
 {
     /// <summary>
-    /// Database context inherited from <see cref="DbContext"/>.
+    /// Database context inherited from <see cref="IdentityDbContext"/>.
     /// </summary>
     protected TContext DbContext { get; }
 

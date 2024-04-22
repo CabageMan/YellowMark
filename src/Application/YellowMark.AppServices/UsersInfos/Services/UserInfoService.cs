@@ -1,54 +1,55 @@
 using AutoMapper;
 using YellowMark.AppServices.Specifications;
-using YellowMark.AppServices.Users.Repositories;
+using YellowMark.AppServices.UsersInfos.Repositories;
 using YellowMark.AppServices.Users.Specifications;
 using YellowMark.Contracts.Pagination;
-using YellowMark.Contracts.Users;
-using YellowMark.Domain.Users.Entity;
+using YellowMark.Contracts.UsersInfos;
+using YellowMark.Domain.UsersInfos.Entity;
+using YellowMark.AppServices.UsersInfos.Specifications;
 
-namespace YellowMark.AppServices.Users.Services;
+namespace YellowMark.AppServices.UsersInfos.Services;
 
 /// <inheritdoc cref="IUserService"/>
-public class UserService : IUserService
+public class UserInfoService : IUserInfoService
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IUserInfoRepository _userRepository;
     private readonly IMapper _mapper;
 
     /// <summary>
-    /// Init <see cref="UserService"/> instance.
+    /// Init <see cref="UserInfoService"/> instance.
     /// </summary>
     /// <param name="userRepository">Users repository</param>
     /// <param name="mapper">Users mapper.</param>
-    public UserService(IUserRepository userRepository, IMapper mapper)
+    public UserInfoService(IUserInfoRepository userRepository, IMapper mapper)
     {
         _userRepository = userRepository;
         _mapper = mapper;
     }
 
     /// <inheritdoc/>
-    public async Task<Guid> AddUserAsync(CreateUserRequest request, CancellationToken cancellationToken)
+    public async Task<Guid> AddUserAsync(CreateUserInfoRequest request, CancellationToken cancellationToken)
     {
-        var entity = _mapper.Map<CreateUserRequest, User>(request);
+        var entity = _mapper.Map<CreateUserInfoRequest, UserInfo>(request);
         await _userRepository.AddAsync(entity, cancellationToken);
         return entity.Id;
     }
 
     /// <inheritdoc/>
-    public Task<ResultWithPagination<UserDto>> GetUsersAsync(GetAllRequestWithPagination request, CancellationToken cancellationToken)
+    public Task<ResultWithPagination<UserInfoDto>> GetUsersAsync(GetAllRequestWithPagination request, CancellationToken cancellationToken)
     {
         return _userRepository.GetAllAsync(request, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<UserDto> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<UserInfoDto> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _userRepository.GetByIdAsync(id, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public Task<IEnumerable<UserDto>> GetUsersByNameAsync(UserByNameRequest request, CancellationToken cancellationToken)
+    public Task<IEnumerable<UserInfoDto>> GetUsersByNameAsync(UserInfoByNameRequest request, CancellationToken cancellationToken)
     {
-        Specification<User> specification = new UserByNameSpecification(request.Name);
+        Specification<UserInfo> specification = new UserInfoByNameSpecification(request.Name);
         if (request.BeOver18)
         {
             specification = specification.And(new UserMustBeOver18Specification());
@@ -58,15 +59,15 @@ public class UserService : IUserService
 
 
     /// <inheritdoc/>
-    public async Task<UserDto> UpdateUserAsync(Guid id, CreateUserRequest request, CancellationToken cancellationToken)
+    public async Task<UserInfoDto> UpdateUserAsync(Guid id, CreateUserInfoRequest request, CancellationToken cancellationToken)
     {
         // TODO: Need to fix. Get previous record and update it (Created at id wrong).
-        var entity = _mapper.Map<CreateUserRequest, User>(request);
+        var entity = _mapper.Map<CreateUserInfoRequest, UserInfo>(request);
         entity.Id = id;
 
         await _userRepository.UpdateAsync(entity, cancellationToken);
 
-        return _mapper.Map<User, UserDto>(entity);
+        return _mapper.Map<UserInfo, UserInfoDto>(entity);
     }
 
     /// <inheritdoc/>

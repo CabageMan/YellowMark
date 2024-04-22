@@ -27,7 +27,7 @@ public class CommentByTextOrAuthorSpecification : Specification<Comment>
     public override Expression<Func<Comment, bool>> ToExpression()
     {
         return comment => comment.Text.Contains(_searchString) 
-            || comment.User.FirstName.Contains(_searchString)
-            || comment.User.LastName.Contains(_searchString);
+            || comment.UserInfo.FirstName.Contains(_searchString)
+            || comment.UserInfo.LastName.Contains(_searchString);
     }
 }

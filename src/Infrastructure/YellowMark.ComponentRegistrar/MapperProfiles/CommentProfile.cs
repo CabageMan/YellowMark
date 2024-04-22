@@ -17,9 +17,9 @@ public class CommentProfile : Profile
     {
         CreateMap<Comment, CommentDto>()
             .ForMember(dest => dest.IsEdited, opt => opt.MapFrom(src => src.CreatedAt != src.UpdatedAt))
-            .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.User.Id))
-            .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.User.FirstName))
-            .ForMember(dest => dest.AuthorLastName, opt => opt.MapFrom(src => src.User.LastName))
+            .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.UserInfo.Id))
+            .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.UserInfo.FirstName))
+            .ForMember(dest => dest.AuthorLastName, opt => opt.MapFrom(src => src.UserInfo.LastName))
             .ForMember(dest => dest.AdId, opt => opt.MapFrom(src => src.Ad.Id))
             .ForMember(dest => dest.AdTitle, opt => opt.MapFrom(src => src.Ad.Title));
 
@@ -28,7 +28,7 @@ public class CommentProfile : Profile
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
             .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
-            .ForMember(dest => dest.User, opt => opt.Ignore())
+            .ForMember(dest => dest.UserInfo, opt => opt.Ignore())
             .ForMember(dest => dest.AdId, opt => opt.MapFrom(src => src.AdId))
             .ForMember(dest => dest.Ad, opt => opt.Ignore());
     }

@@ -1,18 +1,18 @@
 ﻿using System.Text.RegularExpressions;
 using FluentValidation;
-using YellowMark.Contracts.Users;
+using YellowMark.Contracts.UsersInfos;
 
 namespace YellowMark.AppServices.Validators;
 
 /// <summary>
 /// Validator for <see cref="CreateUserRequest"/> user model.
 /// </summary>
-public class CreateUserValidator : AbstractValidator<CreateUserRequest>
+public class CreateUserInfoValidator : AbstractValidator<CreateUserInfoRequest>
 {
     /// <summary>
     /// CreateUser validator.
     /// </summary>
-    public CreateUserValidator()
+    public CreateUserInfoValidator()
     {
         RuleFor(user => user.FirstName)
             .NotNull()

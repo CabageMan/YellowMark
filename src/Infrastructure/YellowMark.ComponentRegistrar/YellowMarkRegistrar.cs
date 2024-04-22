@@ -2,10 +2,10 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using YellowMark.AppServices.Users.Repositories;
-using YellowMark.AppServices.Users.Services;
+using YellowMark.AppServices.UsersInfos.Repositories;
+using YellowMark.AppServices.UsersInfos.Services;
 using YellowMark.AppServices.Validators;
-using YellowMark.DataAccess.User.Repository;
+using YellowMark.DataAccess.UserInfo.Repository;
 using YellowMark.DataAccess.DatabaseContext;
 using YellowMark.Infrastructure.Repository;
 using YellowMark.AppServices.Subcategories.Repositories;
@@ -27,13 +27,12 @@ using YellowMark.AppServices.Comments.Services;
 using YellowMark.AppServices.Files.Repositories;
 using YellowMark.DataAccess.File.Repository;
 using YellowMark.AppServices.Files.Services;
-using YellowMark.DataAccess.DatabaseContext.AuthContext;
-using YellowMark.DataAccess;
 using YellowMark.Domain.Accounts.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using YellowMark.ComponentRegistrar.JwtConfigurator;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace YellowMark.ComponentRegistrar;
 
@@ -70,7 +69,6 @@ public static class YellowMarkRegistrar
     {
         services.AddDbContext<WriteDbContext>();
         services.AddDbContext<ReadDbContext>();
-        services.AddIdentityDbContext();
 
         return services;
     }
@@ -79,7 +77,7 @@ public static class YellowMarkRegistrar
     {
         services.AddScoped(typeof(IReadOnlyRepository<,>), typeof(ReadOnlyRepository<,>));
         services.AddScoped(typeof(IWriteOnlyRepository<,>), typeof(WriteOnlyRepository<,>));
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserInfoRepository, UserInfoRepository>();
         services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<ICurrencyRepository, CurrencyRepository>();
@@ -92,14 +90,14 @@ public static class YellowMarkRegistrar
 
     private static IServiceCollection ConfigureValidators(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<CreateUserValidator>();
+        services.AddValidatorsFromAssemblyContaining<CreateUserInfoValidator>();
 
         return services;
     }
 
     private static IServiceCollection ConfigureSrvices(this IServiceCollection services)
     {
-        services.AddTransient<IUserService, UserService>();
+        services.AddTransient<IUserInfoService, UserInfoService>();
         services.AddTransient<ISubcategoryService, SubcategoryService>();
         services.AddTransient<ICategoryService, CategoryService>();
         services.AddTransient<ICurrencyService, CurrencyService>();
@@ -129,7 +127,7 @@ public static class YellowMarkRegistrar
         return configuration;
     }
 
-    private static IServiceCollection AddDbContext<TContext>(this IServiceCollection services) where TContext : DbContext
+    private static IServiceCollection AddDbContext<TContext>(this IServiceCollection services) where TContext : IdentityDbContext<YellowMark.Domain.Accounts.Entity.Account, IdentityRole<Guid>, Guid>
     {
         services.AddSingleton<
             IDbContextOptionsConfigurator<TContext>,
@@ -152,36 +150,14 @@ public static class YellowMarkRegistrar
         return services;
     }
 
-    private static IServiceCollection AddIdentityDbContext(this IServiceCollection services)
-    {
-        services.AddSingleton<
-            IAuthDbContextOptionsConfigurator,
-            AuthDbContextOptionsConfigurator
-        >();
-        services.AddDbContext<AuthDbContext>((Action<IServiceProvider, DbContextOptionsBuilder>)
-            ((sp, dbOptions) => sp
-                .GetRequiredService<IAuthDbContextOptionsConfigurator>()
-                .Configure((DbContextOptionsBuilder<AuthDbContext>)dbOptions)
-            )
-        );
-
-        services
-            .AddScoped((Func<IServiceProvider, AuthDbContext>)(sp =>
-                    sp.GetRequiredService<AuthDbContext>()
-                )
-            );
-
-        return services;
-    }
-
     private static IServiceCollection ConfigureAuthServices(
         this IServiceCollection services,
         ConfigurationManager configuration)
     {
         // Identity
         services
-            .AddIdentity<Account, IdentityRole>()
-            .AddEntityFrameworkStores<AuthDbContext>();
+            .AddIdentity<Account, IdentityRole<Guid>>()
+            .AddEntityFrameworkStores<WriteDbContext>();
 
         // Authentication
         services

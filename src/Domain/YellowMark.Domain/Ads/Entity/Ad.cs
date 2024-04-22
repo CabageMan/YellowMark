@@ -31,14 +31,14 @@ public class Ad : BaseEntity
     public decimal? Price { get; set; }
 
     /// <summary>
-    /// Ad owner (<see cref="User"/>) id.
+    /// Ad owner (<see cref="UserInfo"/>) id.
     /// </summary>
-    public Guid UserId { get; set; }
+    public Guid UserInfoId { get; set; }
 
     /// <summary>
     /// Ad owner instance.
     /// </summary>
-    public virtual Domain.Users.Entity.User User { get; set; }
+    public virtual Domain.UsersInfos.Entity.UserInfo UserInfo { get; set; }
 
     /// <summary>
     /// Ad Subcategory id <see cref="Guid"/>.

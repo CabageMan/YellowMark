@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +11,7 @@ namespace YellowMark.DbMigrator.Factory;
 /// <summary>
 /// Generic migration database context factory.
 /// </summary>
-public class MigrationDbContextFactory<TContext> : IDesignTimeDbContextFactory<TContext> where TContext : DbContext
+public class MigrationDbContextFactory<TContext> : IDesignTimeDbContextFactory<TContext> where TContext : IdentityDbContext<YellowMark.Domain.Accounts.Entity.Account, IdentityRole<Guid>, Guid>
 {
     private const string ConnectionStringName = "WriteDB";
 

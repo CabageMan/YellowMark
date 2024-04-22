@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using YellowMark.Domain.Base;
 
 namespace YellowMark.Infrastructure.Repository;
@@ -8,7 +10,7 @@ namespace YellowMark.Infrastructure.Repository;
 /// </summary>
 /// <typeparam name="TEntity">Entity type inherited from <see cref="BaseEntity"/></typeparam>
 /// <typeparam name="TContext">DbContext type inherited from <see cref="DbContext"/></typeparam>
-public interface IWriteOnlyRepository<TEntity, TContext> where TEntity : BaseEntity where TContext : DbContext
+public interface IWriteOnlyRepository<TEntity, TContext> where TEntity : BaseEntity where TContext : IdentityDbContext<YellowMark.Domain.Accounts.Entity.Account, IdentityRole<Guid>, Guid>
 {
     /// <summary>
     /// Add new instance of the entity.

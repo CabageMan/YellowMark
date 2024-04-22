@@ -1,9 +1,9 @@
-﻿namespace YellowMark.Contracts.Users;
+﻿namespace YellowMark.Contracts.UsersInfos;
 
 /// <summary>
 /// Request data model for getting users by name.
 /// </summary>
-public class UserByNameRequest
+public class UserInfoByNameRequest
 {
     /// <summary>
     /// User name.

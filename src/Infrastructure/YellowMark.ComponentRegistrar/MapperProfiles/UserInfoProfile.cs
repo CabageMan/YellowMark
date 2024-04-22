@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using YellowMark.Contracts.Users;
-using YellowMark.Domain.Users.Entity;
+using YellowMark.Contracts.UsersInfos;
+using YellowMark.Domain.UsersInfos.Entity;
 
 namespace YellowMark.ComponentRegistrar.MapperProfiles;
 
@@ -14,18 +14,18 @@ public class UserProfile : Profile
     /// </summary>
     public UserProfile()
     {
-        CreateMap<User, UserDto>()
+        CreateMap<UserInfo, UserInfoDto>()
             .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => 
                 $"{src.LastName} {src.MiddleName} {src.FirstName}"
             ));
 
-        CreateMap<CreateUserRequest, User>()
+        CreateMap<CreateUserInfoRequest, UserInfo>()
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
             .ForMember(dest => dest.Ads, opt => opt.Ignore())
-            .ForMember(dest => dest.AccountId, opt => opt.Ignore()) // Ignore for now.
-            .ForMember(dest => dest.Account, opt => opt.Ignore())
+            // .ForMember(dest => dest.AccountId, opt => opt.Ignore()) // Ignore for now.
+            // .ForMember(dest => dest.Account, opt => opt.Ignore())
             .ForMember(dest => dest.Comments, opt => opt.Ignore());
     }
 }

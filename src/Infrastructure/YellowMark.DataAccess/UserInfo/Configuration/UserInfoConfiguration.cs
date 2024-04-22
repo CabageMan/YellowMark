@@ -1,16 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using YellowMark.Domain.Users.Entity;
+using YellowMark.Domain.UsersInfos.Entity;
 
 namespace YellowMark.DataAccess.User.Configuration;
 
 /// <summary>
 /// Users table configuration.
 /// </summary>
-public class UserConfiguration : IEntityTypeConfiguration<Domain.Users.Entity.User>
+public class UserInfoConfiguration : IEntityTypeConfiguration<Domain.UsersInfos.Entity.UserInfo>
 {
     /// <inheritdoc/>
-    public void Configure(EntityTypeBuilder<Domain.Users.Entity.User> builder)
+    public void Configure(EntityTypeBuilder<Domain.UsersInfos.Entity.UserInfo> builder)
     {
         builder
             .ToTable("Users")
@@ -51,14 +51,14 @@ public class UserConfiguration : IEntityTypeConfiguration<Domain.Users.Entity.Us
         
         builder
             .HasMany(user => user.Ads)
-            .WithOne(ad => ad.User)
-            .HasForeignKey(ad => ad.UserId)
+            .WithOne(ad => ad.UserInfo)
+            .HasForeignKey(ad => ad.UserInfoId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         builder
             .HasMany(user => user.Comments)
-            .WithOne(comment => comment.User)
+            .WithOne(comment => comment.UserInfo)
             .HasForeignKey(comment => comment.UserId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);

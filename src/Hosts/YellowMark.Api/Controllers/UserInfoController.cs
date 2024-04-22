@@ -1,6 +1,6 @@
-using YellowMark.AppServices.Users.Services;
+using YellowMark.AppServices.UsersInfos.Services;
 using Microsoft.AspNetCore.Mvc;
-using YellowMark.Contracts.Users;
+using YellowMark.Contracts.UsersInfos;
 using YellowMark.Contracts.Pagination;
 using System.Net;
 using FluentValidation;
@@ -13,21 +13,21 @@ namespace YellowMark.Api.Controllers;
 [ApiController]
 [Route("v1/users")]
 [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
-public class UserController : ControllerBase
+public class UserInfoController : ControllerBase
 {
-    private readonly IUserService _userService;
-    private readonly IValidator<CreateUserRequest> _userValidator;
+    private readonly IUserInfoService _userService;
+    private readonly IValidator<CreateUserInfoRequest> _userValidator;
     private readonly IValidator<Guid> _guidValidator;
 
     /// <summary>
-    /// Init instance of <see cref="UserController"/>.
+    /// Init instance of <see cref="UserInfoController"/>.
     /// </summary>
     /// <param name="userService">User service.</param>
     /// <param name="userValidator">Creation User validator.</param>
     /// <param name="guidValidator">Guid validator.</param>
-    public UserController(
-        IUserService userService, 
-        IValidator<CreateUserRequest> userValidator,
+    public UserInfoController(
+        IUserInfoService userService, 
+        IValidator<CreateUserInfoRequest> userValidator,
         IValidator<Guid> guidValidator)
     {
         _userService = userService;
@@ -38,13 +38,13 @@ public class UserController : ControllerBase
     /// <summary>
     /// Create new User.
     /// </summary>
-    /// <param name="request">User request model <see cref="CreateUserRequest"/></param>
+    /// <param name="request">User request model <see cref="CreateUserInfoRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Created user Id <see cref="Guid"/></returns>
     [HttpPost]
     [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> CreateUser(CreateUserRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateUser(CreateUserInfoRequest request, CancellationToken cancellationToken)
     {
         var validationResult = await _userValidator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid) 
@@ -63,7 +63,7 @@ public class UserController : ControllerBase
     /// <param name="cancellationToken">Operation cancelation token.</param>
     /// <returns>Users list.</returns>
     [HttpGet]
-    [ProducesResponseType(typeof(ResultWithPagination<UserDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ResultWithPagination<UserInfoDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetAllUsers([FromQuery] GetAllRequestWithPagination request, CancellationToken cancellationToken)
     {
@@ -81,7 +81,7 @@ public class UserController : ControllerBase
     /// <returns>User.</returns>
     [HttpGet("{id:Guid}")]
     // [Route("{id:Guid}")]
-    [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(UserInfoDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> GetUserById(Guid id, CancellationToken cancellationToken)
     {
@@ -98,14 +98,14 @@ public class UserController : ControllerBase
     /// <summary>
     /// Returns users list filtered by name.
     /// </summary>
-    /// <param name="request">Request <see cref="UserByNameRequest"/></param> 
+    /// <param name="request">Request <see cref="UserInfoByNameRequest"/></param> 
     /// <param name="cancellationToken">Operation cancelation token.</param>
     /// <returns>Users list.</returns>
     [HttpGet]
     [Route("by-name")]
-    [ProducesResponseType(typeof(IEnumerable<UserDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(IEnumerable<UserInfoDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> GetAllByName([FromQuery] UserByNameRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllByName([FromQuery] UserInfoByNameRequest request, CancellationToken cancellationToken)
     {
         // TODO: Implement all possible returning status codes.
         var result = await _userService.GetUsersByNameAsync(request, cancellationToken);
@@ -116,14 +116,14 @@ public class UserController : ControllerBase
     /// Update User by Id.
     /// </summary>
     /// <param name="id">Needed to update user id.</param>
-    /// <param name="request">User request model <see cref="CreateUserRequest"/></param>
+    /// <param name="request">User request model <see cref="CreateUserInfoRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
-    /// <returns>Updated user <see cref="UserDto"/></returns>
+    /// <returns>Updated user <see cref="UserInfoDto"/></returns>
     [HttpPut("{id:Guid}")]
-    [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(UserInfoDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> UpdateUser(Guid id, CreateUserRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateUser(Guid id, CreateUserInfoRequest request, CancellationToken cancellationToken)
     {
         var guidValidationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
         if (!guidValidationResult.IsValid) 

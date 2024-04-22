@@ -1,13 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using YellowMark.Domain.Base;
 
 namespace YellowMark.Infrastructure.Repository;
 
 /// <inheritdoc cref="IReadOnlyRepository"/>
-public class ReadOnlyRepository<TEntity, TContext> : IReadOnlyRepository<TEntity, TContext> where TEntity : BaseEntity where TContext : DbContext 
+public class ReadOnlyRepository<TEntity, TContext> : IReadOnlyRepository<TEntity, TContext> where TEntity : BaseEntity where TContext : IdentityDbContext<YellowMark.Domain.Accounts.Entity.Account, IdentityRole<Guid>, Guid>
 {
     /// <summary>
-    /// Ratabase context inherited from <see cref="DbContext"/>. 
+    /// Ratabase context inherited from <see cref="IdentityDbContext"/>. 
     /// </summary>
     protected TContext DbContext { get; }
 

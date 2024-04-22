@@ -1,13 +1,13 @@
 ﻿using System.Linq.Expressions;
 using YellowMark.AppServices.Specifications;
-using YellowMark.Domain.Users.Entity;
+using YellowMark.Domain.UsersInfos.Entity;
 
-namespace YellowMark.AppServices.Users.Specifications;
+namespace YellowMark.AppServices.UsersInfos.Specifications;
 
 /// <summary>
 /// Get User by name implementation of the Specification.
 /// </summary>
-public class UserByNameSpecification : Specification<User>
+public class UserInfoByNameSpecification : Specification<UserInfo>
 {
     private readonly string _name;
 
@@ -15,7 +15,7 @@ public class UserByNameSpecification : Specification<User>
     /// Constructor of specification.
     /// </summary>
     /// <param name="name">Target user param.</param>
-    public UserByNameSpecification(string name)
+    public UserInfoByNameSpecification(string name)
     {
         _name = name;
     }
@@ -24,7 +24,7 @@ public class UserByNameSpecification : Specification<User>
     /// Get user by name implementation of ToExpression method.
     /// </summary>
     /// <returns>Expression</returns>
-    public override Expression<Func<User, bool>> ToExpression()
+    public override Expression<Func<UserInfo, bool>> ToExpression()
     {
         return user => user.FirstName == _name;
     }

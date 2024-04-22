@@ -1,9 +1,9 @@
-namespace YellowMark.Contracts.Users;
+namespace YellowMark.Contracts.UsersInfos;
 
 /// <summary>
 /// User Data Transfer Object.
 /// </summary>
-public class UserDto
+public class UserInfoDto
 {
     /// <summary>
     /// User record identifier. 

@@ -21,7 +21,7 @@ public class Comment : BaseEntity
     /// <summary>
     /// Author <see cref="User"/>
     /// </summary>
-    public virtual Domain.Users.Entity.User User { get; set; }
+    public virtual Domain.UsersInfos.Entity.UserInfo UserInfo { get; set; }
 
     /// <summary>
     /// Ad Id.

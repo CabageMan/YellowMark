@@ -1,7 +1,7 @@
 using Microsoft.OpenApi.Models;
 using YellowMark.Api.Controllers;
 using YellowMark.ComponentRegistrar;
-using YellowMark.Contracts.Users;
+using YellowMark.Contracts.UsersInfos;
 
 namespace YellowMark.Api;
 
@@ -32,12 +32,12 @@ public class Program
             });
             options.IncludeXmlComments(
                 Path.Combine(Path.Combine(
-                    AppContext.BaseDirectory, $"{typeof(UserController).Assembly.GetName().Name}.xml"
+                    AppContext.BaseDirectory, $"{typeof(UserInfoController).Assembly.GetName().Name}.xml"
                 ))
             );
             options.IncludeXmlComments(
                 Path.Combine(Path.Combine(
-                    AppContext.BaseDirectory, $"{typeof(UserDto).Assembly.GetName().Name}.xml"
+                    AppContext.BaseDirectory, $"{typeof(UserInfoDto).Assembly.GetName().Name}.xml"
                 ))
             );
         });

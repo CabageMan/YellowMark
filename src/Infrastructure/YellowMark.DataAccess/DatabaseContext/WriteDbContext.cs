@@ -1,4 +1,6 @@
 ﻿using System.Reflection;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace YellowMark.DataAccess.DatabaseContext;
@@ -6,7 +8,7 @@ namespace YellowMark.DataAccess.DatabaseContext;
 /// <summary>
 /// Write-only database context.
 /// </summary>
-public class WriteDbContext : DbContext
+public class WriteDbContext : IdentityDbContext<YellowMark.Domain.Accounts.Entity.Account, IdentityRole<Guid>, Guid>
 {
     /// <summary>
     /// Initialize an instance of <see cref="WriteDbContext"/>
@@ -37,5 +39,7 @@ public class WriteDbContext : DbContext
                 i.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)
             )
         );
+
+        base.OnModelCreating(modelBuilder);
     }
 }

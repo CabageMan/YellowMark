@@ -38,10 +38,10 @@ public class AccountConfiguration : IEntityTypeConfiguration<Domain.Accounts.Ent
         //     .IsRequired()
         //     .HasMaxLength(100);
 
-        builder
-            .HasOne(acc => acc.User)
-            .WithOne(user => user.Account)
-            .HasForeignKey<Domain.Users.Entity.User>(user => user.AccountId)
-            .IsRequired();
+        // builder
+        //     .HasOne(acc => acc.User)
+        //     .WithOne(user => user.Account)
+        //     .HasForeignKey<Domain.Users.Entity.User>(user => user.AccountId)
+        //     .IsRequired();
     }
 }
