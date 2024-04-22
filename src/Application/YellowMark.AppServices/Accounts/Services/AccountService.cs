@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using YellowMark.AppServices.UsersInfos.Services;
 using YellowMark.Contracts;
 using YellowMark.Contracts.Account;
 using YellowMark.Domain.Accounts.Entity;
@@ -13,6 +14,7 @@ public class AccountService : IAccountService
 {
     private readonly UserManager<Account> _userManager;
     private readonly SignInManager<Account> _signInManager;
+    private readonly IUserInfoService _userInfoService;
     private readonly IConfiguration _configuration;
     private readonly IMapper _mapper;
 
@@ -26,11 +28,13 @@ public class AccountService : IAccountService
     public AccountService(
         UserManager<Account> userManager,
         SignInManager<Account> signInManager,
+        IUserInfoService userInfoService,
         IConfiguration configuration,
         IMapper mapper)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _userInfoService = userInfoService;
         _configuration = configuration;
         _mapper = mapper;
     }
@@ -38,6 +42,9 @@ public class AccountService : IAccountService
     /// <inheritdoc/>
     public Task<Guid> RegisterAccountAssync(CreateAccountRequest request, CancellationToken cancellationToken)
     {
+        // Check for existing account.
+        // Create account
+        // Create user info
         throw new NotImplementedException();
     }
 

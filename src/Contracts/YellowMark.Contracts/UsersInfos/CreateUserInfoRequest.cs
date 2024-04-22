@@ -6,6 +6,11 @@
 public class CreateUserInfoRequest
 {
     /// <summary>
+    /// Account id related to the current user info.
+    /// </summary>
+    public Guid AccountId { get; set; }
+    
+    /// <summary>
     /// User's first name.
     /// </summary>
     public string FirstName { get; set; }

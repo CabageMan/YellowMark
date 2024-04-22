@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using YellowMark.AppServices.Accounts.Services;
 using YellowMark.Contracts;
@@ -15,14 +16,23 @@ namespace YellowMark.Api.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly IAccountService _accountService;
+    private readonly IValidator<CreateAccountRequest> _accountValidator;
+    private readonly IValidator<SignInRequest> _loginValidator;
 
     /// <summary>
     /// Init instance of <see cref="AccountController"/>
     /// </summary>
-    /// <param name="accountService"></param>
-    public AccountController(IAccountService accountService)
+    /// <param name="accountService">Account service <see cref="IAccountService"/></param>
+    /// <param name="accountValidator">Creation account validator.</param>
+    /// <param name="loginValidator">Signin info validator.</param>
+    public AccountController(
+        IAccountService accountService,
+        IValidator<CreateAccountRequest> accountValidator,
+        IValidator<SignInRequest> loginValidator)
     {
         _accountService = accountService;
+        _accountValidator = accountValidator;
+        _loginValidator = loginValidator;
     }
 
     /// <summary>
@@ -30,17 +40,21 @@ public class AccountController : ControllerBase
     /// </summary>
     /// <param name="request">Create account request model <see cref="CreateAccountRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
-    /// <returns>Account Id</returns>
+    /// <returns>Related user info id <see cref="Guid"/>.</returns>
     [HttpPost]
     [Route("account")]
     [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> RegisterAccount(CreateAccountRequest request, CancellationToken cancellationToken)
     {
-        // TODO: Validate Request
-        var addedUserId = await _accountService.RegisterAccountAssync(request, cancellationToken);
+        var validationResult = await _accountValidator.ValidateAsync(request, cancellationToken);
+        if (!validationResult.IsValid) 
+        {
+            return BadRequest(validationResult.ToString());
+        }
 
-        return StatusCode((int)HttpStatusCode.Created, addedUserId);
+        var addedUserInfoId = await _accountService.RegisterAccountAssync(request, cancellationToken);
+        return StatusCode((int)HttpStatusCode.Created, addedUserInfoId);
     }
 
     /// <summary>
@@ -56,8 +70,18 @@ public class AccountController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> LoginIntoAccount(SignInRequest request, CancellationToken cancellationToken)
     {
-        // TODO: Validate Request
+        var validationResult = await _loginValidator.ValidateAsync(request, cancellationToken);
+        if (!validationResult.IsValid) 
+        {
+            return BadRequest(validationResult.ToString());
+        }
+
         var loginInfo = await _accountService.SignInIntoAccountAssync(request, cancellationToken);
+
+        if (loginInfo == null)
+        {
+            return NotFound();
+        }
 
         return Ok(loginInfo);
     }
@@ -75,6 +99,11 @@ public class AccountController : ControllerBase
     {
         var accountInfo = await _accountService.GetUserInfoAssync(cancellationToken);
 
+        if (accountInfo == null)
+        {
+            return NotFound();
+        }
+
         return Ok(accountInfo);
     }
 
@@ -86,11 +115,10 @@ public class AccountController : ControllerBase
     [HttpDelete]
     [Route("session")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> Logout(CancellationToken cancellationToken)
     {
         await _accountService.SignOutFromAccoutnAssync(cancellationToken);
-        
+
         return NoContent();
     }
 
@@ -102,7 +130,6 @@ public class AccountController : ControllerBase
     [HttpDelete]
     [Route("account")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteAccount(CancellationToken cancellationToken)
     {
         await _accountService.DeleteAccountAssync(cancellationToken);

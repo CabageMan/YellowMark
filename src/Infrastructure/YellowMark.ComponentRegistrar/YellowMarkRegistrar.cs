@@ -33,6 +33,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using YellowMark.ComponentRegistrar.JwtConfigurator;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using YellowMark.AppServices.Accounts.Services;
 
 namespace YellowMark.ComponentRegistrar;
 
@@ -97,6 +98,7 @@ public static class YellowMarkRegistrar
 
     private static IServiceCollection ConfigureSrvices(this IServiceCollection services)
     {
+        services.AddTransient<IAccountService, AccountService>();
         services.AddTransient<IUserInfoService, UserInfoService>();
         services.AddTransient<ISubcategoryService, SubcategoryService>();
         services.AddTransient<ICategoryService, CategoryService>();
@@ -113,6 +115,7 @@ public static class YellowMarkRegistrar
     {
         var configuration = new MapperConfiguration(config =>
         {
+            config.AddProfile<AccountProfile>();
             config.AddProfile<UserProfile>();
             config.AddProfile<SubcategoryProfile>();
             config.AddProfile<CategoryProfile>();

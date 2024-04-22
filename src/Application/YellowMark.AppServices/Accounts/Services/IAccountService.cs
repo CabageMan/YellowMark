@@ -13,7 +13,7 @@ public interface IAccountService
     /// </summary>
     /// <param name="request">Create account request <see cref="CreateAccountRequest"/></param>
     /// <param name="cancellationToken">Operation cancelation token <see cref="CancellationToken"/></param>
-    /// <returns>Account id. TODO: remove it</returns>
+    /// <returns>Related user info id <see cref="UserInfo"/></returns>
     Task<Guid> RegisterAccountAssync(CreateAccountRequest request, CancellationToken cancellationToken);
 
     /// <summary>
