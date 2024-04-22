@@ -13,7 +13,7 @@ public class UserInfoConfiguration : IEntityTypeConfiguration<Domain.UsersInfos.
     public void Configure(EntityTypeBuilder<Domain.UsersInfos.Entity.UserInfo> builder)
     {
         builder
-            .ToTable("Users")
+            .ToTable("UsersInfos")
             .HasKey(user => user.Id);
 
         builder
@@ -46,7 +46,7 @@ public class UserInfoConfiguration : IEntityTypeConfiguration<Domain.UsersInfos.
         // builder
         //     .HasOne(user => user.Account)
         //     .WithOne(acc => acc.User)
-        //     .HasForeignKey<Domain.Users.Entity.User>(user => user.AccountId)
+        //     .HasForeignKey<Domain.UsersInfos.Entity.UserInfo>(user => user.AccountId)
         //     .IsRequired();
         
         builder

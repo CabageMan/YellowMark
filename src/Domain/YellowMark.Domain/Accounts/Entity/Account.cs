@@ -10,5 +10,5 @@ public class Account : IdentityUser<Guid>
     /// <summary>
     /// User info related to account.
     /// </summary>
-    // public virtual Domain.Users.Entity.User User { get; set; }
+    public virtual Domain.UsersInfos.Entity.UserInfo UserInfo { get; set; }
 }

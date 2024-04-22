@@ -13,12 +13,12 @@ public class UserInfo : BaseEntity
     /// <summary>
     /// Account id related to the current user info.
     /// </summary>
-    // public Guid AccountId { get; set; }
+    public Guid AccountId { get; set; }
 
     /// <summary>
     /// Account related to the current user info.
     /// </summary>
-    // public virtual Account Account { get; set; }
+    public virtual Account Account { get; set; }
 
     /// <summary>
     /// User's first name.
