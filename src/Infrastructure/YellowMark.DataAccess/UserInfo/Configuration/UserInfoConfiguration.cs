@@ -42,12 +42,6 @@ public class UserInfoConfiguration : IEntityTypeConfiguration<Domain.UsersInfos.
         builder
             .Property(user => user.BirthDate)
             .IsRequired();
-
-        // builder
-        //     .HasOne(user => user.Account)
-        //     .WithOne(acc => acc.User)
-        //     .HasForeignKey<Domain.UsersInfos.Entity.UserInfo>(user => user.AccountId)
-        //     .IsRequired();
         
         builder
             .HasMany(user => user.Ads)

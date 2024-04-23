@@ -16,11 +16,6 @@ public class UserInfo : BaseEntity
     public Guid AccountId { get; set; }
 
     /// <summary>
-    /// Account related to the current user info.
-    /// </summary>
-    public virtual Account Account { get; set; }
-
-    /// <summary>
     /// User's first name.
     /// </summary>
     public string FirstName { get; set; }

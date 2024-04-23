@@ -58,6 +58,14 @@ public class UserInfoService : IUserInfoService
     }
 
     /// <inheritdoc/>
+    public async Task<UserInfoDto> GetUserByAccountIdAsync(Guid accountId, CancellationToken cancellationToken)
+    {
+        Specification<UserInfo> specification = new UserInfoByAccounIdSpecification(accountId);
+        var users = await _userRepository.GetFiltered(specification, cancellationToken);
+        return users.First();
+    }
+
+    /// <inheritdoc/>
     public async Task<UserInfoDto> UpdateUserAsync(Guid id, CreateUserInfoRequest request, CancellationToken cancellationToken)
     {
         // TODO: Need to fix. Get previous record and update it (Created at id wrong).

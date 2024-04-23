@@ -40,6 +40,13 @@ public interface IUserInfoService
     Task<IEnumerable<UserInfoDto>> GetUsersByNameAsync(UserInfoByNameRequest request, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Returns user matched the Account id.
+    /// </summary>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>User <see cref="UserInfoDto"/>.</returns>
+    Task<UserInfoDto> GetUserByAccountIdAsync(Guid accountId, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Update current User.
     /// </summary>
     /// <param name="id">User id</param>

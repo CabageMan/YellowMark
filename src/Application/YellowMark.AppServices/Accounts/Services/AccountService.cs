@@ -119,33 +119,39 @@ public class AccountService : IAccountService
             authClaims.Add(new(ClaimTypes.Role, userRole));
         }
 
+        var userInfo = await _userInfoService.GetUserByAccountIdAsync(account.Id, cancellationToken);
         var token = GenerateJwtToken(authClaims);
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-        Console.WriteLine($"\n\nUserInfoId: {account.UserInfo}\nRole: {accountRoles.First()}\nJWT: {tokenString}\n\n");
-        var loginInfo = new LoginDto()
+
+        return new LoginDto()
         {
-            UserInfoId = Guid.NewGuid(), // temp
+            UserInfoId = userInfo.Id,
             JwtToken = tokenString,
             Roles = accountRoles.ToList()
         };
-        return loginInfo;
     }
 
     /// <inheritdoc/>
     public Task<AccountInfoDto> GetUserInfoAssync(CancellationToken cancellationToken)
     {
+        // Get logged in user. 
+        // Get user info.
         throw new NotImplementedException();
     }
 
     /// <inheritdoc/>
     public Task SignOutFromAccoutnAssync(CancellationToken cancellationToken)
     {
+        // Logout.
         throw new NotImplementedException();
     }
 
     /// <inheritdoc/>
     public Task DeleteAccountAssync(CancellationToken cancellationToken)
     {
+        // Logout.
+        // Remove UserInfo record.
+        // Remove Accoun record.
         throw new NotImplementedException();
     }
 
