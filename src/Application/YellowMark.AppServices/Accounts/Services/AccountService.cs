@@ -56,6 +56,7 @@ public class AccountService : IAccountService
 
         var account = new Account()
         {
+            UserName = request.FirstName,
             Email = request.Email,
             PhoneNumber = request.Phone,
             SecurityStamp = Guid.NewGuid().ToString()
@@ -64,7 +65,9 @@ public class AccountService : IAccountService
         var registerResult = await _userManager.CreateAsync(account, request.Password);
         if (!registerResult.Succeeded)
         {
-            throw new InvalidOperationException($"Could not create account for {request.Email}. Reason: {registerResult.Errors}");
+            var errors = registerResult.Errors.Select(error => error.Description);
+            var errorString = string.Join("\n", errors);
+            throw new InvalidOperationException($"Could not create account for {request.Email}. Reason: {errorString}");
         }
 
 

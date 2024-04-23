@@ -160,7 +160,8 @@ public static class YellowMarkRegistrar
         // Identity
         services
             .AddIdentity<Account, IdentityRole<Guid>>()
-            .AddEntityFrameworkStores<WriteDbContext>();
+            .AddEntityFrameworkStores<WriteDbContext>()
+            .AddDefaultTokenProviders();
 
         // Authentication
         services
