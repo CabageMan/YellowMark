@@ -1,7 +1,12 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Text;
 using AutoMapper;
+using FluentValidation.TestHelper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using YellowMark.AppServices.UsersInfos.Services;
 using YellowMark.Contracts;
 using YellowMark.Contracts.Account;
@@ -70,7 +75,6 @@ public class AccountService : IAccountService
             throw new InvalidOperationException($"Could not create account for {request.Email}. Reason: {errorString}");
         }
 
-
         var addRoleResult = await _userManager.AddToRoleAsync(account, UserRoles.User);
         if (!addRoleResult.Succeeded)
         {
@@ -85,9 +89,46 @@ public class AccountService : IAccountService
     }
 
     /// <inheritdoc/>
-    public Task<LoginDto> SignInIntoAccountAssync(SignInRequest request, CancellationToken cancellationToken)
+    public async Task<LoginDto> SignInIntoAccountAssync(SignInRequest request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var account = await _userManager.FindByEmailAsync(request.Email);
+        if (account == null)
+        {
+            throw new InvalidOperationException($"Account with email {request.Email} does not exist.");
+        }
+
+        var isPasswordValid = await _userManager.CheckPasswordAsync(account, request.Password);
+        if (!isPasswordValid)
+        {
+            throw new InvalidOperationException($"Password for {request.Email} does not match.");
+        }
+
+        var accountRoles = await _userManager.GetRolesAsync(account);
+        if (account.UserName == null || account.Email == null || account.PhoneNumber == null)
+        {
+            throw new InvalidOperationException("Could not get account claims.");
+        }
+        var authClaims = new List<Claim>
+        {
+            new(ClaimTypes.Name, account.UserName),
+            new(ClaimTypes.Email, account.Email),
+            new(ClaimTypes.MobilePhone, account.PhoneNumber)
+        };
+        foreach (var userRole in accountRoles)
+        {
+            authClaims.Add(new(ClaimTypes.Role, userRole));
+        }
+
+        var token = GenerateJwtToken(authClaims);
+        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+        Console.WriteLine($"\n\nUserInfoId: {account.UserInfo}\nRole: {accountRoles.First()}\nJWT: {tokenString}\n\n");
+        var loginInfo = new LoginDto()
+        {
+            UserInfoId = Guid.NewGuid(), // temp
+            JwtToken = tokenString,
+            Roles = accountRoles.ToList()
+        };
+        return loginInfo;
     }
 
     /// <inheritdoc/>
@@ -135,11 +176,22 @@ public class AccountService : IAccountService
     }
 
     // Helpers.
-    private string GenerateJwtToken()
+    private JwtSecurityToken GenerateJwtToken(List<Claim> claims)
     {
+        var secretKey = _configuration.GetSection("Jwt")["SecretKey"];
+        if (secretKey == null)
+        {
+            throw new ArgumentNullException("Secret key is null.");
+        }
+        var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+        var credentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256);
 
-        //  Salt password.
-        var token = new JwtSecurityToken();
-        return "";
+        return new JwtSecurityToken(
+            issuer: _configuration["Jwt:Issuer"],
+            audience: _configuration["Jwt:Audience"],
+            expires: DateTime.Now.AddHours(1),
+            claims: claims,
+            signingCredentials: credentials
+        );
     }
 }

@@ -68,7 +68,7 @@ public class AccountController : ControllerBase
     [Route("session")]
     [ProducesResponseType(typeof(LoginDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> LoginIntoAccount(SignInRequest request, CancellationToken cancellationToken)
     {
         var validationResult = await _loginValidator.ValidateAsync(request, cancellationToken);
@@ -81,7 +81,7 @@ public class AccountController : ControllerBase
 
         if (loginInfo == null)
         {
-            return NotFound();
+            return Unauthorized();
         }
 
         return Ok(loginInfo);

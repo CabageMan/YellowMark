@@ -22,17 +22,16 @@ public static class JwtBearerOptionsConfigurator
         var secretKey = configuration.GetSection("Jwt")["SecretKey"] ?? "";
 
         options.SaveToken = true;
-        options.RequireHttpsMetadata = true;
+        options.RequireHttpsMetadata = false;
         options.TokenValidationParameters = new TokenValidationParameters()
         {
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateIssuerSigningKey = true,
+            ValidateLifetime = true,
             ValidIssuer = issuer,
             ValidAudience = audience,
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(secretKey)
-            )
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
         };
     }
 }

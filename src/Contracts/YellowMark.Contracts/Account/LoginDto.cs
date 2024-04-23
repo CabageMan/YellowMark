@@ -6,9 +6,9 @@
 public class LoginDto
 {
     /// <summary>
-    /// Account (user) id.
+    /// Related user info id.
     /// </summary>
-    public Guid UserId { get; set; }
+    public Guid UserInfoId { get; set; }
 
     /// <summary>
     /// Result of sign in.
@@ -18,5 +18,5 @@ public class LoginDto
     /// <summary>
     /// Account (user) role.
     /// </summary>
-    public string Role { get; set; }
+    public List<string> Roles { get; set; }
 }
