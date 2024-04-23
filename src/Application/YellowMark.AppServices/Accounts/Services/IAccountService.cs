@@ -44,4 +44,10 @@ public interface IAccountService
     /// <param name="cancellationToken">Operation cancelation token <see cref="CancellationToken"/></param>
     /// <returns></returns>
     Task DeleteAccountAssync(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Add user roles to database.
+    /// </summary>
+    /// <returns>List of roles names.</returns>
+    Task<List<string>> CreateUserRolesAssync(CancellationToken cancellationToken);
 }

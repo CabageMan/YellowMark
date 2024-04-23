@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using YellowMark.AppServices.Accounts.Services;
 using YellowMark.Contracts;
 using YellowMark.Contracts.Account;
@@ -11,7 +12,7 @@ namespace YellowMark.Api.Controllers;
 /// Authentication and Authorization controller.
 /// </summary>
 [ApiController]
-[Route("v1")]
+[Route("api/v1")]
 [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
 public class AccountController : ControllerBase
 {
@@ -48,7 +49,7 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> RegisterAccount(CreateAccountRequest request, CancellationToken cancellationToken)
     {
         var validationResult = await _accountValidator.ValidateAsync(request, cancellationToken);
-        if (!validationResult.IsValid) 
+        if (!validationResult.IsValid)
         {
             return BadRequest(validationResult.ToString());
         }
@@ -71,7 +72,7 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> LoginIntoAccount(SignInRequest request, CancellationToken cancellationToken)
     {
         var validationResult = await _loginValidator.ValidateAsync(request, cancellationToken);
-        if (!validationResult.IsValid) 
+        if (!validationResult.IsValid)
         {
             return BadRequest(validationResult.ToString());
         }
@@ -135,5 +136,24 @@ public class AccountController : ControllerBase
         await _accountService.DeleteAccountAssync(cancellationToken);
 
         return NoContent();
+    }
+
+    /// <summary>
+    /// Add Users Roles.
+    /// </summary>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Login info <see cref="LoginDto"/></returns>
+    [HttpPost]
+    [Route("account/roles")]
+    [ProducesResponseType(typeof(List<string>), (int)HttpStatusCode.Created)]
+    [ProducesResponseType((int)HttpStatusCode.Conflict)]
+    public async Task<IActionResult> AddUsersRoles(CancellationToken cancellationToken)
+    {
+        var result = await _accountService.CreateUserRolesAssync(cancellationToken);
+        if (result.IsNullOrEmpty())
+        {
+            return Conflict("Roles are already added.");
+        }
+        return StatusCode((int)HttpStatusCode.Created, result);
     }
 }
