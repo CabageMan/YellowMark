@@ -47,7 +47,7 @@ public static class YellowMarkRegistrar
     /// </summary>
     /// <param name="services"><see cref="IServiceCollection"/></param>
     /// <returns></returns>
-    public static IServiceCollection AddDependencyGroup(
+    public static IServiceCollection AddServices(
         this IServiceCollection services,
         ConfigurationManager configuration)
     {
@@ -61,6 +61,7 @@ public static class YellowMarkRegistrar
         return services;
     }
 
+    // Helpers.
     private static IServiceCollection ConfigureAutomapper(this IServiceCollection services)
     {
         return services.AddSingleton<IMapper>(new Mapper(GetMapperConfiguration()));
@@ -165,7 +166,12 @@ public static class YellowMarkRegistrar
 
         // Authentication
         services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddAuthentication(options => 
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer((Action<JwtBearerOptions>)
                 (options => JwtBearerOptionsConfigurator.Configure(options, configuration))
             );

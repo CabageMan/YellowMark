@@ -27,6 +27,7 @@ public static class JwtBearerOptionsConfigurator
         {
             ValidateIssuer = true,
             ValidateAudience = true,
+            ValidateActor = false,
             ValidateIssuerSigningKey = true,
             ValidateLifetime = true,
             ValidIssuer = issuer,

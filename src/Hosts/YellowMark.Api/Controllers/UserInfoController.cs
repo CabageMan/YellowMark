@@ -4,6 +4,7 @@ using YellowMark.Contracts.UsersInfos;
 using YellowMark.Contracts.Pagination;
 using System.Net;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 
 namespace YellowMark.Api.Controllers;
 
@@ -62,6 +63,7 @@ public class UserInfoController : ControllerBase
     /// <param name="request">Pagination params <see cref="GetAllRequestWithPagination"/>.</param>
     /// <param name="cancellationToken">Operation cancelation token.</param>
     /// <returns>Users list.</returns>
+    [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(ResultWithPagination<UserInfoDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -79,6 +81,7 @@ public class UserInfoController : ControllerBase
     /// <param name="id">User id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>User.</returns>
+    [Authorize]
     [HttpGet("{id:Guid}")]
     // [Route("{id:Guid}")]
     [ProducesResponseType(typeof(UserInfoDto), (int)HttpStatusCode.OK)]
