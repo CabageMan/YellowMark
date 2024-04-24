@@ -47,3 +47,7 @@ dotnet run --environment <Environment>
 ```
 
 For development mode it's important to pass 'Development' as --environment argument to use sensitive data from User Secrets.
+
+## Using
+
+After successful start the application before using it need to add User Roles to database. For convinience the 'AddUsersRoles' is added to Account controller (endpoint: /api/v1/account/roles). Just call it to add roles to database.
