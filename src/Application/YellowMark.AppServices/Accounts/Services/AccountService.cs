@@ -4,6 +4,8 @@ using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using FluentValidation.TestHelper;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -20,8 +22,8 @@ namespace YellowMark.AppServices.Accounts.Services;
 public class AccountService : IAccountService
 {
     private readonly UserManager<Account> _userManager;
-    private readonly SignInManager<Account> _signInManager;
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly IUserInfoService _userInfoService;
     private readonly IConfiguration _configuration;
     private readonly IMapper _mapper;
@@ -30,21 +32,22 @@ public class AccountService : IAccountService
     /// Init <see cref="AccountService"/> instance.
     /// </summary>
     /// <param name="userManager">User manager <see cref="UserManager"/></param>
-    /// <param name="signInManager">Sign in manager <see cref="SignInManager"/></param>
     /// <param name="roleManager">Role manager <see cref="IdentityRole"/></param>
+    /// <param name="httpContextAccessor">Http context accessor <see cref="IHttpContextAccessor"/></param>
+    /// <param name="userInfoService">Userinfo service <see cref="IUserInfoService"/></param>
     /// <param name="configuration">App configuration <see cref="IConfiguration"/></param>
     /// <param name="mapper">Account mapper <see cref="IMapper"/></param>
     public AccountService(
         UserManager<Account> userManager,
-        SignInManager<Account> signInManager,
         RoleManager<IdentityRole<Guid>> roleManager,
+        IHttpContextAccessor httpContextAccessor,
         IUserInfoService userInfoService,
         IConfiguration configuration,
         IMapper mapper)
     {
         _userManager = userManager;
-        _signInManager = signInManager;
         _roleManager = roleManager;
+        _httpContextAccessor = httpContextAccessor;
         _userInfoService = userInfoService;
         _configuration = configuration;
         _mapper = mapper;
@@ -132,18 +135,44 @@ public class AccountService : IAccountService
     }
 
     /// <inheritdoc/>
-    public Task<AccountInfoDto> GetUserInfoAssync(CancellationToken cancellationToken)
+    public async Task<AccountInfoDto> GetUserInfoAssync(CancellationToken cancellationToken)
     {
-        // Get logged in user. 
-        // Get user info.
-        throw new NotImplementedException();
+        var context = _httpContextAccessor.HttpContext;
+        ArgumentNullException.ThrowIfNull(context);
+
+        var tokenString = await context.GetTokenAsync("access_token");
+        ArgumentNullException.ThrowIfNull(tokenString);
+
+        var emailClaim = new JwtSecurityTokenHandler()
+            .ReadJwtToken(tokenString)
+            .Claims
+            .FirstOrDefault(c => c.Type == ClaimTypes.Email);
+        ArgumentNullException.ThrowIfNull(emailClaim);
+
+        var email = emailClaim.Value;
+        ArgumentNullException.ThrowIfNull(email);
+
+        var existedAccount = await _userManager.FindByEmailAsync(email);
+        if (existedAccount == null)
+        {
+            throw new InvalidOperationException($"Could not find account related to {email}.");
+        }
+
+        var userInfo = await _userInfoService.GetUserByAccountIdAsync(existedAccount.Id, cancellationToken);
+        var accountInfo = _mapper.Map<UserInfoDto, AccountInfoDto>(userInfo);
+        accountInfo.Email = existedAccount.Email;
+        accountInfo.Phone = existedAccount.PhoneNumber;
+
+        return accountInfo;
     }
 
     /// <inheritdoc/>
-    public Task SignOutFromAccoutnAssync(CancellationToken cancellationToken)
+    public async Task SignOutFromAccoutnAssync(CancellationToken cancellationToken)
     {
-        // Logout.
-        throw new NotImplementedException();
+        var token = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+        Console.WriteLine($"\n\nUser to Logout: {token}\n\n");
+
+        // return Task.CompletedTask;
     }
 
     /// <inheritdoc/>

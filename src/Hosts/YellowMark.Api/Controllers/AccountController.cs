@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using YellowMark.AppServices.Accounts.Services;
@@ -42,6 +43,7 @@ public class AccountController : ControllerBase
     /// <param name="request">Create account request model <see cref="CreateAccountRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Related user info id <see cref="Guid"/>.</returns>
+    [AllowAnonymous]
     [HttpPost]
     [Route("account")]
     [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Created)]
@@ -64,6 +66,7 @@ public class AccountController : ControllerBase
     /// <param name="request">Sign in request model <see cref="SignInRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Login info <see cref="LoginDto"/></returns>
+    [AllowAnonymous]
     [HttpPost]
     [Route("session")]
     [ProducesResponseType(typeof(LoginDto), (int)HttpStatusCode.OK)]
@@ -92,6 +95,7 @@ public class AccountController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Account info <see cref="AccountInfoDto"/></returns>
+    [Authorize]
     [HttpGet]
     [Route("account")]
     [ProducesResponseType(typeof(AccountInfoDto), (int)HttpStatusCode.OK)]
@@ -113,6 +117,7 @@ public class AccountController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns></returns>
+    // [Authorize]
     [HttpDelete]
     [Route("session")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
@@ -128,6 +133,7 @@ public class AccountController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns></returns>
+    [Authorize]
     [HttpDelete]
     [Route("account")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
@@ -143,6 +149,7 @@ public class AccountController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Login info <see cref="LoginDto"/></returns>
+    [AllowAnonymous]
     [HttpPost]
     [Route("account/roles")]
     [ProducesResponseType(typeof(List<string>), (int)HttpStatusCode.Created)]

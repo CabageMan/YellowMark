@@ -34,6 +34,8 @@ using Microsoft.Extensions.Configuration;
 using YellowMark.ComponentRegistrar.JwtConfigurator;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using YellowMark.AppServices.Accounts.Services;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace YellowMark.ComponentRegistrar;
 
@@ -57,6 +59,8 @@ public static class YellowMarkRegistrar
         services.ConfigureRepositories();
         services.ConfigureValidators();
         services.ConfigureSrvices();
+
+        services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         return services;
     }

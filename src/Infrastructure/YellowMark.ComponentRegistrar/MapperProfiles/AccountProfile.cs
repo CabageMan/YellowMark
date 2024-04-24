@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using YellowMark.Contracts;
 using YellowMark.Contracts.Account;
 using YellowMark.Contracts.UsersInfos;
 
@@ -16,5 +17,9 @@ public class AccountProfile : Profile
     {
         CreateMap<CreateAccountRequest, CreateUserInfoRequest>()
             .ForMember(dest => dest.AccountId, opt => opt.Ignore());
+
+        CreateMap<UserInfoDto, AccountInfoDto>()
+            .ForMember(dest => dest.Phone, opt => opt.Ignore())
+            .ForMember(dest => dest.Email, opt => opt.Ignore());
     }
 }
