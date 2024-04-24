@@ -137,27 +137,7 @@ public class AccountService : IAccountService
     /// <inheritdoc/>
     public async Task<AccountInfoDto> GetUserInfoAssync(CancellationToken cancellationToken)
     {
-        var context = _httpContextAccessor.HttpContext;
-        ArgumentNullException.ThrowIfNull(context);
-
-        var tokenString = await context.GetTokenAsync("access_token");
-        ArgumentNullException.ThrowIfNull(tokenString);
-
-        var emailClaim = new JwtSecurityTokenHandler()
-            .ReadJwtToken(tokenString)
-            .Claims
-            .FirstOrDefault(c => c.Type == ClaimTypes.Email);
-        ArgumentNullException.ThrowIfNull(emailClaim);
-
-        var email = emailClaim.Value;
-        ArgumentNullException.ThrowIfNull(email);
-
-        var existedAccount = await _userManager.FindByEmailAsync(email);
-        if (existedAccount == null)
-        {
-            throw new InvalidOperationException($"Could not find account related to {email}.");
-        }
-
+        var existedAccount = await GetAccountByTokenAsync();
         var userInfo = await _userInfoService.GetUserByAccountIdAsync(existedAccount.Id, cancellationToken);
         var accountInfo = _mapper.Map<UserInfoDto, AccountInfoDto>(userInfo);
         accountInfo.Email = existedAccount.Email;
@@ -167,21 +147,18 @@ public class AccountService : IAccountService
     }
 
     /// <inheritdoc/>
-    public async Task SignOutFromAccoutnAssync(CancellationToken cancellationToken)
+    public Task SignOutFromAccoutnAssync(CancellationToken cancellationToken)
     {
-        var token = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
-        Console.WriteLine($"\n\nUser to Logout: {token}\n\n");
-
-        // return Task.CompletedTask;
+        return Task.CompletedTask;
     }
 
     /// <inheritdoc/>
-    public Task DeleteAccountAssync(CancellationToken cancellationToken)
+    public async Task DeleteAccountAssync(CancellationToken cancellationToken)
     {
-        // Logout.
-        // Remove UserInfo record.
-        // Remove Accoun record.
-        throw new NotImplementedException();
+        var existedAccount = await GetAccountByTokenAsync();
+        var userInfo = await _userInfoService.GetUserByAccountIdAsync(existedAccount.Id, cancellationToken);
+        await _userInfoService.DeleteUserByIdAsync(userInfo.Id, cancellationToken);
+        await _userManager.DeleteAsync(existedAccount);
     }
 
     /// <inheritdoc/>
@@ -228,5 +205,30 @@ public class AccountService : IAccountService
             claims: claims,
             signingCredentials: credentials
         );
+    }
+
+    private async Task<Account> GetAccountByTokenAsync()
+    {
+        var context = _httpContextAccessor.HttpContext;
+        ArgumentNullException.ThrowIfNull(context);
+
+        var tokenString = await context.GetTokenAsync("access_token");
+        ArgumentNullException.ThrowIfNull(tokenString);
+
+        var emailClaim = new JwtSecurityTokenHandler()
+            .ReadJwtToken(tokenString)
+            .Claims
+            .FirstOrDefault(c => c.Type == ClaimTypes.Email);
+        ArgumentNullException.ThrowIfNull(emailClaim);
+
+        var email = emailClaim.Value;
+        ArgumentNullException.ThrowIfNull(email);
+
+        var existedAccount = await _userManager.FindByEmailAsync(email);
+        if (existedAccount == null)
+        {
+            throw new InvalidOperationException($"Could not find account related to {email}.");
+        }
+        return existedAccount;
     }
 }

@@ -117,14 +117,14 @@ public class AccountController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns></returns>
-    // [Authorize]
+    [Authorize]
     [HttpDelete]
     [Route("session")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     public async Task<IActionResult> Logout(CancellationToken cancellationToken)
     {
         await _accountService.SignOutFromAccoutnAssync(cancellationToken);
-
+        // TODO: Need to implement
         return NoContent();
     }
 
