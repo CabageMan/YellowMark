@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using YellowMark.AppServices.UsersInfos.Services;
 using YellowMark.Contracts;
@@ -27,6 +28,7 @@ public class AccountService : IAccountService
     private readonly IUserInfoService _userInfoService;
     private readonly IConfiguration _configuration;
     private readonly IMapper _mapper;
+    private readonly ILogger<AccountService> _logger;
 
     /// <summary>
     /// Init <see cref="AccountService"/> instance.
@@ -37,13 +39,15 @@ public class AccountService : IAccountService
     /// <param name="userInfoService">Userinfo service <see cref="IUserInfoService"/></param>
     /// <param name="configuration">App configuration <see cref="IConfiguration"/></param>
     /// <param name="mapper">Account mapper <see cref="IMapper"/></param>
+    /// <param name="logger">Logger <see cref="ILogger"/></param>
     public AccountService(
         UserManager<Account> userManager,
         RoleManager<IdentityRole<Guid>> roleManager,
         IHttpContextAccessor httpContextAccessor,
         IUserInfoService userInfoService,
         IConfiguration configuration,
-        IMapper mapper)
+        IMapper mapper,
+        ILogger<AccountService> logger)
     {
         _userManager = userManager;
         _roleManager = roleManager;
@@ -51,6 +55,7 @@ public class AccountService : IAccountService
         _userInfoService = userInfoService;
         _configuration = configuration;
         _mapper = mapper;
+        _logger = logger;
     }
 
     /// <inheritdoc/>
@@ -70,6 +75,8 @@ public class AccountService : IAccountService
             SecurityStamp = Guid.NewGuid().ToString()
         };
 
+        _logger.LogInformation("Try to create new account");
+
         var registerResult = await _userManager.CreateAsync(account, request.Password);
         if (!registerResult.Succeeded)
         {
@@ -83,6 +90,8 @@ public class AccountService : IAccountService
         {
             throw new InvalidOperationException($"Could not create account for {request.Email}");
         }
+
+        _logger.LogInformation("Try to create related to account user info with account id {Id}", account.Id);
 
         var userInfo = _mapper.Map<CreateAccountRequest, CreateUserInfoRequest>(request);
         userInfo.AccountId = account.Id;

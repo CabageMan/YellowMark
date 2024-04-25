@@ -20,6 +20,7 @@ public class AccountController : ControllerBase
     private readonly IAccountService _accountService;
     private readonly IValidator<CreateAccountRequest> _accountValidator;
     private readonly IValidator<SignInRequest> _loginValidator;
+    private readonly ILogger<AccountController> _logger;
 
     /// <summary>
     /// Init instance of <see cref="AccountController"/>
@@ -27,14 +28,17 @@ public class AccountController : ControllerBase
     /// <param name="accountService">Account service <see cref="IAccountService"/></param>
     /// <param name="accountValidator">Creation account validator.</param>
     /// <param name="loginValidator">Signin info validator.</param>
+    /// <param name="logger">Logger <see cref="ILogger"/></param>
     public AccountController(
         IAccountService accountService,
         IValidator<CreateAccountRequest> accountValidator,
-        IValidator<SignInRequest> loginValidator)
+        IValidator<SignInRequest> loginValidator,
+        ILogger<AccountController> logger)
     {
         _accountService = accountService;
         _accountValidator = accountValidator;
         _loginValidator = loginValidator;
+        _logger = logger;
     }
 
     /// <summary>
@@ -50,6 +54,9 @@ public class AccountController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> RegisterAccount(CreateAccountRequest request, CancellationToken cancellationToken)
     {
+        using var loggerScope = _logger.BeginScope("Register new account operation");
+        _logger.LogInformation("Register account request");
+
         var validationResult = await _accountValidator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
         {
@@ -57,6 +64,9 @@ public class AccountController : ControllerBase
         }
 
         var addedUserInfoId = await _accountService.RegisterAccountAssync(request, cancellationToken);
+
+        _logger.LogInformation("Account successfully registered. Created UserInfo with id {Id}", addedUserInfoId);
+
         return StatusCode((int)HttpStatusCode.Created, addedUserInfoId);
     }
 
@@ -74,6 +84,9 @@ public class AccountController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> LoginIntoAccount(SignInRequest request, CancellationToken cancellationToken)
     {
+        using var loggerScope = _logger.BeginScope("Sign in into account operation");
+        _logger.LogInformation("Sign in into account request");
+
         var validationResult = await _loginValidator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
         {
@@ -86,6 +99,8 @@ public class AccountController : ControllerBase
         {
             return Unauthorized();
         }
+
+        _logger.LogInformation("Successful login with token {Token}", loginInfo.JwtToken);
 
         return Ok(loginInfo);
     }

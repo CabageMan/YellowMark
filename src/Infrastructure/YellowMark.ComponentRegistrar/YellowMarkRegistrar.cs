@@ -36,6 +36,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using YellowMark.AppServices.Accounts.Services;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Http;
+using Serilog;
+using Serilog.Events;
 
 namespace YellowMark.ComponentRegistrar;
 
@@ -59,8 +61,8 @@ public static class YellowMarkRegistrar
         services.ConfigureRepositories();
         services.ConfigureValidators();
         services.ConfigureSrvices();
-
         services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.ConfigureSerilog(configuration);
 
         return services;
     }
@@ -182,6 +184,22 @@ public static class YellowMarkRegistrar
 
         // Authorization.
         services.AddAuthorization();
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureSerilog(
+        this IServiceCollection services,
+        ConfigurationManager configuration)
+    {
+        services.AddSerilog((services, config) =>
+        {
+            config
+                .ReadFrom.Configuration(configuration)
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                .WriteTo.Console()
+                .WriteTo.Debug();
+        });
 
         return services;
     }
