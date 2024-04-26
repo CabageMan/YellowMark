@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using YellowMark.AppServices.Subcategories.Repositories;
 using YellowMark.Contracts.Subcategories;
 using YellowMark.Domain.Subcategories.Entity;
@@ -11,16 +14,26 @@ public class SubcategoryService : ISubcategoryService
 
     private readonly ISubcategoryRepository _subcategoryRepository;
     private readonly IMapper _mapper;
+    private readonly IMemoryCache _memoryCache;
+    private readonly IDistributedCache _distributedCache;
 
     /// <summary>
     /// Init <see cref="SubcategoryService"/> instance.
     /// </summary>
     /// <param name="subcategoryRepository">Subcategory Repository (<see cref="ISubcategoryRepository"/>)</param>
     /// <param name="mapper">Subcategory mapper</param>
-    public SubcategoryService(ISubcategoryRepository subcategoryRepository, IMapper mapper)
+    /// <param name="memoryCache">Memory cache <see cref="IMemoryCache"/></param>
+    /// <param name="distributedCache">Distributed cache <see cref="IDistributedCache"/></param>
+    public SubcategoryService(
+        ISubcategoryRepository subcategoryRepository,
+        IMapper mapper,
+        IMemoryCache memoryCache,
+        IDistributedCache distributedCache)
     {
         _subcategoryRepository = subcategoryRepository;
         _mapper = mapper;
+        _memoryCache = memoryCache;
+        _distributedCache = distributedCache;
     }
 
     /// <inheritdoc/>
@@ -32,15 +45,50 @@ public class SubcategoryService : ISubcategoryService
     }
 
     /// <inheritdoc/>
-    public Task<IEnumerable<SubcategoryDto>> GetSubcategoriesAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<SubcategoryDto>> GetSubcategoriesAsync(CancellationToken cancellationToken)
     {
-        return _subcategoryRepository.GetAllAsync(cancellationToken);
+        var cacheKey = "all_subcategories";
+        var categoriesSerialized = await _distributedCache.GetStringAsync(cacheKey, cancellationToken);
+        if (!string.IsNullOrWhiteSpace(categoriesSerialized))
+        {
+            var cachedCategories = JsonSerializer.Deserialize<IReadOnlyCollection<SubcategoryDto>>(categoriesSerialized);
+            if (cachedCategories != null)
+            {
+                return cachedCategories;
+            }
+        }
+
+        var categories = await _subcategoryRepository.GetAllAsync(cancellationToken);
+        categoriesSerialized = JsonSerializer.Serialize(categories);
+        await _distributedCache.SetStringAsync(
+            cacheKey,
+            categoriesSerialized,
+            new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(5) },
+            cancellationToken)
+        ;
+
+        return categories;
     }
 
     /// <inheritdoc/>
     public async Task<SubcategoryDto> GetSubcategoryByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _subcategoryRepository.GetByIdAsync(id, cancellationToken);
+        var cacheKey = $"subcategory_info_{id}";
+
+        if (_memoryCache.TryGetValue<SubcategoryDto>(cacheKey, out var result) && result != null)
+        {
+            return result;
+        }
+
+        var category = await _subcategoryRepository.GetByIdAsync(id, cancellationToken);
+
+        _memoryCache.Set(
+            cacheKey,
+            category,
+            new MemoryCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(5) }
+        );
+
+        return category;
     }
 
     /// <inheritdoc/>
@@ -50,7 +98,7 @@ public class SubcategoryService : ISubcategoryService
         var entity = _mapper.Map<CreateSubcategoryRequest, Subcategory>(request);
         entity.Id = id;
 
-        await  _subcategoryRepository.UpdateAsync(entity, cancellationToken);
+        await _subcategoryRepository.UpdateAsync(entity, cancellationToken);
 
         return _mapper.Map<Subcategory, SubcategoryDto>(entity);
     }

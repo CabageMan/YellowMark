@@ -33,8 +33,8 @@ public class CreateUserInfoValidator : AbstractValidator<CreateUserInfoRequest>
         //     .EmailAddress()
         //     .WithMessage("A valid email address is required.");
 
-        int minPhoneLength = 11;
-        int maxPhoneLength = 15;
+        // int minPhoneLength = 11;
+        // int maxPhoneLength = 15;
         // TODO: Update phone regex if it needed. Check in w.
         // Refactor on tests creating.
         // Phone format: 1(234)567-8901

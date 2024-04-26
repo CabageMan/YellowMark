@@ -63,6 +63,7 @@ public static class YellowMarkRegistrar
         services.ConfigureSrvices();
         services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.ConfigureSerilog(configuration);
+        services.ConfigureCaching(configuration);
 
         return services;
     }
@@ -199,6 +200,21 @@ public static class YellowMarkRegistrar
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                 .WriteTo.Console()
                 .WriteTo.Debug();
+        });
+
+        return services;
+    }
+
+    private static IServiceCollection ConfigureCaching(
+        this IServiceCollection services,
+        ConfigurationManager configuration)
+    {
+        services.AddMemoryCache();
+
+        services.AddStackExchangeRedisCache(options => 
+        {
+            options.Configuration = configuration.GetConnectionString("Redis");
+            options.InstanceName = "local_";
         });
 
         return services;
