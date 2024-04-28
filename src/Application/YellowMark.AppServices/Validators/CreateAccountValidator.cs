@@ -22,12 +22,14 @@ public class CreateAccountValidator : AbstractValidator<CreateAccountRequest>
 
 
         RuleFor(acc => acc.MiddleName)
-            .Length(1, 50);
+            .Length(1, 50)
+            .Matches(@"^[\p{L}.-]+$");
 
         RuleFor(acc => acc.LastName)
             .NotNull()
             .NotEmpty()
-            .Length(1, 50);
+            .Length(1, 50)
+            .Matches(@"^[\p{L}-]+$");
 
         RuleFor(acc => acc.Email)
             .NotEmpty()

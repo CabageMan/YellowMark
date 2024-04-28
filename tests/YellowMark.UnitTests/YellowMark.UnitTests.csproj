@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Application\YellowMark.AppServices\YellowMark.AppServices.csproj" />
+    <ProjectReference Include="..\..\src\Infrastructure\YellowMark.ComponentRegistrar\YellowMark.ComponentRegistrar.csproj" />
   </ItemGroup>
 
 </Project>
