@@ -17,15 +17,17 @@ public class CreateAccountValidator : AbstractValidator<CreateAccountRequest>
         RuleFor(acc => acc.FirstName)
             .NotNull()
             .NotEmpty()
-            .Length(0, 255);
+            .Length(1, 50)
+            .Matches(@"^[\p{L}]+$");
+
 
         RuleFor(acc => acc.MiddleName)
-            .Length(0, 255);
+            .Length(1, 50);
 
         RuleFor(acc => acc.LastName)
             .NotNull()
             .NotEmpty()
-            .Length(0, 255);
+            .Length(1, 50);
 
         RuleFor(acc => acc.Email)
             .NotEmpty()
