@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using YellowMark.AppServices.Currencies.Repositories;
 using YellowMark.Contracts.Currnecies;
 using YellowMark.Domain.Currencies.Entity;
@@ -10,16 +13,24 @@ public class CurrencyService : ICurrencyService
 {
     private readonly ICurrencyRepository _currencyRepository;
     private readonly IMapper _mapper;
+    private readonly IMemoryCache _memoryCache;
+    private readonly IDistributedCache _distributedCache;
 
     /// <summary>
     /// Init <see cref="CurrencyService"/> instance.
     /// </summary>
     /// <param name="currencyRepository">Currency Repository (<see cref="ICurrencyRepository"/>)</param>
     /// <param name="mapper">Currency mapper</param>
-    public CurrencyService(ICurrencyRepository currencyRepository, IMapper mapper)
+    public CurrencyService(
+        ICurrencyRepository currencyRepository, 
+        IMapper mapper,
+        IMemoryCache memoryCache,
+        IDistributedCache distributedCache)
     {
         _currencyRepository = currencyRepository;
         _mapper = mapper;
+        _memoryCache = memoryCache;
+        _distributedCache = distributedCache;
     }
 
     /// <inheritdoc/>
@@ -31,27 +42,65 @@ public class CurrencyService : ICurrencyService
     }
 
     /// <inheritdoc/>
-    public Task<IEnumerable<CurrencyDto>> GetCurrenciesAsync(CancellationToken cancellationToken)
+    public async Task<IEnumerable<CurrencyDto>> GetCurrenciesAsync(CancellationToken cancellationToken)
     {
-        return _currencyRepository.GetAllAsync(cancellationToken);
+        var cacheKey = "all_currencies";
+
+        var currenciesSerialized = await _distributedCache.GetStringAsync(cacheKey, cancellationToken);
+        if (!string.IsNullOrWhiteSpace(currenciesSerialized))
+        {
+            var cachedCurrencies = JsonSerializer.Deserialize<IReadOnlyCollection<CurrencyDto>>(currenciesSerialized);
+            if (cachedCurrencies != null)
+            {
+                return cachedCurrencies;
+            }
+        }
+
+        var currencies = await _currencyRepository.GetAllAsync(cancellationToken);
+        currenciesSerialized = JsonSerializer.Serialize(currencies);
+        await _distributedCache.SetStringAsync(
+            cacheKey,
+            currenciesSerialized,
+            new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(15) },
+            cancellationToken)
+        ;
+
+        return currencies;
     }
 
     /// <inheritdoc/>
     public async Task<CurrencyDto> GetCurrencyByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _currencyRepository.GetByIdAsync(id, cancellationToken);
+        var cacheKey = $"currency_info_{id}";
+
+        if (_memoryCache.TryGetValue<Currency>(cacheKey, out var result) && result != null)
+        {
+            return _mapper.Map<CurrencyDto>(result);
+        }
+
+        var currency = await _currencyRepository.GetByIdAsync(id, cancellationToken);
+
+        _memoryCache.Set(
+            cacheKey,
+            currency,
+            new MemoryCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(15) }
+        );
+
+        return _mapper.Map<CurrencyDto>(currency);
     }
 
     /// <inheritdoc/>
     public async Task<CurrencyDto> UpdateCurrencyAsync(Guid id, CreateCurrencyRequest request, CancellationToken cancellationToken)
     {
-        // TODO: Need to fix. Get previous record and update it (Created at id wrong).
-        var entity = _mapper.Map<CreateCurrencyRequest, Currency>(request);
-        entity.Id = id;
+        var currentEntity = await _currencyRepository.GetByIdAsync(id, cancellationToken);
 
-        await  _currencyRepository.UpdateAsync(entity, cancellationToken);
+        var updatedEntity = _mapper.Map<CreateCurrencyRequest, Currency>(request);
+        updatedEntity.Id = id;
+        updatedEntity.CreatedAt = currentEntity.CreatedAt;
 
-        return _mapper.Map<Currency, CurrencyDto>(entity);
+        await  _currencyRepository.UpdateAsync(updatedEntity, cancellationToken);
+
+        return _mapper.Map<Currency, CurrencyDto>(updatedEntity);
     }
 
     /// <inheritdoc/>

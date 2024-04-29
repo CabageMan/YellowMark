@@ -42,7 +42,8 @@ public class AdService : IAdService
     /// <inheritdoc/>
     public async Task<AdDto> GetAdByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _adRepository.GetByIdAsync(id, cancellationToken);
+        var entity = await _adRepository.GetByIdAsync(id, cancellationToken);
+        return _mapper.Map<Ad, AdDto>(entity);
     }
 
     /// <inheritdoc/>
@@ -55,13 +56,15 @@ public class AdService : IAdService
     /// <inheritdoc/>
     public async Task<AdDto> UpdateAdAsync(Guid id, CreateAdRequest request, CancellationToken cancellationToken)
     {
-        // TODO: Need to fix. Get previous record and update it (Created at id wrong).
-        var entity = _mapper.Map<CreateAdRequest, Ad>(request);
-        entity.Id = id;
+        var currentEntity = await _adRepository.GetByIdAsync(id, cancellationToken);
 
-        await _adRepository.UpdateAsync(entity, cancellationToken);
+        var updatedEntity = _mapper.Map<CreateAdRequest, Ad>(request);
+        updatedEntity.Id = id;
+        updatedEntity.CreatedAt = currentEntity.CreatedAt;
 
-        return _mapper.Map<Ad, AdDto>(entity);
+        await _adRepository.UpdateAsync(updatedEntity, cancellationToken);
+
+        return _mapper.Map<Ad, AdDto>(updatedEntity);
     }
 
     /// <inheritdoc/>

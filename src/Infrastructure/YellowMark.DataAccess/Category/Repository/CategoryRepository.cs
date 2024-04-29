@@ -48,12 +48,12 @@ public class CategoryRepository : ICategoryRepository
     }
 
     /// <inheritdoc/>
-    public async Task<CategoryDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Domain.Categories.Entity.Category> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _readOnlyRepository
             .GetAll()
             .Where(s => s.Id == id)
-            .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
+            // .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
     }
 

@@ -37,7 +37,8 @@ public class CommentService : ICommentService
     /// <inheritdoc/>
     public async Task<CommentDto> GetCommentByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _commentRepository.GetByIdAsync(id, cancellationToken);
+        var entity = await _commentRepository.GetByIdAsync(id, cancellationToken);
+        return _mapper.Map<CommentDto>(entity);
     }
 
     /// <inheritdoc/>
@@ -56,13 +57,15 @@ public class CommentService : ICommentService
     /// <inheritdoc/>
     public async Task<CommentDto> UpdateCommentAsync(Guid id, CreateCommentRequest request, CancellationToken cancellationToken)
     {
-        // TODO: Need to fix. Get previous record and update it (Created at id wrong).
-        var entity = _mapper.Map<CreateCommentRequest, Comment>(request);
-        entity.Id = id;
+        var currentEntity = await _commentRepository.GetByIdAsync(id, cancellationToken);
 
-        await _commentRepository.UpdateAsync(entity, cancellationToken);
+        var updatedEntity = _mapper.Map<CreateCommentRequest, Comment>(request);
+        updatedEntity.Id = id;
+        updatedEntity.CreatedAt = currentEntity.CreatedAt;
 
-        return _mapper.Map<Comment, CommentDto>(entity);
+        await _commentRepository.UpdateAsync(updatedEntity, cancellationToken);
+
+        return _mapper.Map<Comment, CommentDto>(updatedEntity);
     }
     
     /// <inheritdoc/>

@@ -63,12 +63,12 @@ public class AdRepository : IAdRepository
     }
 
     /// <inheritdoc/>
-    public async Task<AdDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Domain.Ads.Entity.Ad> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _readOnlyRepository
             .GetAll()
             .Where(s => s.Id == id)
-            .ProjectTo<AdDto>(_mapper.ConfigurationProvider)
+            // .ProjectTo<AdDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
     }
 

@@ -11,7 +11,6 @@ namespace YellowMark.AppServices.Subcategories.Services;
 /// <inheritdoc cref="ISubcategoryService"/>
 public class SubcategoryService : ISubcategoryService
 {
-
     private readonly ISubcategoryRepository _subcategoryRepository;
     private readonly IMapper _mapper;
     private readonly IMemoryCache _memoryCache;
@@ -75,9 +74,9 @@ public class SubcategoryService : ISubcategoryService
     {
         var cacheKey = $"subcategory_info_{id}";
 
-        if (_memoryCache.TryGetValue<SubcategoryDto>(cacheKey, out var result) && result != null)
+        if (_memoryCache.TryGetValue<Subcategory>(cacheKey, out var result) && result != null)
         {
-            return result;
+            return _mapper.Map<SubcategoryDto>(result);
         }
 
         var category = await _subcategoryRepository.GetByIdAsync(id, cancellationToken);
@@ -88,19 +87,21 @@ public class SubcategoryService : ISubcategoryService
             new MemoryCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(5) }
         );
 
-        return category;
+        return _mapper.Map<SubcategoryDto>(category);
     }
 
     /// <inheritdoc/>
     public async Task<SubcategoryDto> UpdateSubcategoryAsync(Guid id, CreateSubcategoryRequest request, CancellationToken cancellationToken)
     {
-        // TODO: Need to fix. Get previous record and update it (Created at id wrong).
-        var entity = _mapper.Map<CreateSubcategoryRequest, Subcategory>(request);
-        entity.Id = id;
+        var currentEntity = await _subcategoryRepository.GetByIdAsync(id, cancellationToken);
 
-        await _subcategoryRepository.UpdateAsync(entity, cancellationToken);
+        var updatedEntity = _mapper.Map<CreateSubcategoryRequest, Subcategory>(request);
+        updatedEntity.Id = id;
+        updatedEntity.CreatedAt = currentEntity.CreatedAt;
 
-        return _mapper.Map<Subcategory, SubcategoryDto>(entity);
+        await _subcategoryRepository.UpdateAsync(updatedEntity, cancellationToken);
+
+        return _mapper.Map<Subcategory, SubcategoryDto>(updatedEntity);
     }
 
     /// <inheritdoc/>

@@ -25,7 +25,7 @@ public class CategoryService : ICategoryService
     /// <param name="memoryCache">Memory cache <see cref="IMemoryCache"/></param>
     /// <param name="distributedCache">Distributed cache <see cref="IDistributedCache"/></param>
     public CategoryService(
-        ICategoryRepository categoryRepository, 
+        ICategoryRepository categoryRepository,
         IMapper mapper,
         IMemoryCache memoryCache,
         IDistributedCache distributedCache)
@@ -62,9 +62,9 @@ public class CategoryService : ICategoryService
         var categories = await _categoryRepository.GetAllAsync(cancellationToken);
         categoriesSerialized = JsonSerializer.Serialize(categories);
         await _distributedCache.SetStringAsync(
-            cacheKey, 
+            cacheKey,
             categoriesSerialized,
-            new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(5) },
+            new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(15) },
             cancellationToken)
         ;
 
@@ -76,32 +76,34 @@ public class CategoryService : ICategoryService
     {
         var cacheKey = $"category_info_{id}";
 
-        if (_memoryCache.TryGetValue<CategoryDto>(cacheKey, out var result) && result != null)
+        if (_memoryCache.TryGetValue<Category>(cacheKey, out var result) && result != null)
         {
-            return result;
+            return _mapper.Map<CategoryDto>(result);
         }
 
         var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
 
         _memoryCache.Set(
-            cacheKey, 
-            category, 
-            new MemoryCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(5) }
+            cacheKey,
+            category,
+            new MemoryCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(15) }
         );
 
-        return category;
+        return _mapper.Map<CategoryDto>(category);
     }
 
     /// <inheritdoc/>
     public async Task<CategoryDto> UpdateCategoryAsync(Guid id, CreateCategoryRequest request, CancellationToken cancellationToken)
     {
-        // TODO: Need to fix. Get previous record and update it (Created at id wrong).
-        var entity = _mapper.Map<CreateCategoryRequest, Category>(request);
-        entity.Id = id;
+        var currentEntity = await _categoryRepository.GetByIdAsync(id, cancellationToken);
 
-        await  _categoryRepository.UpdateAsync(entity, cancellationToken);
+        var updatedEntity = _mapper.Map<CreateCategoryRequest, Category>(request);
+        updatedEntity.Id = id;
+        updatedEntity.CreatedAt = currentEntity.CreatedAt;
 
-        return _mapper.Map<Category, CategoryDto>(entity);
+        await _categoryRepository.UpdateAsync(updatedEntity, cancellationToken);
+
+        return _mapper.Map<Category, CategoryDto>(updatedEntity);
     }
 
     /// <inheritdoc/>

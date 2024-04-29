@@ -48,12 +48,11 @@ public class SubcategoryRepository : ISubcategoryRepository
     }
 
     /// <inheritdoc/>
-    public async Task<SubcategoryDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Domain.Subcategories.Entity.Subcategory> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _readOnlyRepository
             .GetAll()
             .Where(s => s.Id == id)
-            .ProjectTo<SubcategoryDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
     }
 

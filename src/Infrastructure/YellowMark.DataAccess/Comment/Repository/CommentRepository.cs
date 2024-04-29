@@ -63,12 +63,11 @@ public class CommentRepository : ICommentRepository
     }
 
     /// <inheritdoc/>
-    public async Task<CommentDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Domain.Comments.Entity.Comment> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _readOnlyRepository
             .GetAll()
             .Where(s => s.Id == id)
-            .ProjectTo<CommentDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
     }
 

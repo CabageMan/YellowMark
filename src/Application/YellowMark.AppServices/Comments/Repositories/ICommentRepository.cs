@@ -1,6 +1,7 @@
 ﻿using YellowMark.AppServices.Specifications;
 using YellowMark.Contracts.Comments;
 using YellowMark.Contracts.Pagination;
+using YellowMark.Domain.Comments.Entity;
 
 namespace YellowMark.AppServices.Comments.Repositories;
 
@@ -12,10 +13,10 @@ public interface ICommentRepository
     /// <summary>
     /// Add new Comment instance.
     /// </summary>
-    /// <param name="entity">Comment model <see cref="Domain.Comments.Entity.Comment"/></param>
+    /// <param name="entity">Comment model <see cref="Comment"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns><see cref="Task"/></returns>
-    Task AddAsync(Domain.Comments.Entity.Comment entity, CancellationToken cancellationToken);
+    Task AddAsync(Comment entity, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns all instances of the CommentDto. 
@@ -31,23 +32,23 @@ public interface ICommentRepository
     /// <param name="specification">Filtering specification <see cref="Specification"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Collection of the <see cref="CommentDto"/></returns>
-    Task<IEnumerable<CommentDto>> GetFiltered(Specification<Domain.Comments.Entity.Comment> specification, CancellationToken cancellationToken);
+    Task<IEnumerable<CommentDto>> GetFiltered(Specification<Comment> specification, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Returns an instance of the <see cref="CommentDto"/> by id.
+    /// Returns an instance of the <see cref="Comment"/> by id.
     /// </summary>
     /// <param name="id">Comment id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
-    /// <returns><see cref="CommentDto"/></returns>
-    Task<CommentDto> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    /// <returns><see cref="Comment"/></returns>
+    Task<Comment> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Update current Comment.
     /// </summary>
-    /// <param name="entity">Entity model <see cref="Domain.Comments.Entity.Comment"/></param>
+    /// <param name="entity">Entity model <see cref="Comment"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns><see cref="Task"/></returns>
-    Task UpdateAsync(Domain.Comments.Entity.Comment entity, CancellationToken cancellationToken);
+    Task UpdateAsync(Comment entity, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete a Comment by id.

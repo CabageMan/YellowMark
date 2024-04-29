@@ -49,12 +49,11 @@ public class CurrencyRepository : ICurrencyRepository
     }
 
     /// <inheritdoc/>
-    public async Task<CurrencyDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Domain.Currencies.Entity.Currency> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _readOnlyRepository
             .GetAll()
             .Where(s => s.Id == id)
-            .ProjectTo<CurrencyDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
     }
 

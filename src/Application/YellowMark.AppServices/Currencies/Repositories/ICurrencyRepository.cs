@@ -1,5 +1,6 @@
 ﻿using YellowMark.AppServices.Specifications;
 using YellowMark.Contracts.Currnecies;
+using YellowMark.Domain.Currencies.Entity;
 
 namespace YellowMark.AppServices.Currencies.Repositories;
 
@@ -11,10 +12,10 @@ public interface ICurrencyRepository
     /// <summary>
     /// Add new Currency instance.
     /// </summary>
-    /// <param name="entity">Currency model <see cref="Domain.Currencies.Entity.Currency"/></param>
+    /// <param name="entity">Currency model <see cref="Currency"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns><see cref="Task"/></returns>
-    Task AddAsync(Domain.Currencies.Entity.Currency entity, CancellationToken cancellationToken);
+    Task AddAsync(Currency entity, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns all instances of the CurrencyDto.
@@ -29,23 +30,23 @@ public interface ICurrencyRepository
     /// <param name="specification">Filtering specification <see cref="Specification"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Collection of the <see cref="CurrencyDto"/></returns>
-    Task<IEnumerable<CurrencyDto>> GetFiltered(Specification<Domain.Currencies.Entity.Currency> specification, CancellationToken cancellationToken);
+    Task<IEnumerable<CurrencyDto>> GetFiltered(Specification<Currency> specification, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Returns an instance of the <see cref="CurrencyDto"/> by id.
+    /// Returns an instance of the <see cref="Currency"/> by id.
     /// </summary>
     /// <param name="id">Currency id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
-    /// <returns><see cref="CurrencyDto"/></returns>
-    Task<CurrencyDto> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    /// <returns><see cref="Currency"/></returns>
+    Task<Currency> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Update current Currency.
     /// </summary>
-    /// <param name="entity">Entity model <see cref="Domain.Currencies.Entity.Currency"/></param>
+    /// <param name="entity">Entity model <see cref="Currency"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns><see cref="Task"/></returns>
-    Task UpdateAsync(Domain.Currencies.Entity.Currency entity, CancellationToken cancellationToken);
+    Task UpdateAsync(Currency entity, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete a Currency by id.

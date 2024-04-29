@@ -1,6 +1,7 @@
 ﻿using YellowMark.AppServices.Specifications;
 using YellowMark.Contracts.Ads;
 using YellowMark.Contracts.Pagination;
+using YellowMark.Domain.Ads.Entity;
 
 namespace YellowMark.AppServices.Ads.Repositories;
 
@@ -12,10 +13,10 @@ public interface IAdRepository
     /// <summary>
     /// Add new Ad instance.
     /// </summary>
-    /// <param name="entity">Ad model <see cref="Domain.Ads.Entity.Ad"/></param>
+    /// <param name="entity">Ad model <see cref="Ad"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns><see cref="Task"/></returns>
-    Task AddAsync(Domain.Ads.Entity.Ad entity, CancellationToken cancellationToken);
+    Task AddAsync(Ad entity, CancellationToken cancellationToken);
 
     /// <summary>
     /// Returns all instances of the AdDto with pagination info. 
@@ -31,23 +32,23 @@ public interface IAdRepository
     /// <param name="specification">Filtering specification <see cref="Specification"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Collection of the <see cref="AdDto"/></returns>
-    Task<IEnumerable<AdDto>> GetFiltered(Specification<Domain.Ads.Entity.Ad> specification, CancellationToken cancellationToken);
+    Task<IEnumerable<AdDto>> GetFiltered(Specification<Ad> specification, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Returns an instance of the <see cref="AdDto"/> by id.
+    /// Returns an instance of the <see cref="Ad"/> by id.
     /// </summary>
     /// <param name="id">Ad id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
-    /// <returns><see cref="AdDto"/></returns>
-    Task<AdDto> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    /// <returns><see cref="Ad"/></returns>
+    Task<Ad> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Update current Ad.
     /// </summary>
-    /// <param name="entity">Entity model <see cref="Domain.Ads.Entity.Ad"/></param>
+    /// <param name="entity">Entity model <see cref="Ad"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns><see cref="Task"/></returns>
-    Task UpdateAsync(Domain.Ads.Entity.Ad entity, CancellationToken cancellationToken);
+    Task UpdateAsync(Ad entity, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete a Ad by id.
