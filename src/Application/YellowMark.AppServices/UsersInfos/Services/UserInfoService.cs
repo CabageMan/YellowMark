@@ -43,7 +43,8 @@ public class UserInfoService : IUserInfoService
     /// <inheritdoc/>
     public async Task<UserInfoDto> GetUserByIdAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await _userRepository.GetByIdAsync(id, cancellationToken);
+        var entity = await _userRepository.GetByIdAsync(id, cancellationToken);
+        return _mapper.Map<UserInfo, UserInfoDto>(entity);
     }
 
     /// <inheritdoc/>
@@ -68,13 +69,15 @@ public class UserInfoService : IUserInfoService
     /// <inheritdoc/>
     public async Task<UserInfoDto> UpdateUserAsync(Guid id, CreateUserInfoRequest request, CancellationToken cancellationToken)
     {
-        // TODO: Need to fix. Get previous record and update it (Created at id wrong).
-        var entity = _mapper.Map<CreateUserInfoRequest, UserInfo>(request);
-        entity.Id = id;
+        var currentEntity = await _userRepository.GetByIdAsync(id, cancellationToken);
 
-        await _userRepository.UpdateAsync(entity, cancellationToken);
+        var updatedEntity = _mapper.Map<CreateUserInfoRequest, UserInfo>(request);
+        updatedEntity.Id = id;
+        updatedEntity.CreatedAt = currentEntity.CreatedAt;
 
-        return _mapper.Map<UserInfo, UserInfoDto>(entity);
+        await _userRepository.UpdateAsync(updatedEntity, cancellationToken);
+
+        return _mapper.Map<UserInfo, UserInfoDto>(updatedEntity);
     }
 
     /// <inheritdoc/>

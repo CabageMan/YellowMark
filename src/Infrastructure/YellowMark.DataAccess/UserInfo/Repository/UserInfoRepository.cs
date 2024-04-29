@@ -74,12 +74,11 @@ public class UserInfoRepository : IUserInfoRepository
     }
 
     /// <inheritdoc/>
-    public async Task<UserInfoDto> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public async Task<Domain.UsersInfos.Entity.UserInfo> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _readOnlyRepository
             .GetAll()
             .Where(s => s.Id == id)
-            .ProjectTo<UserInfoDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
     }
 
