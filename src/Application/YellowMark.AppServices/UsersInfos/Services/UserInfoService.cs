@@ -63,7 +63,12 @@ public class UserInfoService : IUserInfoService
     {
         Specification<UserInfo> specification = new UserInfoByAccounIdSpecification(accountId);
         var users = await _userRepository.GetFiltered(specification, cancellationToken);
-        return users.First();
+        var user = users.First();
+        if (user == null)
+        {
+            throw new InvalidDataException("Could not find user related to account.");
+        }
+        return user;
     }
 
     /// <inheritdoc/>
@@ -73,6 +78,7 @@ public class UserInfoService : IUserInfoService
 
         var updatedEntity = _mapper.Map<CreateUserInfoRequest, UserInfo>(request);
         updatedEntity.Id = id;
+        updatedEntity.AccountId = currentEntity.AccountId;
         updatedEntity.CreatedAt = currentEntity.CreatedAt;
 
         await _userRepository.UpdateAsync(updatedEntity, cancellationToken);

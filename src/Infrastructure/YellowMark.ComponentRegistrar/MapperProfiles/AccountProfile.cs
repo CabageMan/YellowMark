@@ -2,6 +2,7 @@
 using YellowMark.Contracts;
 using YellowMark.Contracts.Account;
 using YellowMark.Contracts.UsersInfos;
+using YellowMark.Domain.UsersInfos.Entity;
 
 namespace YellowMark.ComponentRegistrar.MapperProfiles;
 
@@ -21,5 +22,8 @@ public class AccountProfile : Profile
         CreateMap<UserInfoDto, AccountInfoDto>()
             .ForMember(dest => dest.Phone, opt => opt.Ignore())
             .ForMember(dest => dest.Email, opt => opt.Ignore());
+
+        CreateMap<UpdateAccountRequest, CreateUserInfoRequest>()
+            .ForMember(dest => dest.AccountId, opt => opt.Ignore());
     }
 }

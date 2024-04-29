@@ -9,11 +9,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using YellowMark.AppServices.UsersInfos.Services;
-using YellowMark.Contracts;
 using YellowMark.Contracts.Account;
 using YellowMark.Contracts.UsersInfos;
 using YellowMark.Domain.Accounts.Entity;
 using YellowMark.Domain.UserRoles;
+using YellowMark.Domain.UsersInfos.Entity;
 
 namespace YellowMark.AppServices.Accounts.Services;
 
@@ -141,8 +141,33 @@ public class AccountService : IAccountService
         };
     }
 
+    // TODO: Refactor user update logic: a lot of manipulation with data.
     /// <inheritdoc/>
-    public async Task<AccountInfoDto> GetUserInfoAssync(CancellationToken cancellationToken)
+    public async Task<AccountInfoDto> UpdateAccountInfoAssync(UpdateAccountRequest request, CancellationToken cancellationToken)
+    {
+        var account = await GetAccountByTokenAsync();
+        account.UserName = request.FirstName;
+        account.Email = request.Email;
+        account.PhoneNumber = request.Phone;
+
+        var currentUserInfo = await _userInfoService.GetUserByAccountIdAsync(account.Id, cancellationToken);
+
+        var updatedUserInfo = _mapper.Map<UpdateAccountRequest, CreateUserInfoRequest>(request);
+        updatedUserInfo.AccountId = account.Id;
+        
+        await _userManager.UpdateAsync(account);
+
+        var userInfoDto = await _userInfoService.UpdateUserAsync(currentUserInfo.Id, updatedUserInfo, cancellationToken);
+
+        var accountInfo = _mapper.Map<UserInfoDto, AccountInfoDto>(userInfoDto);
+        accountInfo.Email = account.Email;
+        accountInfo.Phone = account.PhoneNumber;
+
+        return accountInfo;
+    }
+
+    /// <inheritdoc/>
+    public async Task<AccountInfoDto> GetAccountInfoAssync(CancellationToken cancellationToken)
     {
         var existedAccount = await GetAccountByTokenAsync();
         var userInfo = await _userInfoService.GetUserByAccountIdAsync(existedAccount.Id, cancellationToken);

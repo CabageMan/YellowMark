@@ -21,7 +21,7 @@ public interface IAccountService
     /// </summary>
     /// <param name="request">Sign in request <see cref="SignInRequest"/></param>
     /// <param name="cancellationToken">Operation cancelation token <see cref="CancellationToken"/></param>
-    /// <returns></returns>
+    /// <returns><see cref="LoginDto"/></returns>
     Task<LoginDto> SignInIntoAccountAssync(SignInRequest request, CancellationToken cancellationToken);
 
     /// <summary>
@@ -35,8 +35,15 @@ public interface IAccountService
     /// Get current account info.
     /// </summary>
     /// <param name="cancellationToken"></param>
-    /// <returns></returns>
-    Task<AccountInfoDto> GetUserInfoAssync(CancellationToken cancellationToken); 
+    /// <returns><see cref="AccountInfoDto"/></returns>
+    Task<AccountInfoDto> GetAccountInfoAssync(CancellationToken cancellationToken); 
+
+    /// <summary>
+    /// Update current account info.
+    /// </summary>
+    /// <param name="cancellationToken"></param>
+    /// <returns><see cref="AccountInfoDto"/></returns>
+    Task<AccountInfoDto> UpdateAccountInfoAssync(UpdateAccountRequest request, CancellationToken cancellationToken); 
 
     /// <summary>
     /// Delete existing account.

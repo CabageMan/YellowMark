@@ -1,4 +1,4 @@
-﻿namespace YellowMark.Contracts;
+﻿namespace YellowMark.Contracts.Account;
 
 /// <summary>
 /// Data Transfer Object for login info.

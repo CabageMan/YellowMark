@@ -1,15 +1,10 @@
 ﻿namespace YellowMark.Contracts.Account;
 
 /// <summary>
-/// Account info Data Transfer Object.
+/// Update account info request.
 /// </summary>
-public class AccountInfoDto
+public class UpdateAccountRequest
 {
-    /// <summary>
-    /// User record identifier. 
-    /// </summary>
-    public Guid Id { get; set; }
-
     /// <summary>
     /// User first name.
     /// </summary>
@@ -24,11 +19,6 @@ public class AccountInfoDto
     /// User last name.
     /// </summary>
     public string LastName { get; set; }
-
-    /// <summary>
-    /// User full name. 
-    /// </summary>
-    public string FullName { get; set; }
 
     /// <summary>
     /// User email. 

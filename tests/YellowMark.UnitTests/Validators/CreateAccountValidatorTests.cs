@@ -476,4 +476,168 @@ public class CreateAccountValidatorTests : BaseUnitTest
 
         result.ShouldHaveValidationErrorFor(x => x.Phone).Only();
     }
+
+    // Password
+    [Theory]
+    [InlineData("Password123$")]
+    [InlineData("passWord1%@")]
+    [InlineData("PASSWOrd123$")]
+    public void ShouldCorrect_Password(string testPassword)
+    {
+        var createUserRequest = Fixture
+            .Build<CreateAccountRequest>()
+            .With(x => x.FirstName, "Jack")
+            .With(x => x.MiddleName, "Jr.")
+            .With(x => x.LastName, "Awesome")
+            .With(x => x.Email, "test@email.com")
+            .With(x => x.Phone, "1(234)890-1675")
+            .With(x => x.BirthDate, DateOnly.FromDateTime(DateTime.Parse("1973-03-19")))
+            .With(x => x.Password, testPassword)
+            .Create();
+        var sut = new CreateAccountValidator();
+
+        var result = sut.TestValidate(createUserRequest);
+
+        result.ShouldNotHaveValidationErrorFor(x => x.Password);
+    }
+
+    [Fact]
+    public void ShouldError_PasswordNull()
+    {
+        var createUserRequest = Fixture
+            .Build<CreateAccountRequest>()
+            .With(x => x.FirstName, "Jack")
+            .With(x => x.MiddleName, "Jr.")
+            .With(x => x.LastName, "Awesome")
+            .With(x => x.Email, "test@email.com")
+            .With(x => x.Phone, "1(234)890-1675")
+            .With(x => x.BirthDate, DateOnly.FromDateTime(DateTime.Parse("1973-03-19")))
+            .With(x => x.Password, (string?)null)
+            .Create();
+        var sut = new CreateAccountValidator();
+
+        var result = sut.TestValidate(createUserRequest);
+
+        result.ShouldHaveValidationErrorFor(x => x.Password).Only();
+    }
+
+    [Fact]
+    public void ShouldError_PasswordEmpty()
+    {
+        var createUserRequest = Fixture
+            .Build<CreateAccountRequest>()
+            .With(x => x.FirstName, "Jack")
+            .With(x => x.MiddleName, "Jr.")
+            .With(x => x.LastName, "Awesome")
+            .With(x => x.Email, "test@email.com")
+            .With(x => x.Phone, "1(234)890-1675")
+            .With(x => x.BirthDate, DateOnly.FromDateTime(DateTime.Parse("1973-03-19")))
+            .With(x => x.Password, string.Empty)
+            .Create();
+        var sut = new CreateAccountValidator();
+
+        var result = sut.TestValidate(createUserRequest);
+
+        result.ShouldHaveValidationErrorFor(x => x.Password).Only();
+    }
+
+    [Fact]
+    public void ShouldError_PasswordShort()
+    {
+        var createUserRequest = Fixture
+            .Build<CreateAccountRequest>()
+            .With(x => x.FirstName, "Jack")
+            .With(x => x.MiddleName, "Jr.")
+            .With(x => x.LastName, "Awesome")
+            .With(x => x.Email, "test@email.com")
+            .With(x => x.Phone, "1(234)890-1675")
+            .With(x => x.BirthDate, DateOnly.FromDateTime(DateTime.Parse("1973-03-19")))
+            .With(x => x.Password, "Pass1$")
+            .Create();
+        var sut = new CreateAccountValidator();
+
+        var result = sut.TestValidate(createUserRequest);
+
+        result.ShouldHaveValidationErrorFor(x => x.Password).Only();
+    }
+
+    [Fact]
+    public void ShouldError_PasswordWithoutUppercase()
+    {
+        var createUserRequest = Fixture
+            .Build<CreateAccountRequest>()
+            .With(x => x.FirstName, "Jack")
+            .With(x => x.MiddleName, "Jr.")
+            .With(x => x.LastName, "Awesome")
+            .With(x => x.Email, "test@email.com")
+            .With(x => x.Phone, "1(234)890-1675")
+            .With(x => x.BirthDate, DateOnly.FromDateTime(DateTime.Parse("1973-03-19")))
+            .With(x => x.Password, "password123$")
+            .Create();
+        var sut = new CreateAccountValidator();
+
+        var result = sut.TestValidate(createUserRequest);
+
+        result.ShouldHaveValidationErrorFor(x => x.Password).Only();
+    }
+
+    [Fact]
+    public void ShouldError_PasswordWithoutLowercase()
+    {
+        var createUserRequest = Fixture
+            .Build<CreateAccountRequest>()
+            .With(x => x.FirstName, "Jack")
+            .With(x => x.MiddleName, "Jr.")
+            .With(x => x.LastName, "Awesome")
+            .With(x => x.Email, "test@email.com")
+            .With(x => x.Phone, "1(234)890-1675")
+            .With(x => x.BirthDate, DateOnly.FromDateTime(DateTime.Parse("1973-03-19")))
+            .With(x => x.Password, "PASSWORD123$")
+            .Create();
+        var sut = new CreateAccountValidator();
+
+        var result = sut.TestValidate(createUserRequest);
+
+        result.ShouldHaveValidationErrorFor(x => x.Password).Only();
+    }
+
+    [Fact]
+    public void ShouldError_PasswordWithoutDigits()
+    {
+        var createUserRequest = Fixture
+            .Build<CreateAccountRequest>()
+            .With(x => x.FirstName, "Jack")
+            .With(x => x.MiddleName, "Jr.")
+            .With(x => x.LastName, "Awesome")
+            .With(x => x.Email, "test@email.com")
+            .With(x => x.Phone, "1(234)890-1675")
+            .With(x => x.BirthDate, DateOnly.FromDateTime(DateTime.Parse("1973-03-19")))
+            .With(x => x.Password, "password$")
+            .Create();
+        var sut = new CreateAccountValidator();
+
+        var result = sut.TestValidate(createUserRequest);
+
+        result.ShouldHaveValidationErrorFor(x => x.Password).Only();
+    }
+
+    [Fact]
+    public void ShouldError_PasswordWithoutSpecialCharacters()
+    {
+        var createUserRequest = Fixture
+            .Build<CreateAccountRequest>()
+            .With(x => x.FirstName, "Jack")
+            .With(x => x.MiddleName, "Jr.")
+            .With(x => x.LastName, "Awesome")
+            .With(x => x.Email, "test@email.com")
+            .With(x => x.Phone, "1(234)890-1675")
+            .With(x => x.BirthDate, DateOnly.FromDateTime(DateTime.Parse("1973-03-19")))
+            .With(x => x.Password, "Password123")
+            .Create();
+        var sut = new CreateAccountValidator();
+
+        var result = sut.TestValidate(createUserRequest);
+
+        result.ShouldHaveValidationErrorFor(x => x.Password).Only();
+    }
 }

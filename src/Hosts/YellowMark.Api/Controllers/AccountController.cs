@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using YellowMark.AppServices.Accounts.Services;
-using YellowMark.Contracts;
+using YellowMark.AppServices.Validators;
 using YellowMark.Contracts.Account;
 
 namespace YellowMark.Api.Controllers;
@@ -18,26 +18,30 @@ namespace YellowMark.Api.Controllers;
 public class AccountController : ControllerBase
 {
     private readonly IAccountService _accountService;
-    private readonly IValidator<CreateAccountRequest> _accountValidator;
+    private readonly IValidator<CreateAccountRequest> _createAccountValidator;
     private readonly IValidator<SignInRequest> _loginValidator;
+    private readonly IValidator<UpdateAccountRequest> _updateAccountValidator;
     private readonly ILogger<AccountController> _logger;
 
     /// <summary>
     /// Init instance of <see cref="AccountController"/>
     /// </summary>
     /// <param name="accountService">Account service <see cref="IAccountService"/></param>
-    /// <param name="accountValidator">Creation account validator.</param>
-    /// <param name="loginValidator">Signin info validator.</param>
+    /// <param name="createAccountValidator">Creation account validator <see cref="CreateAccountValidator"/>.</param>
+    /// <param name="loginValidator">Signin info validator <see cref="SigninValidator"/>.</param>
+    /// <param name="updateAccountValidator">Updating account validator <see cref="UpdateAccountValidator"/>.</param>
     /// <param name="logger">Logger <see cref="ILogger"/></param>
     public AccountController(
         IAccountService accountService,
-        IValidator<CreateAccountRequest> accountValidator,
+        IValidator<CreateAccountRequest> createAccountValidator,
         IValidator<SignInRequest> loginValidator,
+        IValidator<UpdateAccountRequest> updateAccountValidator,
         ILogger<AccountController> logger)
     {
         _accountService = accountService;
-        _accountValidator = accountValidator;
+        _createAccountValidator = createAccountValidator;
         _loginValidator = loginValidator;
+        _updateAccountValidator = updateAccountValidator;
         _logger = logger;
     }
 
@@ -57,7 +61,7 @@ public class AccountController : ControllerBase
         using var loggerScope = _logger.BeginScope("Register new account operation");
         _logger.LogInformation("Register account request");
 
-        var validationResult = await _accountValidator.ValidateAsync(request, cancellationToken);
+        var validationResult = await _createAccountValidator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
         {
             return BadRequest(validationResult.ToString());
@@ -117,7 +121,7 @@ public class AccountController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetAccountInfo(CancellationToken cancellationToken)
     {
-        var accountInfo = await _accountService.GetUserInfoAssync(cancellationToken);
+        var accountInfo = await _accountService.GetAccountInfoAssync(cancellationToken);
 
         if (accountInfo == null)
         {
@@ -127,6 +131,37 @@ public class AccountController : ControllerBase
         return Ok(accountInfo);
     }
 
+    /// <summary>
+    /// Update account info.
+    /// </summary>
+    /// <param name="request">Update account info request <see cref="UpdateAccountRequest"/></param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Account info <see cref="AccountInfoDto"/></returns>
+    [Authorize]
+    [HttpPut]
+    [Route("account")]
+    [ProducesResponseType(typeof(AccountInfoDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<IActionResult> UpdateAccountInfo(UpdateAccountRequest request, CancellationToken cancellationToken)
+    {
+        var validationResult = await _updateAccountValidator.ValidateAsync(request, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.ToString());
+        }
+
+        var accountInfo = await _accountService.UpdateAccountInfoAssync(request, cancellationToken);
+
+        if (accountInfo == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(accountInfo);
+    }
+
+    /*
     /// <summary>
     /// Sign out from current account.
     /// </summary>
@@ -142,6 +177,7 @@ public class AccountController : ControllerBase
         // TODO: Need to implement
         return NoContent();
     }
+    */
 
     /// <summary>
     /// Delete current account.

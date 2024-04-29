@@ -11,6 +11,11 @@ public class UserInfoDto
     public Guid Id { get; set; }
 
     /// <summary>
+    /// User info creation date.
+    /// </summary>
+    public DateTime CreatedAt { get; set; }
+
+    /// <summary>
     /// User's first name.
     /// </summary>
     public string FirstName { get; set; }

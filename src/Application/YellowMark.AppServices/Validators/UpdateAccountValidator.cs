@@ -5,21 +5,20 @@ using YellowMark.Contracts.Account;
 namespace YellowMark.AppServices.Validators;
 
 /// <summary>
-/// Validator for <see cref="CreateAccountRequest"/> user model.
+/// Validator for <see cref="UpdateAccountRequest"/> user model.
 /// </summary>
-public class CreateAccountValidator : AbstractValidator<CreateAccountRequest>
+public class UpdateAccountValidator : AbstractValidator<UpdateAccountRequest>
 {
     /// <summary>
-    /// Create account validator.
+    /// Update account validator.
     /// </summary>
-    public CreateAccountValidator()
+    public UpdateAccountValidator()
     {
         RuleFor(acc => acc.FirstName)
             .NotNull()
             .NotEmpty()
             .Length(1, 50)
             .Matches(@"^[\p{L}]+$");
-
 
         RuleFor(acc => acc.MiddleName)
             .Length(1, 50)
@@ -56,21 +55,6 @@ public class CreateAccountValidator : AbstractValidator<CreateAccountRequest>
             .NotNull()
             .Must(BeOver18)
             .WithMessage("You must be at least 18 years old.");
-
-        RuleFor(acc => acc.Password)
-            .NotEmpty()
-            .NotNull()
-            .MinimumLength(8)
-            .Matches(@"[A-Z]")
-            .WithMessage("Your password must contain at least one uppercase letter.")
-            .Matches(@"[a-z]")
-            .WithMessage("Your password must contain at least one lowercase letter.")
-            .Matches(@"[0-9]")
-            .WithMessage("Your password must contain at least one number.")
-            .Matches(@"[][""!@$%^&*(){}:;<>,.?/+_=|'~\\-]")
-            .WithMessage("Your password must contain one or more special characters.")
-            .Matches("^[^£# “”]*$")
-            .WithMessage("Your password must not contain the following characters £ # “” or spaces.");
     }
 
     // TODO: Create separate validator BeOver18 and user it.

@@ -69,4 +69,21 @@ public class AccountProfileTest : BaseUnitTest
         Assert.Equal(userInfo.FullName, accountInfo.FullName);
         Assert.Equal(userInfo.BirthDate, accountInfo.BirthDate);
     }
+
+    [Fact]
+    public void ShouldCorrect_Map_UpdateAccountRequest_to_CreateUserInfoRequest()
+    {
+        var account = Fixture
+            .Build<UpdateAccountRequest>()
+            .With(x => x.BirthDate, DateOnly.FromDateTime(DateTime.Parse("1973-03-19")))
+            .Create();
+
+        var userInfo = _mapper.Map<CreateUserInfoRequest>(account);
+
+        Assert.NotNull(userInfo);
+        Assert.Equal(account.FirstName, userInfo.FirstName);
+        Assert.Equal(account.MiddleName, userInfo.MiddleName);
+        Assert.Equal(account.LastName, userInfo.LastName);
+        Assert.Equal(account.BirthDate, userInfo.BirthDate);
+    }
 }
