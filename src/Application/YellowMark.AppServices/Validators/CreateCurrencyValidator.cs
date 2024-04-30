@@ -13,13 +13,7 @@ public class CreateCurrencyValidator : AbstractValidator<CreateCurrencyRequest>
     /// </summary>
     public CreateCurrencyValidator()
     {
-        int maxAlphabeticCodeLength = 3;
-        RuleFor(s => s.AlphabeticCode)
-            .NotNull()
-            .NotEmpty()
-            .WithMessage("Non empty alphabetic code required")
-            .Length(0, maxAlphabeticCodeLength)
-            .WithMessage($"Alphabetic code should not be grated than {maxAlphabeticCodeLength} characters.");
+        RuleFor(s => s.AlphabeticCode).StringCorrectLength(0, 3);
 
         RuleFor(s => s.NumericCode)
             .NotNull()

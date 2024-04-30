@@ -13,9 +13,6 @@ public class CreateCategoryValidator : AbstractValidator<CreateCategoryRequest>
     /// </summary>
     public CreateCategoryValidator()
     {
-        RuleFor(s => s.Name)
-            .NotNull()
-            .NotEmpty()
-            .Length(0, 255);
+        RuleFor(s => s.Name).StringCorrectLength(0, 255);
     }
 }

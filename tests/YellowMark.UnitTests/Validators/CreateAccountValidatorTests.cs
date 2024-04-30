@@ -14,6 +14,7 @@ public class CreateAccountValidatorTests : BaseUnitTest
     [Theory]
     [InlineData("Jack")]
     [InlineData("Blob")]
+    [InlineData("Ivan")]
     public void ShouldCorrect_FirstName(string testName)
     {
         var createUserRequest = Fixture

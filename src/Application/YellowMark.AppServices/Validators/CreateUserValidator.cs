@@ -27,11 +27,6 @@ public class CreateUserInfoValidator : AbstractValidator<CreateUserInfoRequest>
             .NotEmpty()
             .Length(0, 255);
 
-        // RuleFor(user => user.Email)
-        //     .NotEmpty()
-        //     .NotNull()
-        //     .EmailAddress()
-        //     .WithMessage("A valid email address is required.");
 
         // int minPhoneLength = 11;
         // int maxPhoneLength = 15;

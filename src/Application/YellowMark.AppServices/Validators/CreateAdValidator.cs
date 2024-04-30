@@ -13,29 +13,17 @@ public class CreateAdValidator : AbstractValidator<CreateAdRequest>
     /// </summary>
     public CreateAdValidator()
     {
-        RuleFor(ad => ad.Title)
-            .NotNull()
-            .NotEmpty()
-            .Length(0, 255);
+        RuleFor(ad => ad.Title).StringCorrectLength(0, 255);
 
-        RuleFor(ad => ad.Description)
-            .NotNull()
-            .NotEmpty()
-            .MaximumLength(2500);
+        RuleFor(ad => ad.Description).StringCorrectLength(0, 2500);
 
         RuleFor(ad => ad.Price)
             .Must(NotNegative)
             .WithMessage("Price should be positive");
 
-        // TODO: Check in case not null.
-        // RuleFor(ad => ad.CurrencyId)
-        //     .SetValidator(new GuidValidator());
+        RuleFor(ad => ad.OwnerId).NonEmptyGuid();
 
-        RuleFor(ad => ad.OwnerId)
-            .SetValidator(new GuidValidator());
-
-        RuleFor(ad => ad.SubcategoryId)
-            .SetValidator(new GuidValidator());
+        RuleFor(ad => ad.SubcategoryId) .NonEmptyGuid();
     }
 
     private static bool NotNegative(decimal? value)

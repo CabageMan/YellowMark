@@ -13,12 +13,7 @@ public class CreateSubcategoryValidator : AbstractValidator<CreateSubcategoryReq
     /// </summary>
     public CreateSubcategoryValidator()
     {
-        RuleFor(s => s.Name)
-            .NotNull()
-            .NotEmpty()
-            .Length(0, 255);
-
-        RuleFor(s => s.CategoryId)
-            .SetValidator(new GuidValidator());
+        RuleFor(s => s.Name).StringCorrectLength(0, 255);
+        RuleFor(s => s.CategoryId).NonEmptyGuid();
     }
 }

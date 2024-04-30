@@ -13,15 +13,8 @@ public class CreateCommentValidator : AbstractValidator<CreateCommentRequest>
     /// </summary>
     public CreateCommentValidator()
     {
-        RuleFor(ad => ad.Text)
-            .NotNull()
-            .NotEmpty()
-            .Length(0, 1024);
-
-        RuleFor(ad => ad.UserId)
-            .SetValidator(new GuidValidator());
-
-        RuleFor(ad => ad.AdId)
-            .SetValidator(new GuidValidator());
+        RuleFor(ad => ad.Text).StringCorrectLength(0, 1024);
+        RuleFor(ad => ad.UserId).NonEmptyGuid();
+        RuleFor(ad => ad.AdId).NonEmptyGuid();
     }
 }

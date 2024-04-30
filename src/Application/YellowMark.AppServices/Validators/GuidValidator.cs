@@ -7,13 +7,13 @@ namespace YellowMark.AppServices.Validators;
 /// </summary>
 public class GuidValidator : AbstractValidator<Guid>
 {
-    
     /// <summary>
-    /// Guid validator.
+    /// Constructor fot guid validator.
     /// </summary>
     public GuidValidator()
     {
         RuleFor(guid => guid)
+            .NotNull()
             .NotEmpty()
             .WithMessage("Id must not be empty.");
     }

@@ -13,18 +13,7 @@ public class SigninValidator : AbstractValidator<SignInRequest>
     /// </summary>
     public SigninValidator()
     {
-
-        RuleFor(s => s.Email)
-            .NotEmpty()
-            .NotNull()
-            .EmailAddress()
-            .WithMessage("A valid email address is required.");
-
-        RuleFor(s => s.Password)
-            .NotNull()
-            .NotEmpty()
-            .WithMessage("Password must not be empty.")
-            .Length(8, 20)
-            .WithMessage("Password min length - 8, max - 20.");
+        RuleFor(s => s.Email).EmailCorrectFormat();
+        RuleFor(s => s.Password).PasswordCorrectFormat();
     }
 }
