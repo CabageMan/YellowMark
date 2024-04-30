@@ -39,6 +39,16 @@ public class UserInfo : BaseEntity
     public DateOnly BirthDate { get; set; }
 
     /// <summary>
+    /// User phone. 
+    /// </summary>
+    public string Phone { get; set; }
+
+    /// <summary>
+    /// Set user phone visibility to other users in ads. 
+    /// </summary>
+    public bool ShowPhone { get; set; }
+
+    /// <summary>
     /// Collection of ads.
     /// </summary>
     public virtual List<Ad> Ads { get; set; }

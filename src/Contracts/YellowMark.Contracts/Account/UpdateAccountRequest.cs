@@ -31,6 +31,11 @@ public class UpdateAccountRequest
     public string Phone { get; set; }
 
     /// <summary>
+    /// Set user phone visibility to other users in ads. Default is false.
+    /// </summary>
+    public bool ShowPhone { get; set; } = false;
+
+    /// <summary>
     /// User birth date.
     /// </summary>
     public DateOnly BirthDate { get; set; }

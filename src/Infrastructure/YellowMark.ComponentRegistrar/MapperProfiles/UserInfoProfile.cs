@@ -17,6 +17,9 @@ public class UserProfile : Profile
         CreateMap<UserInfo, UserInfoDto>()
             .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => 
                 $"{src.LastName} {src.MiddleName} {src.FirstName}"
+            ))
+            .ForMember(dest => dest.Phone, opt => opt.MapFrom(src =>
+                src.ShowPhone ? src.Phone : null
             ));
 
         CreateMap<CreateUserInfoRequest, UserInfo>()

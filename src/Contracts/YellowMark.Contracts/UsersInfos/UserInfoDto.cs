@@ -35,17 +35,10 @@ public class UserInfoDto
     /// </summary>
     public string FullName { get; set; }
 
-    /*
     /// <summary>
-    /// User's email. 
-    /// </summary>
-    public string Email { get; set; }
-
-    /// <summary>
-    /// User's phone. 
+    /// User phone. 
     /// </summary>
     public string Phone { get; set; }
-    */
 
     /// <summary>
     /// User's birth date.

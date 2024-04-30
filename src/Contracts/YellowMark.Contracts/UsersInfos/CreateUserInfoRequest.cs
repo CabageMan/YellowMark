@@ -26,6 +26,16 @@ public class CreateUserInfoRequest
     public string LastName { get; set; }
 
     /// <summary>
+    /// User phone. 
+    /// </summary>
+    public string Phone { get; set; }
+
+    /// <summary>
+    /// Set user phone visibility to other users in ads. Default is false.
+    /// </summary>
+    public bool ShowPhone { get; set; } = false;
+
+    /// <summary>
     /// User's birth date.
     /// </summary>
     public DateOnly BirthDate { get; set; }

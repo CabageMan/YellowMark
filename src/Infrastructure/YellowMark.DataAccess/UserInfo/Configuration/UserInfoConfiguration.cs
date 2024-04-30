@@ -27,20 +27,29 @@ public class UserInfoConfiguration : IEntityTypeConfiguration<Domain.UsersInfos.
         builder
             .Property(user => user.FirstName)
             .IsRequired()
-            .HasMaxLength(255);
+            .HasMaxLength(50);
 
         builder
             .Property(user => user.MiddleName)
             .IsRequired()
-            .HasMaxLength(255);
+            .HasMaxLength(50);
 
         builder
             .Property(user => user.LastName)
             .IsRequired()
-            .HasMaxLength(255);
+            .HasMaxLength(50);
 
         builder
             .Property(user => user.BirthDate)
+            .IsRequired();
+
+        builder
+            .Property(user => user.Phone)
+            .IsRequired()
+            .HasMaxLength(15);
+
+        builder
+            .Property(user => user.ShowPhone)
             .IsRequired();
         
         builder
