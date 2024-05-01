@@ -46,7 +46,7 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// 
+    /// Register new account.
     /// </summary>
     /// <param name="request">Create account request model <see cref="CreateAccountRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -121,12 +121,17 @@ public class AccountController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetAccountInfo(CancellationToken cancellationToken)
     {
+        using var loggerScope = _logger.BeginScope("Get account info operation");
+        _logger.LogInformation("Get account info request");
+         
         var accountInfo = await _accountService.GetAccountInfoAssync(cancellationToken);
 
         if (accountInfo == null)
         {
             return NotFound();
         }
+
+        _logger.LogInformation("Successful got user info for user {Name}", accountInfo.FirstName);
 
         return Ok(accountInfo);
     }
@@ -145,11 +150,16 @@ public class AccountController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> UpdateAccountInfo(UpdateAccountRequest request, CancellationToken cancellationToken)
     {
+        using var loggerScope = _logger.BeginScope("Update account info operation");
+        _logger.LogInformation("Validate request");
+
         var validationResult = await _updateAccountValidator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid)
         {
             return BadRequest(validationResult.ToString());
         }
+
+        _logger.LogInformation("Update account info request");
 
         var accountInfo = await _accountService.UpdateAccountInfoAssync(request, cancellationToken);
 
@@ -157,6 +167,8 @@ public class AccountController : ControllerBase
         {
             return NotFound();
         }
+
+        _logger.LogInformation("Successful update account info.");
 
         return Ok(accountInfo);
     }
@@ -190,7 +202,12 @@ public class AccountController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     public async Task<IActionResult> DeleteAccount(CancellationToken cancellationToken)
     {
+        using var loggerScope = _logger.BeginScope("Deletion account operation");
+        _logger.LogInformation("Delete account request");
+
         await _accountService.DeleteAccountAssync(cancellationToken);
+
+        _logger.LogInformation("Successfull deleted.");
 
         return NoContent();
     }

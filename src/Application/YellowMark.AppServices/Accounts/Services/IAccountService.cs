@@ -24,12 +24,14 @@ public interface IAccountService
     /// <returns><see cref="LoginDto"/></returns>
     Task<LoginDto> SignInIntoAccountAssync(SignInRequest request, CancellationToken cancellationToken);
 
+    /*
     /// <summary>
     /// Sign out from existing account.
     /// </summary>
     /// <param name="cancellationToken">Operation cancelation token <see cref="CancellationToken"/></param>
     /// <returns></returns>
     Task SignOutFromAccoutnAssync(CancellationToken cancellationToken);
+    */
 
     /// <summary>
     /// Get current account info.

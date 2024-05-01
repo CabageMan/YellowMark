@@ -26,6 +26,8 @@ public class UserInfoByNameSpecification : Specification<UserInfo>
     /// <returns>Expression</returns>
     public override Expression<Func<UserInfo, bool>> ToExpression()
     {
-        return user => user.FirstName == _name;
+        return user => user.FirstName.Contains(_name) || 
+            user.MiddleName.Contains(_name) ||
+            user.LastName.Contains(_name);
     }
 }

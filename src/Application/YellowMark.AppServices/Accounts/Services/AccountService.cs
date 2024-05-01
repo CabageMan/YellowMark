@@ -59,6 +59,8 @@ public class AccountService : IAccountService
     /// <inheritdoc/>
     public async Task<Guid> RegisterAccountAssync(CreateAccountRequest request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Try to find existed account with the same creds.");
+
         var existedAccount = await _userManager.FindByEmailAsync(request.Email);
         if (existedAccount != null)
         {
@@ -83,6 +85,8 @@ public class AccountService : IAccountService
             throw new InvalidOperationException($"Could not create account for {request.Email}. Reason: {errorString}");
         }
 
+        _logger.LogInformation("Try to add role to the new account");
+
         var addRoleResult = await _userManager.AddToRoleAsync(account, UserRoles.User);
         if (!addRoleResult.Succeeded)
         {
@@ -101,17 +105,23 @@ public class AccountService : IAccountService
     /// <inheritdoc/>
     public async Task<LoginDto> SignInIntoAccountAssync(SignInRequest request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Try to find existed account.");
+
         var account = await _userManager.FindByEmailAsync(request.Email);
         if (account == null)
         {
             throw new InvalidOperationException($"Account with email {request.Email} does not exist.");
         }
 
+        _logger.LogInformation("Check password.");
+
         var isPasswordValid = await _userManager.CheckPasswordAsync(account, request.Password);
         if (!isPasswordValid)
         {
             throw new InvalidOperationException($"Password for {request.Email} does not match.");
         }
+
+        _logger.LogInformation("Try to get roles for account.");
 
         var accountRoles = await _userManager.GetRolesAsync(account);
         if (account.UserName == null || account.Email == null || account.PhoneNumber == null)
@@ -129,6 +139,8 @@ public class AccountService : IAccountService
             authClaims.Add(new(ClaimTypes.Role, userRole));
         }
 
+        _logger.LogInformation("Try to get user info related to account.");
+
         var userInfo = await _userInfoService.GetUserByAccountIdAsync(account.Id, cancellationToken);
         var token = GenerateJwtToken(authClaims);
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
@@ -141,23 +153,32 @@ public class AccountService : IAccountService
         };
     }
 
-    // TODO: Refactor user update logic: a lot of manipulation with data.
     /// <inheritdoc/>
     public async Task<AccountInfoDto> UpdateAccountInfoAssync(UpdateAccountRequest request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Try to find existed account from token.");
+
         var account = await GetAccountByTokenAsync();
         account.UserName = request.FirstName;
         account.Email = request.Email;
         account.PhoneNumber = request.Phone;
 
+        _logger.LogInformation("Try to get related to account user info.");
+
         var currentUserInfo = await _userInfoService.GetUserByAccountIdAsync(account.Id, cancellationToken);
 
-        var updatedUserInfo = _mapper.Map<UpdateAccountRequest, CreateUserInfoRequest>(request);
+        var updatedUserInfo = _mapper.Map<UpdateAccountRequest, UpdateUserInfoRequest>(request);
+        updatedUserInfo.Id = currentUserInfo.Id;
         updatedUserInfo.AccountId = account.Id;
+        updatedUserInfo.CreatedAt = currentUserInfo.CreatedAt;
+
+        _logger.LogInformation("Try to update account.");
         
         await _userManager.UpdateAsync(account);
 
-        var userInfoDto = await _userInfoService.UpdateUserAsync(currentUserInfo.Id, updatedUserInfo, cancellationToken);
+        _logger.LogInformation("Try to update related user info.");
+
+        var userInfoDto = await _userInfoService.UpdateUserAsync(updatedUserInfo, cancellationToken);
 
         var accountInfo = _mapper.Map<UserInfoDto, AccountInfoDto>(userInfoDto);
         accountInfo.Email = account.Email;
@@ -169,6 +190,8 @@ public class AccountService : IAccountService
     /// <inheritdoc/>
     public async Task<AccountInfoDto> GetAccountInfoAssync(CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Try to find existed account from token info. And get info.");
+
         var existedAccount = await GetAccountByTokenAsync();
         var userInfo = await _userInfoService.GetUserByAccountIdAsync(existedAccount.Id, cancellationToken);
         var accountInfo = _mapper.Map<UserInfoDto, AccountInfoDto>(userInfo);
@@ -178,17 +201,24 @@ public class AccountService : IAccountService
         return accountInfo;
     }
 
+    /*
     /// <inheritdoc/>
     public Task SignOutFromAccoutnAssync(CancellationToken cancellationToken)
     {
         return Task.CompletedTask;
     }
+    */
 
     /// <inheritdoc/>
     public async Task DeleteAccountAssync(CancellationToken cancellationToken)
     {
+        _logger.LogInformation("Try to find existed account from token info. And get info.");
+
         var existedAccount = await GetAccountByTokenAsync();
         var userInfo = await _userInfoService.GetUserByAccountIdAsync(existedAccount.Id, cancellationToken);
+
+        _logger.LogInformation("Delete account and related user infos.");
+
         await _userInfoService.DeleteUserByIdAsync(userInfo.Id, cancellationToken);
         await _userManager.DeleteAsync(existedAccount);
     }

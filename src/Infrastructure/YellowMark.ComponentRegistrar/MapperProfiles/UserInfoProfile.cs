@@ -29,5 +29,12 @@ public class UserProfile : Profile
             .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId)) 
             .ForMember(dest => dest.Ads, opt => opt.Ignore())
             .ForMember(dest => dest.Comments, opt => opt.Ignore());
+
+        CreateMap<UpdateUserInfoRequest, UserInfo>()
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.AccountId, opt => opt.MapFrom(src => src.AccountId)) 
+            .ForMember(dest => dest.Ads, opt => opt.Ignore())
+            .ForMember(dest => dest.Comments, opt => opt.Ignore());
     }
 }

@@ -49,11 +49,10 @@ public interface IUserInfoService
     /// <summary>
     /// Update current User.
     /// </summary>
-    /// <param name="id">User id</param>
-    /// <param name="request">Creation model <see cref="CreateUserInfoRequest"/></param>
+    /// <param name="request">Update user info model <see cref="UpdateUserInfoRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Updated user <see cref="UserInfoDto"/></returns>
-    Task<UserInfoDto> UpdateUserAsync(Guid id, CreateUserInfoRequest request, CancellationToken cancellationToken);
+    Task<UserInfoDto> UpdateUserAsync(UpdateUserInfoRequest request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete the User by id.

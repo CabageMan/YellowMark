@@ -24,7 +24,9 @@ public class AccountProfile : Profile
             .ForMember(dest => dest.Phone, opt => opt.Ignore())
             .ForMember(dest => dest.Email, opt => opt.Ignore());
 
-        CreateMap<UpdateAccountRequest, CreateUserInfoRequest>()
+        CreateMap<UpdateAccountRequest, UpdateUserInfoRequest>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
             .ForMember(dest => dest.AccountId, opt => opt.Ignore());
     }
 }

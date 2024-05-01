@@ -1,7 +1,6 @@
 using AutoMapper;
 using YellowMark.AppServices.Specifications;
 using YellowMark.AppServices.UsersInfos.Repositories;
-using YellowMark.AppServices.Users.Specifications;
 using YellowMark.Contracts.Pagination;
 using YellowMark.Contracts.UsersInfos;
 using YellowMark.Domain.UsersInfos.Entity;
@@ -51,10 +50,7 @@ public class UserInfoService : IUserInfoService
     public Task<IEnumerable<UserInfoDto>> GetUsersByNameAsync(UserInfoByNameRequest request, CancellationToken cancellationToken)
     {
         Specification<UserInfo> specification = new UserInfoByNameSpecification(request.Name);
-        if (request.BeOver18)
-        {
-            specification = specification.And(new UserMustBeOver18Specification());
-        }
+
         return _userRepository.GetFiltered(specification, cancellationToken);
     }
 
@@ -72,14 +68,12 @@ public class UserInfoService : IUserInfoService
     }
 
     /// <inheritdoc/>
-    public async Task<UserInfoDto> UpdateUserAsync(Guid id, CreateUserInfoRequest request, CancellationToken cancellationToken)
+    public async Task<UserInfoDto> UpdateUserAsync(UpdateUserInfoRequest request, CancellationToken cancellationToken)
     {
-        var currentEntity = await _userRepository.GetByIdAsync(id, cancellationToken);
-
-        var updatedEntity = _mapper.Map<CreateUserInfoRequest, UserInfo>(request);
-        updatedEntity.Id = id;
-        updatedEntity.AccountId = currentEntity.AccountId;
-        updatedEntity.CreatedAt = currentEntity.CreatedAt;
+        var updatedEntity = _mapper.Map<UpdateUserInfoRequest, UserInfo>(request);
+        updatedEntity.Id = request.Id;
+        updatedEntity.AccountId = request.AccountId;
+        updatedEntity.CreatedAt = request.CreatedAt;
 
         await _userRepository.UpdateAsync(updatedEntity, cancellationToken);
 

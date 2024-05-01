@@ -1,17 +1,12 @@
 ﻿namespace YellowMark.Contracts.UsersInfos;
 
 /// <summary>
-/// Request data model for getting users by name.
+/// Request data model for getting users by name (first, midle, last names).
 /// </summary>
 public class UserInfoByNameRequest
 {
     /// <summary>
-    /// User name.
+    /// User first, last or middle name.
     /// </summary>
     public string Name { get; set; }
-    
-    /// <summary>
-    /// Search users older 18.
-    /// </summary>
-    public bool BeOver18 { get; set; }
 }
