@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
+using AutoMapper.Configuration.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -13,7 +14,6 @@ using YellowMark.Contracts.Account;
 using YellowMark.Contracts.UsersInfos;
 using YellowMark.Domain.Accounts.Entity;
 using YellowMark.Domain.UserRoles;
-using YellowMark.Domain.UsersInfos.Entity;
 
 namespace YellowMark.AppServices.Accounts.Services;
 
@@ -90,7 +90,9 @@ public class AccountService : IAccountService
         var addRoleResult = await _userManager.AddToRoleAsync(account, UserRoles.User);
         if (!addRoleResult.Succeeded)
         {
-            throw new InvalidOperationException($"Could not create account for {request.Email}");
+            var errors = addRoleResult.Errors.Select(error => error.Description);
+            var errorString = string.Join("\n", errors);
+            throw new InvalidOperationException($"Could not add role for account {request.Email}. Reason: {errorString}");
         }
 
         _logger.LogInformation("Try to create related to account user info with account id {Id}", account.Id);
@@ -124,6 +126,7 @@ public class AccountService : IAccountService
         _logger.LogInformation("Try to get roles for account.");
 
         var accountRoles = await _userManager.GetRolesAsync(account);
+
         if (account.UserName == null || account.Email == null || account.PhoneNumber == null)
         {
             throw new InvalidOperationException("Could not get account claims.");
@@ -173,7 +176,7 @@ public class AccountService : IAccountService
         updatedUserInfo.CreatedAt = currentUserInfo.CreatedAt;
 
         _logger.LogInformation("Try to update account.");
-        
+
         await _userManager.UpdateAsync(account);
 
         _logger.LogInformation("Try to update related user info.");
@@ -249,6 +252,18 @@ public class AccountService : IAccountService
         return result;
     }
 
+    /// <inheritdoc/>
+    public async Task<List<string>> AddAdminRoleAssync(CancellationToken cancellationToken)
+    {
+        return await AddRoleToAccountAssync(UserRoles.Admin);
+    }
+
+    /// <inheritdoc/>
+    public async Task<List<string>> AddSuperUserRoleAssync(CancellationToken cancellationToken)
+    {
+        return await AddRoleToAccountAssync(UserRoles.SuperUser);
+    }
+
     // Helpers.
     private JwtSecurityToken GenerateJwtToken(List<Claim> claims)
     {
@@ -292,5 +307,28 @@ public class AccountService : IAccountService
             throw new InvalidOperationException($"Could not find account related to {email}.");
         }
         return existedAccount;
+    }
+
+    private async Task<List<string>> AddRoleToAccountAssync(string userRole)
+    {
+        var account = await GetAccountByTokenAsync();
+
+        var accountRoles = await _userManager.GetRolesAsync(account);
+
+        if (accountRoles.Contains(userRole))
+        {
+            return (List<string>)accountRoles;
+        }
+
+        var addRoleResult = await _userManager.AddToRoleAsync(account, userRole);
+        if (!addRoleResult.Succeeded)
+        {
+            var errors = addRoleResult.Errors.Select(error => error.Description);
+            var errorString = string.Join("\n", errors);
+            throw new InvalidOperationException($"Could not add role for account {account.UserName}. Reason: {errorString}");
+        }
+        accountRoles.Add(userRole);
+
+        return (List<string>)accountRoles;
     }
 }

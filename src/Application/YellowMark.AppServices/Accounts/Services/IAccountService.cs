@@ -38,14 +38,14 @@ public interface IAccountService
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns><see cref="AccountInfoDto"/></returns>
-    Task<AccountInfoDto> GetAccountInfoAssync(CancellationToken cancellationToken); 
+    Task<AccountInfoDto> GetAccountInfoAssync(CancellationToken cancellationToken);
 
     /// <summary>
     /// Update current account info.
     /// </summary>
     /// <param name="cancellationToken"></param>
     /// <returns><see cref="AccountInfoDto"/></returns>
-    Task<AccountInfoDto> UpdateAccountInfoAssync(UpdateAccountRequest request, CancellationToken cancellationToken); 
+    Task<AccountInfoDto> UpdateAccountInfoAssync(UpdateAccountRequest request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete existing account.
@@ -56,7 +56,24 @@ public interface IAccountService
 
     /// <summary>
     /// Add user roles to database.
+    /// Temp. convenient method.
     /// </summary>
     /// <returns>List of roles names.</returns>
     Task<List<string>> CreateUserRolesAssync(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Add admin role to current account.
+    /// Temp. convenient method.
+    /// </summary>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns></returns>
+    Task<List<string>> AddAdminRoleAssync(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Add superUser role to current account.
+    /// Temp. convenient method.
+    /// </summary>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns></returns>
+    Task<List<string>> AddSuperUserRoleAssync(CancellationToken cancellationToken);
 }

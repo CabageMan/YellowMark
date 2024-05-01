@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using YellowMark.AppServices.Accounts.Services;
 using YellowMark.AppServices.Validators;
 using YellowMark.Contracts.Account;
+using YellowMark.Domain.UserRoles;
 
 namespace YellowMark.Api.Controllers;
 
@@ -213,10 +214,10 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// Add Users Roles.
+    /// Add Users Roles to database. Temp. method for convenient ussage.
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
-    /// <returns>Login info <see cref="LoginDto"/></returns>
+    /// <returns>List of added roles names.</returns>
     [AllowAnonymous]
     [HttpPost]
     [Route("account/roles")]
@@ -230,5 +231,37 @@ public class AccountController : ControllerBase
             return Conflict("Roles are already added.");
         }
         return StatusCode((int)HttpStatusCode.Created, result);
+    }
+
+    /// <summary>
+    /// Add admin role to current account.
+    /// Temp. method for convenient ussage.
+    /// </summary>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>List of suer roles.</returns>
+    [Authorize(Roles = UserRoles.User)]
+    [HttpPost]
+    [Route("account/role/admin")]
+    [ProducesResponseType(typeof(List<string>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> AddAdminRoleToAccount(CancellationToken cancellationToken)
+    {
+        var result = await _accountService.AddAdminRoleAssync(cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
+    /// Add superUser role to current account.
+    /// Temp. method for convenient ussage.
+    /// </summary>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>List of user roles.</returns>
+    [Authorize(Roles = UserRoles.Admin)]
+    [HttpPost]
+    [Route("account/role/superuser")]
+    [ProducesResponseType(typeof(List<string>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> AddSuperUserRoleToAccount(CancellationToken cancellationToken)
+    {
+        var result = await _accountService.AddSuperUserRoleAssync(cancellationToken);
+        return Ok(result);
     }
 }
