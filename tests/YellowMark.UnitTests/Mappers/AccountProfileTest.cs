@@ -78,7 +78,7 @@ public class AccountProfileTest : BaseUnitTest
             .With(x => x.BirthDate, DateOnly.FromDateTime(DateTime.Parse("1973-03-19")))
             .Create();
 
-        var userInfo = _mapper.Map<CreateUserInfoRequest>(account);
+        var userInfo = _mapper.Map<UpdateUserInfoRequest>(account);
 
         Assert.NotNull(userInfo);
         Assert.Equal(account.FirstName, userInfo.FirstName);

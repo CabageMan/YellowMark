@@ -21,6 +21,11 @@ public class UpdateAccountRequest
     public string LastName { get; set; }
 
     /// <summary>
+    /// User birth date.
+    /// </summary>
+    public DateOnly BirthDate { get; set; }
+
+    /// <summary>
     /// User email. 
     /// </summary>
     public string Email { get; set; }
@@ -34,9 +39,4 @@ public class UpdateAccountRequest
     /// Set user phone visibility to other users in ads. Default is false.
     /// </summary>
     public bool ShowPhone { get; set; } = false;
-
-    /// <summary>
-    /// User birth date.
-    /// </summary>
-    public DateOnly BirthDate { get; set; }
 }
