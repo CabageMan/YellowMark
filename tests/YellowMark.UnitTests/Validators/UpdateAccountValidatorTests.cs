@@ -57,7 +57,7 @@ public class UpdateAccountValidatorTests : BaseUnitTest
     {
         var updateUserRequest = Fixture
             .Build<UpdateAccountRequest>()
-            .With(x => x.FirstName, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+            .With(x => x.FirstName, new string('a', 51))
             .With(x => x.MiddleName, "Jr.")
             .With(x => x.LastName, "Awesome")
             .With(x => x.Email, "test@email.com")
@@ -139,7 +139,7 @@ public class UpdateAccountValidatorTests : BaseUnitTest
         var updateUserRequest = Fixture
             .Build<UpdateAccountRequest>()
             .With(x => x.FirstName, "Jack")
-            .With(x => x.MiddleName, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+            .With(x => x.MiddleName, new string('a', 51))
             .With(x => x.LastName, "Awesome")
             .With(x => x.Email, "test@email.com")
             .With(x => x.Phone, "1(234)890-1675")
@@ -201,7 +201,7 @@ public class UpdateAccountValidatorTests : BaseUnitTest
             .Build<UpdateAccountRequest>()
             .With(x => x.FirstName, "Jack")
             .With(x => x.MiddleName, "Jr.")
-            .With(x => x.LastName, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+            .With(x => x.LastName, new string('a', 51))
             .With(x => x.Email, "test@email.com")
             .With(x => x.Phone, "1(234)890-1675")
             .With(x => x.BirthDate, DateOnly.FromDateTime(DateTime.Parse("1973-03-19")))
