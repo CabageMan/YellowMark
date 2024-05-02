@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using YellowMark.Contracts.UsersInfos;
 using YellowMark.Contracts.Pagination;
 using System.Net;
-using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
+using FluentValidation;
 
 namespace YellowMark.Api.Controllers;
 
@@ -17,7 +17,6 @@ namespace YellowMark.Api.Controllers;
 public class UserInfoController : ControllerBase
 {
     private readonly IUserInfoService _userService;
-    // private readonly IValidator<CreateUserInfoRequest> _userValidator;
     private readonly IValidator<GetAllRequestWithPagination> _paginationRequestValidator;
     private readonly IValidator<Guid> _guidValidator;
 
@@ -29,12 +28,10 @@ public class UserInfoController : ControllerBase
     /// <param name="paginationRequestValidator">Pagination params validator</param>
     public UserInfoController(
         IUserInfoService userService, 
-        // IValidator<CreateUserInfoRequest> userValidator,
         IValidator<Guid> guidValidator,
         IValidator<GetAllRequestWithPagination> paginationRequestValidator)
     {
         _userService = userService;
-        // _userValidator = userValidator;
         _guidValidator = guidValidator;
         _paginationRequestValidator = paginationRequestValidator;
     }
