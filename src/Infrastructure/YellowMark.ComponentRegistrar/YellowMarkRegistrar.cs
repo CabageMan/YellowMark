@@ -38,6 +38,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Http;
 using Serilog;
 using Serilog.Events;
+using YellowMark.ComponentRegistrar.ExceptionHandlers;
 
 namespace YellowMark.ComponentRegistrar;
 
@@ -55,6 +56,7 @@ public static class YellowMarkRegistrar
         this IServiceCollection services,
         ConfigurationManager configuration)
     {
+        services.ConfigureExceptionHandler();
         services.ConfigureAutomapper();
         services.ConfigureDbContext();
         services.ConfigureAuthServices(configuration);
@@ -69,6 +71,15 @@ public static class YellowMarkRegistrar
     }
 
     // Helpers.
+    private static IServiceCollection ConfigureExceptionHandler(this IServiceCollection services)
+    {
+        services.AddProblemDetails();
+        services.AddExceptionHandler<AccountExceptionHandler>();
+        services.AddExceptionHandler<UserInfoExceptionHandler>();
+        // services.AddExceptionHandler<GlobalExceptionHandler>();
+
+        return services;
+    }
     private static IServiceCollection ConfigureAutomapper(this IServiceCollection services)
     {
         return services.AddSingleton<IMapper>(new Mapper(GetMapperConfiguration()));
@@ -99,7 +110,7 @@ public static class YellowMarkRegistrar
 
     private static IServiceCollection ConfigureValidators(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssemblyContaining<CreateUserInfoValidator>();
+        services.AddValidatorsFromAssemblyContaining<CreateAccountValidator>();
 
         return services;
     }
@@ -173,7 +184,7 @@ public static class YellowMarkRegistrar
 
         // Authentication
         services
-            .AddAuthentication(options => 
+            .AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -211,7 +222,7 @@ public static class YellowMarkRegistrar
     {
         services.AddMemoryCache();
 
-        services.AddStackExchangeRedisCache(options => 
+        services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = configuration.GetConnectionString("Redis");
             options.InstanceName = "local_";

@@ -2,13 +2,13 @@
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
-using AutoMapper.Configuration.Annotations;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using YellowMark.AppServices.Accounts.Exceptions;
 using YellowMark.AppServices.UsersInfos.Services;
 using YellowMark.Contracts.Account;
 using YellowMark.Contracts.UsersInfos;
@@ -64,7 +64,7 @@ public class AccountService : IAccountService
         var existedAccount = await _userManager.FindByEmailAsync(request.Email);
         if (existedAccount != null)
         {
-            throw new InvalidOperationException($"Acount with email {request.Email} is already existed.");
+            throw new AccountBadRequestException($"Acount with email {request.Email} is already existed.");
         }
 
         var account = new Account()
@@ -82,7 +82,7 @@ public class AccountService : IAccountService
         {
             var errors = registerResult.Errors.Select(error => error.Description);
             var errorString = string.Join("\n", errors);
-            throw new InvalidOperationException($"Could not create account for {request.Email}. Reason: {errorString}");
+            throw new AccountOperationException($"Could not create account for {request.Email}. Reason: {errorString}");
         }
 
         _logger.LogInformation("Try to add role to the new account");
@@ -92,7 +92,7 @@ public class AccountService : IAccountService
         {
             var errors = addRoleResult.Errors.Select(error => error.Description);
             var errorString = string.Join("\n", errors);
-            throw new InvalidOperationException($"Could not add role for account {request.Email}. Reason: {errorString}");
+            throw new AccountOperationException($"Could not add role for account {request.Email}. Reason: {errorString}");
         }
 
         _logger.LogInformation("Try to create related to account user info with account id {Id}", account.Id);
@@ -112,7 +112,7 @@ public class AccountService : IAccountService
         var account = await _userManager.FindByEmailAsync(request.Email);
         if (account == null)
         {
-            throw new InvalidOperationException($"Account with email {request.Email} does not exist.");
+            throw new AccountNotFoundException($"Account with email {request.Email} does not exist.");
         }
 
         _logger.LogInformation("Check password.");
@@ -120,7 +120,7 @@ public class AccountService : IAccountService
         var isPasswordValid = await _userManager.CheckPasswordAsync(account, request.Password);
         if (!isPasswordValid)
         {
-            throw new InvalidOperationException($"Password for {request.Email} does not match.");
+            throw new AccountBadRequestException($"Password for {request.Email} does not match.");
         }
 
         _logger.LogInformation("Try to get roles for account.");
@@ -129,7 +129,7 @@ public class AccountService : IAccountService
 
         if (account.UserName == null || account.Email == null || account.PhoneNumber == null)
         {
-            throw new InvalidOperationException("Could not get account claims.");
+            throw new AccountOperationException("Could not get account claims.");
         }
         var authClaims = new List<Claim>
         {
@@ -270,6 +270,7 @@ public class AccountService : IAccountService
         var secretKey = _configuration.GetSection("Jwt")["SecretKey"];
         if (secretKey == null)
         {
+            // TODO: Think how to handle this case:
             throw new ArgumentNullException("Secret key is null.");
         }
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
@@ -304,7 +305,7 @@ public class AccountService : IAccountService
         var existedAccount = await _userManager.FindByEmailAsync(email);
         if (existedAccount == null)
         {
-            throw new InvalidOperationException($"Could not find account related to {email}.");
+            throw new AccountNotFoundException($"Could not find account related to {email}.");
         }
         return existedAccount;
     }
@@ -325,7 +326,7 @@ public class AccountService : IAccountService
         {
             var errors = addRoleResult.Errors.Select(error => error.Description);
             var errorString = string.Join("\n", errors);
-            throw new InvalidOperationException($"Could not add role for account {account.UserName}. Reason: {errorString}");
+            throw new AccountOperationException($"Could not add role for account {account.UserName}. Reason: {errorString}");
         }
         accountRoles.Add(userRole);
 

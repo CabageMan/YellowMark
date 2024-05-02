@@ -25,7 +25,7 @@ public class Program
         // Swager
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(options => 
+        builder.Services.AddSwaggerGen(options =>
             {
                 SetupSwagerDefault(options);
                 SetupSwagerSecurity(options);
@@ -33,6 +33,8 @@ public class Program
         );
 
         var app = builder.Build();
+
+        app.UseExceptionHandler(); 
 
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
@@ -55,10 +57,10 @@ public class Program
     private static void SetupSwagerDefault(SwaggerGenOptions options)
     {
         options.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Title = "YellowMark notice board API",
-                Version = "v1"
-            }
+        {
+            Title = "YellowMark notice board API",
+            Version = "v1"
+        }
         );
         options.IncludeXmlComments(
             Path.Combine(Path.Combine(
@@ -75,15 +77,15 @@ public class Program
     private static void SetupSwagerSecurity(SwaggerGenOptions options)
     {
         options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            {
-                Description = @"JWT Authorization header using the Bearer scheme.  
+        {
+            Description = @"JWT Authorization header using the Bearer scheme.  
                     Enter 'Bearer' [space] and then your token in the text input below.
                     Example: 'Bearer secretKey'",
-                Name = "Authorization",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = JwtBearerDefaults.AuthenticationScheme
-            }
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = JwtBearerDefaults.AuthenticationScheme
+        }
         );
         options.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
@@ -91,9 +93,9 @@ public class Program
                     new OpenApiSecurityScheme
                     {
                         Reference = new OpenApiReference
-                            { 
-                                Type = ReferenceType.SecurityScheme, 
-                                Id = "Bearer" 
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
                             },
                         Scheme = "oauth2",
                         Name = "Bearer",

@@ -5,6 +5,7 @@ using YellowMark.Contracts.Pagination;
 using YellowMark.Contracts.UsersInfos;
 using YellowMark.Domain.UsersInfos.Entity;
 using YellowMark.AppServices.UsersInfos.Specifications;
+using YellowMark.AppServices.UsersInfos.Exceptions;
 
 namespace YellowMark.AppServices.UsersInfos.Services;
 
@@ -62,7 +63,7 @@ public class UserInfoService : IUserInfoService
         var user = users.First();
         if (user == null)
         {
-            throw new InvalidDataException("Could not find user related to account.");
+            throw new UserInfoNotFoundException("Could not find user related to account.");
         }
         return user;
     }

@@ -164,4 +164,32 @@ public static class ValidatiorExtensions
             .NotEmpty()
             .WithMessage("Id must not be empty.");
     }
+
+    /// <summary>
+    /// Check optional decimal value is positive.
+    /// </summary>
+    /// <typeparam name="T">Type of the root object.</typeparam>
+    /// <param name="ruleBuilder">Rule builder <see cref="IRuleBuilder"/> for <see cref="Guid"/> property. </param>
+    /// <returns><see cref="IRuleBuilderOptions"/></returns>
+    public static IRuleBuilderOptions<T, decimal?> NotNegative<T>(
+        this IRuleBuilder<T, decimal?> ruleBuilder)
+    {
+        return ruleBuilder
+            .Must(value => value == null || value >= 0)
+            .WithMessage("{PropertyName} should be positive");
+    }
+
+    /// <summary>
+    /// Check int value is positive.
+    /// </summary>
+    /// <typeparam name="T">Type of the root object.</typeparam>
+    /// <param name="ruleBuilder">Rule builder <see cref="IRuleBuilder"/> for <see cref="Guid"/> property. </param>
+    /// <returns><see cref="IRuleBuilderOptions"/></returns>
+    public static IRuleBuilderOptions<T, int> NotNegative<T>(
+        this IRuleBuilder<T, int> ruleBuilder)
+    {
+        return ruleBuilder
+            .Must(value => value >= 0)
+            .WithMessage("{PropertyName} should be positive");
+    }
 }

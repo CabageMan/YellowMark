@@ -57,6 +57,7 @@ public class AccountController : ControllerBase
     [Route("account")]
     [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.Conflict)]
     public async Task<IActionResult> RegisterAccount(CreateAccountRequest request, CancellationToken cancellationToken)
     {
         using var loggerScope = _logger.BeginScope("Register new account operation");
@@ -86,6 +87,8 @@ public class AccountController : ControllerBase
     [Route("session")]
     [ProducesResponseType(typeof(LoginDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.Conflict)]
     [ProducesResponseType((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> LoginIntoAccount(SignInRequest request, CancellationToken cancellationToken)
     {
@@ -201,6 +204,7 @@ public class AccountController : ControllerBase
     [HttpDelete]
     [Route("account")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteAccount(CancellationToken cancellationToken)
     {
         using var loggerScope = _logger.BeginScope("Deletion account operation");

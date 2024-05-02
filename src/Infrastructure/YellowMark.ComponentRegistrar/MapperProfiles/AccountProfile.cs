@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using YellowMark.Contracts;
 using YellowMark.Contracts.Account;
 using YellowMark.Contracts.UsersInfos;
-using YellowMark.Domain.UsersInfos.Entity;
 
 namespace YellowMark.ComponentRegistrar.MapperProfiles;
 

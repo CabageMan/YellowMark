@@ -6,9 +6,9 @@
 public class GetAllRequestWithPagination
 {
     /// <summary>
-    /// Current page number.
+    /// Current page number. Default value is 1.
     /// </summary>
-    public int PageNumber { get; set; }
+    public int PageNumber { get; set; } = 1;
 
     /// <summary>
     /// Number of requesting entities. Default value is 10.

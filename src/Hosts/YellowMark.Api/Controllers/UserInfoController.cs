@@ -17,23 +17,26 @@ namespace YellowMark.Api.Controllers;
 public class UserInfoController : ControllerBase
 {
     private readonly IUserInfoService _userService;
-    private readonly IValidator<CreateUserInfoRequest> _userValidator;
+    // private readonly IValidator<CreateUserInfoRequest> _userValidator;
+    private readonly IValidator<GetAllRequestWithPagination> _paginationRequestValidator;
     private readonly IValidator<Guid> _guidValidator;
 
     /// <summary>
     /// Init instance of <see cref="UserInfoController"/>.
     /// </summary>
     /// <param name="userService">User service.</param>
-    /// <param name="userValidator">Creation User validator.</param>
     /// <param name="guidValidator">Guid validator.</param>
+    /// <param name="paginationRequestValidator">Pagination params validator</param>
     public UserInfoController(
         IUserInfoService userService, 
-        IValidator<CreateUserInfoRequest> userValidator,
-        IValidator<Guid> guidValidator)
+        // IValidator<CreateUserInfoRequest> userValidator,
+        IValidator<Guid> guidValidator,
+        IValidator<GetAllRequestWithPagination> paginationRequestValidator)
     {
         _userService = userService;
-        _userValidator = userValidator;
+        // _userValidator = userValidator;
         _guidValidator = guidValidator;
+        _paginationRequestValidator = paginationRequestValidator;
     }
 
     /// <summary>
@@ -45,11 +48,15 @@ public class UserInfoController : ControllerBase
     [Authorize]
     [HttpGet]
     [ProducesResponseType(typeof(ResultWithPagination<UserInfoDto>), (int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> GetAllUsers([FromQuery] GetAllRequestWithPagination request, CancellationToken cancellationToken)
     {
-        // TODO: Implement pagination validator.
-        // TODO: Implement all possible returning status codes.
+        var validationResult = await _paginationRequestValidator.ValidateAsync(request, cancellationToken); 
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.ToString());
+        }
+
         var result = await _userService.GetUsersAsync(request, cancellationToken);
         return Ok(result);
     }
@@ -64,6 +71,7 @@ public class UserInfoController : ControllerBase
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(UserInfoDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetUserById(Guid id, CancellationToken cancellationToken)
     {
         var validationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
@@ -73,6 +81,10 @@ public class UserInfoController : ControllerBase
         }
 
         var result = await _userService.GetUserByIdAsync(id, cancellationToken);
+        if (result == null)
+        {
+            return NotFound();
+        }
         return Ok(result);
     }
 
@@ -85,10 +97,8 @@ public class UserInfoController : ControllerBase
     [HttpGet]
     [Route("by-name")]
     [ProducesResponseType(typeof(IEnumerable<UserInfoDto>), (int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetAllByName([FromQuery] UserInfoByNameRequest request, CancellationToken cancellationToken)
     {
-        // TODO: Implement all possible returning status codes.
         var result = await _userService.GetUsersByNameAsync(request, cancellationToken);
         return Ok(result);
     }
