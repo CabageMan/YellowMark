@@ -13,7 +13,7 @@ public class CreateCategoryValidatorTests : BaseUnitTest
     // Title
     [Theory]
     [InlineData("Fishing boats")]
-    [InlineData("Steam locomotivs")]
+    [InlineData("Steam locomotives")]
     [InlineData("Retro auto")]
     public void ShouldCorrect_Name(string testName)
     {

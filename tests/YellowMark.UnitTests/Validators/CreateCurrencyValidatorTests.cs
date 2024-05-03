@@ -127,7 +127,7 @@ public class CreateCurrencyValidatorTests : BaseUnitTest
     }
 
     [Fact]
-    public void ShouldError_NumeticCodeNull()
+    public void ShouldError_NumericCodeNull()
     {
         var createCurrencyRequest = Fixture
             .Build<CreateCurrencyRequest>()

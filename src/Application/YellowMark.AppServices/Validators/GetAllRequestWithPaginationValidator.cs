@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using YellowMark.AppServices.Validators;
 using YellowMark.Contracts.Pagination;
 
 namespace YellowMark.AppServices.Validators;
@@ -14,7 +13,14 @@ public class GetAllRequestWithPaginationValidator : AbstractValidator<GetAllRequ
     /// </summary>
     public GetAllRequestWithPaginationValidator()
     {
-        RuleFor(s => s.PageNumber).NotNegative();
-        RuleFor(s => s.BatchSize).NotNegative();
+        RuleFor(s => s.PageNumber)
+            .NotNull()
+            .NotEmpty()
+            .NotNegative();
+
+        RuleFor(s => s.BatchSize)
+            .NotNull()
+            .NotEmpty()
+            .NotNegative();
     }
 }
