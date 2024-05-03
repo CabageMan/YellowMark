@@ -1,7 +1,7 @@
 using YellowMark.Domain.Base;
+using YellowMark.Domain.Categories.Entity;
 using YellowMark.Domain.Comments.Entity;
 using YellowMark.Domain.Currencies.Entity;
-using YellowMark.Domain.Subcategories.Entity;
 
 namespace YellowMark.Domain.Ads.Entity;
 
@@ -41,14 +41,14 @@ public class Ad : BaseEntity
     public virtual Domain.UsersInfos.Entity.UserInfo UserInfo { get; set; }
 
     /// <summary>
-    /// Ad Subcategory id <see cref="Guid"/>.
+    /// Ad Category id <see cref="Guid"/>.
     /// </summary>
-    public Guid SubcategoryId { get; set; }
+    public Guid CategoryId { get; set; }
 
     /// <summary>
-    /// Ad <see cref="Subcategory"/>.
+    /// Ad <see cref="Category"/>.
     /// </summary>
-    public virtual Subcategory Subcategory { get; set; }
+    public virtual Category Category { get; set; }
 
     /// <summary>
     /// Goods Currency id specified in the ad (<see cref="Guid"/>). 

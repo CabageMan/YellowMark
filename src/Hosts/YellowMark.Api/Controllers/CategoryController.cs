@@ -1,8 +1,10 @@
 ﻿using System.Net;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using YellowMark.AppServices.Categories.Services;
 using YellowMark.Contracts.Categories;
+using YellowMark.Domain.UserRoles;
 
 namespace YellowMark.Api.Controllers;
 
@@ -35,17 +37,17 @@ public class CategoryController : ControllerBase
     }
 
     /// <summary>
-    /// Create new Category.
+    /// Create new Category. Awailable only for Admins or SuperUsers.
     /// </summary>
     /// <param name="request">Category request model <see cref="CreateCategoryRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Created category Id <see cref="Guid"/></returns>
+    [Authorize(Roles = $"{UserRoles.Admin}, {UserRoles.SuperUser}")]
     [HttpPost]
     [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateCategory(CreateCategoryRequest request, CancellationToken cancellationToken)
     {
-        // TODO: This method is available only for Admin.
         var validationResult = await _categoryValidator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid) 
         {
@@ -61,12 +63,11 @@ public class CategoryController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken">Operation cancelation token.</param>
     /// <returns>Categories list.</returns>
+    [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<CategoryDto>), (int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetAllCategories(CancellationToken cancellationToken)
     {
-        // TODO: Implement all possible returning status codes.
         var result = await _categoryService.GetCategoriesAsync(cancellationToken);
         return Ok(result);
     }
@@ -77,9 +78,11 @@ public class CategoryController : ControllerBase
     /// <param name="id">Category id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Category <see cref="CategoryDto"/>.</returns>
+    [AllowAnonymous]
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(CategoryDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetCategoryById(Guid id, CancellationToken cancellationToken)
     {
         var validationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
@@ -89,23 +92,28 @@ public class CategoryController : ControllerBase
         }
 
         var result = await _categoryService.GetCategoryByIdAsync(id, cancellationToken);
+        if (result == null)
+        {
+            return NotFound("Could not find category.");
+        }
+
         return Ok(result);
     }
 
     /// <summary>
-    /// Update Category by Id.
+    /// Update Category by Id. Awailable only for Admins or SuperUsers. 
     /// </summary>
     /// <param name="id">Needed to update category id.</param>
     /// <param name="request">Category request model <see cref="CreateCategoryRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Updated category <see cref="CategoryDto"/></returns>
+    [Authorize(Roles = $"{UserRoles.Admin}, {UserRoles.SuperUser}")]
     [HttpPut("{id:Guid}")]
     [ProducesResponseType(typeof(CategoryDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> UpdateCategory(Guid id, CreateCategoryRequest request, CancellationToken cancellationToken)
     {
-        // TODO: Should be available only for admin.
         var guidValidationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
         if (!guidValidationResult.IsValid) 
         {
@@ -117,25 +125,28 @@ public class CategoryController : ControllerBase
         {
             return BadRequest(categoryValidationResult.ToString());
         }
-        // TODO: Handle exceptions
 
         var updatedCategory = await _categoryService.UpdateCategoryAsync(id, request, cancellationToken);
+        if (updatedCategory == null)
+        {
+            return NotFound("Could not find category to update.");
+        }
+
         return Ok(updatedCategory);
     }
 
     /// <summary>
-    /// Delete Category by Id.
+    /// Delete Category by Id. Awailable only for Admins or SuperUsers.
     /// </summary>
     /// <param name="id">Category id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Task</returns>
+    [Authorize(Roles = $"{UserRoles.Admin}, {UserRoles.SuperUser}")]
     [HttpDelete("{id:Guid}")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteCategory(Guid id, CancellationToken cancellationToken)
     {
-        // TODO: Should be available only for admin.
         var validationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
         if (!validationResult.IsValid)
         {
@@ -143,7 +154,6 @@ public class CategoryController : ControllerBase
         }
 
         await _categoryService.DeleteCategoryByIdAsync(id, cancellationToken);
-        // TODO: Handle exceptions
 
         return NoContent();
     }

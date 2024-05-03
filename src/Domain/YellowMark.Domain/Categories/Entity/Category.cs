@@ -1,5 +1,5 @@
+using YellowMark.Domain.Ads.Entity;
 using YellowMark.Domain.Base;
-using YellowMark.Domain.Subcategories.Entity;
 
 namespace YellowMark.Domain.Categories.Entity;
 
@@ -11,7 +11,22 @@ public class Category : BaseEntity
     public string Name { get; set; }
 
     /// <summary>
+    /// Parent category id. Null for root category.
+    /// </summary>
+    public Guid? ParentCategoryId { get; set; }
+
+    /// <summary>
+    /// Parent category. Null for root category.
+    /// </summary>
+    public virtual Category? ParentCategory { get; set; }
+
+    /// <summary>
     /// Subcategories collection <see cref="Subcategory"/>.
     /// </summary>
-    public virtual List<Subcategory> Subcategories { get; set; }
+    public virtual List<Category> Subcategories { get; set; }
+
+    /// <summary>
+    /// Collection of ads.
+    /// </summary>
+    public virtual List<Ad> Ads { get; set; }
 }

@@ -245,13 +245,13 @@ public class CreateAdValidatorTests : BaseUnitTest
         var createAdRequest = Fixture
             .Build<CreateAdRequest>()
             .With(x => x.Price, 1000)
-            .With(x => x.SubcategoryId, new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
+            .With(x => x.CategoryId, new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
             .Create();
         var sut = new CreateAdValidator();
 
         var result = sut.TestValidate(createAdRequest);
 
-        result.ShouldNotHaveValidationErrorFor(x => x.SubcategoryId);
+        result.ShouldNotHaveValidationErrorFor(x => x.CategoryId);
     }
 
     [Fact]
@@ -260,13 +260,13 @@ public class CreateAdValidatorTests : BaseUnitTest
         var createAdRequest = Fixture
             .Build<CreateAdRequest>()
             .With(x => x.Price, 1000)
-            .With(x => x.SubcategoryId, (Guid?)null)
+            .With(x => x.CategoryId, (Guid?)null)
             .Create();
         var sut = new CreateAdValidator();
 
         var result = sut.TestValidate(createAdRequest);
 
-        result.ShouldHaveValidationErrorFor(x => x.SubcategoryId).Only();
+        result.ShouldHaveValidationErrorFor(x => x.CategoryId).Only();
     }
 
     [Fact]
@@ -275,12 +275,12 @@ public class CreateAdValidatorTests : BaseUnitTest
         var createAdRequest = Fixture
             .Build<CreateAdRequest>()
             .With(x => x.Price, 1000)
-            .With(x => x.SubcategoryId, Guid.Empty)
+            .With(x => x.CategoryId, Guid.Empty)
             .Create();
         var sut = new CreateAdValidator();
 
         var result = sut.TestValidate(createAdRequest);
 
-        result.ShouldHaveValidationErrorFor(x => x.SubcategoryId).Only();
+        result.ShouldHaveValidationErrorFor(x => x.CategoryId).Only();
     }
 }

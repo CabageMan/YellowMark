@@ -1,5 +1,3 @@
-using YellowMark.Contracts.Subcategories;
-
 namespace YellowMark.Contracts.Categories;
 
 /// <summary>
@@ -28,7 +26,7 @@ public class CategoryDto
     public string Name { get; set; }
 
     /// <summary>
-    /// Subcategories collection <see cref="SubcategoryDto"/>.
+    /// Subcategories collection <see cref="CategoryDto"/>.
     /// </summary>
-    public virtual List<SubcategoryDto> Subcategories { get; set; }
+    public virtual List<CategoryDto> Subcategories { get; set; }
 }

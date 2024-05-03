@@ -30,6 +30,12 @@ public class CategoryConfiguration : IEntityTypeConfiguration<Domain.Categories.
 
         builder
             .HasMany(c => c.Subcategories)
+            .WithOne(s => s.ParentCategory)
+            .HasForeignKey(s => s.ParentCategoryId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasMany(c => c.Ads)
             .WithOne(s => s.Category)
             .HasForeignKey(s => s.CategoryId)
             .IsRequired()

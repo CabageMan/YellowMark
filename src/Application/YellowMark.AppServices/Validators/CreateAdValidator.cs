@@ -17,6 +17,6 @@ public class CreateAdValidator : AbstractValidator<CreateAdRequest>
         RuleFor(ad => ad.Description).StringCorrectLength(0, 2500);
         RuleFor(ad => ad.Price).NotNegative();
         RuleFor(ad => ad.OwnerId).NonEmptyGuid();
-        RuleFor(ad => ad.SubcategoryId).NonEmptyGuid();
+        RuleFor(ad => ad.CategoryId).NonEmptyGuid();
     }
 }

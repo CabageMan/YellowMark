@@ -8,9 +8,6 @@ using YellowMark.AppServices.Validators;
 using YellowMark.DataAccess.UserInfo.Repository;
 using YellowMark.DataAccess.DatabaseContext;
 using YellowMark.Infrastructure.Repository;
-using YellowMark.AppServices.Subcategories.Repositories;
-using YellowMark.DataAccess.Subcategory.Repository;
-using YellowMark.AppServices.Subcategories.Services;
 using YellowMark.AppServices.Categories.Services;
 using YellowMark.DataAccess.Category.Repository;
 using YellowMark.AppServices.Categories.Repositories;
@@ -76,6 +73,7 @@ public static class YellowMarkRegistrar
         services.AddProblemDetails();
         services.AddExceptionHandler<AccountExceptionHandler>();
         services.AddExceptionHandler<UserInfoExceptionHandler>();
+        services.AddExceptionHandler<CategoryExceptionHandler>();
         // services.AddExceptionHandler<GlobalExceptionHandler>();
 
         return services;
@@ -98,7 +96,6 @@ public static class YellowMarkRegistrar
         services.AddScoped(typeof(IReadOnlyRepository<,>), typeof(ReadOnlyRepository<,>));
         services.AddScoped(typeof(IWriteOnlyRepository<,>), typeof(WriteOnlyRepository<,>));
         services.AddScoped<IUserInfoRepository, UserInfoRepository>();
-        services.AddScoped<ISubcategoryRepository, SubcategoryRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<ICurrencyRepository, CurrencyRepository>();
         services.AddScoped<IAdRepository, AdRepository>();
@@ -119,7 +116,6 @@ public static class YellowMarkRegistrar
     {
         services.AddTransient<IAccountService, AccountService>();
         services.AddTransient<IUserInfoService, UserInfoService>();
-        services.AddTransient<ISubcategoryService, SubcategoryService>();
         services.AddTransient<ICategoryService, CategoryService>();
         services.AddTransient<ICurrencyService, CurrencyService>();
         services.AddTransient<IAdService, AdService>();
@@ -136,7 +132,6 @@ public static class YellowMarkRegistrar
         {
             config.AddProfile<AccountProfile>();
             config.AddProfile<UserProfile>();
-            config.AddProfile<SubcategoryProfile>();
             config.AddProfile<CategoryProfile>();
             config.AddProfile<CurrencyProfile>();
             config.AddProfile<AdProfile>();

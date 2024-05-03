@@ -2,14 +2,17 @@
 using AutoMapper;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Tokens;
+using YellowMark.AppServices.Categories.Exceptions;
 using YellowMark.AppServices.Categories.Repositories;
+using YellowMark.AppServices.Categories.Specifications;
+using YellowMark.AppServices.Specifications;
 using YellowMark.Contracts.Categories;
 using YellowMark.Domain.Categories.Entity;
 
 namespace YellowMark.AppServices.Categories.Services;
 
 /// <inheritdoc cref="ICategoryService"/>
-// TODO: Rework Categories and SubCategories.
 public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _categoryRepository;
@@ -39,6 +42,13 @@ public class CategoryService : ICategoryService
     /// <inheritdoc/>
     public async Task<Guid> AddCategoryAsync(CreateCategoryRequest request, CancellationToken cancellationToken)
     {
+        Specification<Category> specification = new CategoryByNameSpecification(request.Name);
+        var existedCategory = await _categoryRepository.GetFiltered(specification, cancellationToken);
+        if (!existedCategory.IsNullOrEmpty())
+        {
+            throw new CategoryOperationException($"Category with name {request.Name} is allready existed.");
+        }
+
         var entity = _mapper.Map<CreateCategoryRequest, Category>(request);
         await _categoryRepository.AddAsync(entity, cancellationToken);
         return entity.Id;
@@ -64,7 +74,7 @@ public class CategoryService : ICategoryService
         await _distributedCache.SetStringAsync(
             cacheKey,
             categoriesSerialized,
-            new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(15) },
+            new DistributedCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(5) },
             cancellationToken)
         ;
 

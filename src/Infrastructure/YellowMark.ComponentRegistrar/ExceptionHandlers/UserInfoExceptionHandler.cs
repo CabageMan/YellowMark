@@ -15,7 +15,7 @@ public class UserInfoExceptionHandler : IExceptionHandler
     /// <summary>
     /// Constructor for <see cref="UserInfoExceptionHandler"/>
     /// </summary>
-    /// <param name="logger"></param>
+    /// <param name="logger">Logger.</param>
     public UserInfoExceptionHandler(ILogger<UserInfoExceptionHandler> logger)
     {
         _logger = logger;

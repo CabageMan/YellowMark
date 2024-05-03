@@ -6,10 +6,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Categories/Specifications/" />
     <Folder Include="Currencies/Specifications/" />
     <Folder Include="Files/Specifications/" />
-    <Folder Include="Subcategories/Specifications/" />
   </ItemGroup>
 
   <ItemGroup>

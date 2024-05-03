@@ -1,6 +1,5 @@
 using YellowMark.Contracts.Categories;
 using YellowMark.Contracts.Currnecies;
-using YellowMark.Contracts.Subcategories;
 using YellowMark.Contracts.UsersInfos;
 
 namespace YellowMark.Contracts.Ads;
@@ -40,7 +39,6 @@ public class AdDto
     /// </summary>
     public decimal? Price { get; set; }
 
-    // TODO: Check, may be use part of user data, or other DTO.
     /// <summary>
     /// Ad owner <see cref="UserInfoDto"/>
     /// </summary>
@@ -50,11 +48,6 @@ public class AdDto
     /// Ad category <see cref="CategoryDto"/>.
     /// </summary>
     public CategoryDto Category { get; set; }
-
-    /// <summary>
-    /// Ad subcategory <see cref="SubcategoryDto"/>.
-    /// </summary>
-    public SubcategoryDto Subcategory { get; set; }
 
     /// <summary>
     /// Goods currency <see cref="CurrencyDto"/> specified in the ad. 

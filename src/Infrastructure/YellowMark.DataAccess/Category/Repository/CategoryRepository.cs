@@ -53,7 +53,6 @@ public class CategoryRepository : ICategoryRepository
         return await _readOnlyRepository
             .GetAll()
             .Where(s => s.Id == id)
-            // .ProjectTo<CategoryDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
     }
 

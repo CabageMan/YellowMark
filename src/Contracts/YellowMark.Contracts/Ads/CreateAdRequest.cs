@@ -33,5 +33,5 @@ public class CreateAdRequest
     /// <summary>
     /// Ad Subcategory id <see cref="Guid"/>.
     /// </summary>
-    public Guid SubcategoryId { get; set; }
+    public Guid CategoryId { get; set; }
 }

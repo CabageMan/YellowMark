@@ -9,4 +9,9 @@ public class CreateCategoryRequest
     /// Category name.
     /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// Parent category id. Null for root category.
+    /// </summary>
+    public Guid? ParentCategoryId { get; set; }
 }
