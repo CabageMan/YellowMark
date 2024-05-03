@@ -91,6 +91,7 @@ public class UserInfoController : ControllerBase
     /// <param name="request">Request <see cref="UserInfoByNameRequest"/></param> 
     /// <param name="cancellationToken">Operation cancelation token.</param>
     /// <returns>Users list.</returns>
+    [Authorize]
     [HttpGet]
     [Route("by-name")]
     [ProducesResponseType(typeof(IEnumerable<UserInfoDto>), (int)HttpStatusCode.OK)]

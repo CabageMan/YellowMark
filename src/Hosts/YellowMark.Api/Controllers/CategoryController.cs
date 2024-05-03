@@ -10,7 +10,7 @@ namespace YellowMark.Api.Controllers;
 /// Category Controller
 /// </summary>
 [ApiController]
-[Route("v1/categories")]
+[Route("api/v1/categories")]
 [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
 public class CategoryController : ControllerBase
 {
