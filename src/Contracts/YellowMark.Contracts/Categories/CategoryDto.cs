@@ -11,16 +11,6 @@ public class CategoryDto
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Category creation date.
-    /// </summary>
-    public DateTime CreatedAt { get; set; }
-
-    /// <summary>
-    /// Category update date.
-    /// </summary>
-    public DateTime UpdatedAt { get; set; }
-
-    /// <summary>
     /// Category name.
     /// </summary>
     public string Name { get; set; }

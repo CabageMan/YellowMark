@@ -1,8 +1,10 @@
 ﻿using System.Net;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using YellowMark.AppServices.Currencies.Services;
 using YellowMark.Contracts.Currnecies;
+using YellowMark.Domain.UserRoles;
 
 namespace YellowMark.Api.Controllers;
 
@@ -35,22 +37,23 @@ public class CurrencyController : ControllerBase
     }
 
     /// <summary>
-    /// Create new Currency.
+    /// Create new Currency. Awailable only for Admins or SuperUsers.
     /// </summary>
     /// <param name="request">Currency request model <see cref="CreateCurrencyRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Created currency Id <see cref="Guid"/></returns>
+    [Authorize(Roles = $"{UserRoles.Admin}, {UserRoles.SuperUser}")]
     [HttpPost]
     [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateCurrency(CreateCurrencyRequest request, CancellationToken cancellationToken)
     {
-        // TODO: This method is available only for Admin.
         var validationResult = await _currencyValidator.ValidateAsync(request, cancellationToken);
         if (!validationResult.IsValid) 
         {
             return BadRequest(validationResult.ToString());
         }
+
         var addedCurrencyId = await _currencyService.AddCurrencyAsync(request, cancellationToken);
         return Created(new Uri($"{Request.Path}/{addedCurrencyId}", UriKind.Relative), addedCurrencyId);
     }
@@ -60,12 +63,11 @@ public class CurrencyController : ControllerBase
     /// </summary>
     /// <param name="cancellationToken">Operation cancelation token.</param>
     /// <returns>Currencies list.</returns>
+    [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<CurrencyDto>), (int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetAllCurrencies(CancellationToken cancellationToken)
     {
-        // TODO: Implement all possible returning status codes.
         var result = await _currencyService.GetCurrenciesAsync(cancellationToken);
         return Ok(result);
     }
@@ -76,9 +78,11 @@ public class CurrencyController : ControllerBase
     /// <param name="id">Currency id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Currency <see cref="CurrencyDto"/>.</returns>
+    [AllowAnonymous]
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(CurrencyDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetCurrencyById(Guid id, CancellationToken cancellationToken)
     {
         var validationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
@@ -88,23 +92,28 @@ public class CurrencyController : ControllerBase
         }
 
         var result = await _currencyService.GetCurrencyByIdAsync(id, cancellationToken);
+        if (result == null)
+        {
+            return NotFound("Could not find currencty.");
+        }
+
         return Ok(result);
     }
 
     /// <summary>
-    /// Update Currency by Id.
+    /// Update Currency by Id. Awailable only for Admins or SuperUsers. 
     /// </summary>
     /// <param name="id">Needed to update currency.</param>
     /// <param name="request">Currency request model <see cref="CreateCurrencyRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Updated currency <see cref="CurrencyDto"/></returns>
+    [Authorize(Roles = $"{UserRoles.Admin}, {UserRoles.SuperUser}")]
     [HttpPut("{id:Guid}")]
     [ProducesResponseType(typeof(CurrencyDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> UpdateCurrency(Guid id, CreateCurrencyRequest request, CancellationToken cancellationToken)
     {
-        // TODO: Should be available only for admin.
         var guidValidationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
         if (!guidValidationResult.IsValid) 
         {
@@ -116,9 +125,13 @@ public class CurrencyController : ControllerBase
         {
             return BadRequest(currencyValidationResult.ToString());
         }
-        // TODO: Handle exceptions
 
         var updatedCurrency = await _currencyService.UpdateCurrencyAsync(id, request, cancellationToken);
+        if (updatedCurrency == null)
+        {
+            return NotFound("Could not find currency to update.");
+        }
+
         return Ok(updatedCurrency);
     }
 
@@ -128,13 +141,12 @@ public class CurrencyController : ControllerBase
     /// <param name="id">Currency id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Task</returns>
+    [Authorize(Roles = $"{UserRoles.Admin}, {UserRoles.SuperUser}")]
     [HttpDelete("{id:Guid}")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteCurrency(Guid id, CancellationToken cancellationToken)
     {
-        // TODO: Should be available only for admin.
         var validationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
         if (!validationResult.IsValid)
         {
@@ -142,7 +154,6 @@ public class CurrencyController : ControllerBase
         }
 
         await _currencyService.DeleteCurrencyByIdAsync(id, cancellationToken);
-        // TODO: Handle exceptions
 
         return NoContent();
     }

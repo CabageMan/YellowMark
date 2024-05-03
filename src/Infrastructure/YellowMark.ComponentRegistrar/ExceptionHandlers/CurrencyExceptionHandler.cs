@@ -1,22 +1,22 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using YellowMark.AppServices.Categories.Exceptions;
+using YellowMark.AppServices.Currencies.Exceptions;
 
 namespace YellowMark.ComponentRegistrar.ExceptionHandlers;
 
 /// <summary>
-/// Category exceptions handler.
+/// Currency exceptions handler.
 /// </summary>
-public class CategoryExceptionHandler : IExceptionHandler
+public class CurrencyExceptionHandler : IExceptionHandler
 {
-    private readonly ILogger<CategoryExceptionHandler> _logger;
+    private readonly ILogger<CurrencyExceptionHandler> _logger;
 
     /// <summary>
-    /// Constructor for <see cref="CategoryExceptionHandler"/>
+    /// Constructor for <see cref="CurrencyExceptionHandler"/>
     /// </summary>
     /// <param name="logger">Logger.</param>
-    public CategoryExceptionHandler(ILogger<CategoryExceptionHandler> logger)
+    public CurrencyExceptionHandler(ILogger<CurrencyExceptionHandler> logger)
     {
         _logger = logger;
     }
@@ -24,12 +24,12 @@ public class CategoryExceptionHandler : IExceptionHandler
     /// <inheritdoc/>
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        if (exception is CategoryOperationException categoryOperationException)
+        if (exception is CurrencyOperationException currencyOperationException)
         {
-            _logger.LogError("CategoryOperationException: {Message}", categoryOperationException.Message);
+            _logger.LogError("CurrencyOperationException: {Message}", currencyOperationException.Message);
 
             httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
-            await httpContext.Response.WriteAsJsonAsync(categoryOperationException.Message, cancellationToken);
+            await httpContext.Response.WriteAsJsonAsync(currencyOperationException.Message, cancellationToken);
             return true;
         }
 

@@ -74,6 +74,7 @@ public static class YellowMarkRegistrar
         services.AddExceptionHandler<AccountExceptionHandler>();
         services.AddExceptionHandler<UserInfoExceptionHandler>();
         services.AddExceptionHandler<CategoryExceptionHandler>();
+        services.AddExceptionHandler<CurrencyExceptionHandler>();
         // services.AddExceptionHandler<GlobalExceptionHandler>();
 
         return services;

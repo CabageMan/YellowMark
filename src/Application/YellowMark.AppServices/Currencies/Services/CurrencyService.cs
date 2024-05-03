@@ -2,7 +2,11 @@
 using AutoMapper;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.IdentityModel.Tokens;
+using YellowMark.AppServices.Currencies.Exceptions;
 using YellowMark.AppServices.Currencies.Repositories;
+using YellowMark.AppServices.Currencies.Specifications;
+using YellowMark.AppServices.Specifications;
 using YellowMark.Contracts.Currnecies;
 using YellowMark.Domain.Currencies.Entity;
 
@@ -21,6 +25,8 @@ public class CurrencyService : ICurrencyService
     /// </summary>
     /// <param name="currencyRepository">Currency Repository (<see cref="ICurrencyRepository"/>)</param>
     /// <param name="mapper">Currency mapper</param>
+    /// <param name="memoryCache">Memory cache <see cref="IMemoryCache"/></param>
+    /// <param name="distributedCache">Distributed cache <see cref="IDistributedCache"/></param>
     public CurrencyService(
         ICurrencyRepository currencyRepository, 
         IMapper mapper,
@@ -36,6 +42,13 @@ public class CurrencyService : ICurrencyService
     /// <inheritdoc/>
     public async Task<Guid> AddCurrencyAsync(CreateCurrencyRequest request, CancellationToken cancellationToken)
     {
+        Specification<Currency> specification = new CurrencyByCodesSpecification(request.AlphabeticCode);
+        var existedCurrency = await _currencyRepository.GetFiltered(specification, cancellationToken);       
+        if (!existedCurrency.IsNullOrEmpty())
+        {
+            throw new CurrencyOperationException($"Currency with code {request.AlphabeticCode} is allready existed.");
+        }
+
         var entity = _mapper.Map<CreateCurrencyRequest, Currency>(request);
         await _currencyRepository.AddAsync(entity, cancellationToken);
         return entity.Id;
