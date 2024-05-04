@@ -40,4 +40,18 @@ public class AdOperationException : Exception {
             throw message == null ? new AdOperationException() : new AdOperationException(message);
         }
     }
+
+    /// <summary>
+    /// Throw <see cref="AdOperationException"/> if argument is FALSE.
+    /// </summary>
+    /// <param name="argument">Bool value.</param>
+    /// <param name="message">Exception message.</param>
+    /// <exception cref="AdOperationException"></exception>
+    public static void ThrowIfFalse(bool argument, string? message = null)
+    {
+        if (!argument)
+        {
+            throw message == null ? new AdOperationException() : new AdOperationException(message);
+        }
+    }
 }

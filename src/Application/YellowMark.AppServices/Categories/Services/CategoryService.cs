@@ -49,6 +49,12 @@ public class CategoryService : ICategoryService
             throw new CategoryOperationException($"Category with name {request.Name} is allready existed.");
         }
 
+        if (request.ParentCategoryId != null)
+        {
+            var parentCategoryExists = await CategoryExistsWithId((Guid)request.ParentCategoryId, cancellationToken);
+            CategoryOperationException.ThrowIfFalse(parentCategoryExists, $"There is no parent category with id: {(Guid)request.ParentCategoryId}");
+        }
+
         var entity = _mapper.Map<CreateCategoryRequest, Category>(request);
         await _categoryRepository.AddAsync(entity, cancellationToken);
         return entity.Id;
@@ -103,13 +109,21 @@ public class CategoryService : ICategoryService
     }
 
     /// <inheritdoc/>
-    public async Task<CategoryDto> UpdateCategoryAsync(Guid id, CreateCategoryRequest request, CancellationToken cancellationToken)
+    public async Task<bool> CategoryExistsWithId(Guid id, CancellationToken cancellationToken)
+    {
+        return await _categoryRepository.ExistsWithId(id, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public async Task<CategoryDto> UpdateCategoryAsync(Guid id, UpdateCategoryRequest request, CancellationToken cancellationToken)
     {
         var currentEntity = await _categoryRepository.GetByIdAsync(id, cancellationToken);
+        CategoryNotFoundException.ThrowIfNull(currentEntity, "Could not find category to update.");
 
-        var updatedEntity = _mapper.Map<CreateCategoryRequest, Category>(request);
+        var updatedEntity = _mapper.Map<UpdateCategoryRequest, Category>(request);
         updatedEntity.Id = id;
         updatedEntity.CreatedAt = currentEntity.CreatedAt;
+        updatedEntity.ParentCategoryId = currentEntity.ParentCategoryId;
 
         await _categoryRepository.UpdateAsync(updatedEntity, cancellationToken);
 

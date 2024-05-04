@@ -43,6 +43,14 @@ public interface IAdRepository
     Task<Ad> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Check if ad exists.
+    /// </summary>
+    /// <param name="id">Ad Id.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Bool if ad existst.</returns>
+    Task<bool> ExistsWithId(Guid id, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Update current Ad.
     /// </summary>
     /// <param name="entity">Entity model <see cref="Ad"/></param>

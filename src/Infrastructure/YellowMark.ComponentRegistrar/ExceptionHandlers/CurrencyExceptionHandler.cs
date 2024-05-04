@@ -32,6 +32,14 @@ public class CurrencyExceptionHandler : IExceptionHandler
             await httpContext.Response.WriteAsJsonAsync(currencyOperationException.Message, cancellationToken);
             return true;
         }
+        if (exception is CurrencyNotFoundException currencyNotFoundException)
+        {
+            _logger.LogError("CurrencyNotFoundException: {Message}", currencyNotFoundException.Message);
+
+            httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+            await httpContext.Response.WriteAsJsonAsync(currencyNotFoundException.Message, cancellationToken);
+            return true;
+        }
 
         return false;
     }

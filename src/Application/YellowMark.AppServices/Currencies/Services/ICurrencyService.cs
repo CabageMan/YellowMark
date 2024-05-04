@@ -30,6 +30,14 @@ public interface ICurrencyService
     Task<CurrencyDto> GetCurrencyByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Check if currency exists by Id.
+    /// </summary>
+    /// <param name="id">Currency Id.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Bool ff currency exist</returns>
+    Task<bool> CurrencyExistsWithId(Guid id, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Update current Currency.
     /// </summary>
     /// <param name="id">Currency id</param>

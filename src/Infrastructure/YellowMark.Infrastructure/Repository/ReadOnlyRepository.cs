@@ -37,11 +37,18 @@ public class ReadOnlyRepository<TEntity, TContext> : IReadOnlyRepository<TEntity
     /// <inheritdoc/>
     public async Task<TEntity> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
+        // TODO: Check how handle it. If it throw exception here all other checking later is useless.
         var entity = await DbSet.FindAsync(id, cancellationToken);
         if (entity == null)
         {
             throw new InvalidOperationException($"Instance of {typeof(TEntity).Name} not found");
         }
         return entity;
+    }
+
+    /// <inheritdoc/>
+    public async Task<bool> ExistsWithId(Guid id, CancellationToken cancellationToken)
+    {
+        return await DbSet.AnyAsync(e => e.Id == id, cancellationToken);
     }
 }

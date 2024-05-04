@@ -103,9 +103,16 @@ public class CurrencyService : ICurrencyService
     }
 
     /// <inheritdoc/>
+    public async Task<bool> CurrencyExistsWithId(Guid id, CancellationToken cancellationToken)
+    {
+        return await _currencyRepository.ExistsWithId(id, cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public async Task<CurrencyDto> UpdateCurrencyAsync(Guid id, CreateCurrencyRequest request, CancellationToken cancellationToken)
     {
         var currentEntity = await _currencyRepository.GetByIdAsync(id, cancellationToken);
+        CurrencyNotFoundException.ThrowIfNull(currentEntity, "Could not find currency to update.");
 
         var updatedEntity = _mapper.Map<CreateCurrencyRequest, Currency>(request);
         updatedEntity.Id = id;

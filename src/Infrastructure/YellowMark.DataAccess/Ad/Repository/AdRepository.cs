@@ -84,6 +84,12 @@ public class AdRepository : IAdRepository
     }
 
     /// <inheritdoc/>
+    public async Task<bool> ExistsWithId(Guid id, CancellationToken cancellationToken)
+    {
+        return await _readOnlyRepository.ExistsWithId(id, cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public async Task UpdateAsync(Domain.Ads.Entity.Ad entity, CancellationToken cancellationToken)
     {
         await _writeOnlyRepository.UpdateAsync(entity, cancellationToken);

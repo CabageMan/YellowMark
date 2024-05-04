@@ -16,6 +16,7 @@ public interface IWriteOnlyRepository<TEntity, TContext> where TEntity : BaseEnt
     /// Add new instance of the entity.
     /// </summary>
     /// <param name="model">Entity model <see cref="TEntity"/></param>
+    /// <param name="cancellationToken">Operation cancellation token.</param>
     /// <returns></returns>
     Task AddAsync(TEntity model, CancellationToken cancellationToken);
 
@@ -23,6 +24,7 @@ public interface IWriteOnlyRepository<TEntity, TContext> where TEntity : BaseEnt
     /// Update current instance of the entity.
     /// </summary>
     /// <param name="model">Entity model <see cref="TEntity"/></param>
+    /// <param name="cancellationToken">Operation cancellation token.</param>
     /// <returns></returns>
     Task UpdateAsync(TEntity model, CancellationToken cancellationToken);
 
@@ -30,6 +32,7 @@ public interface IWriteOnlyRepository<TEntity, TContext> where TEntity : BaseEnt
     /// Delete an instance of the entity by id.
     /// </summary>
     /// <param name="id">Entity id</param>
+    /// <param name="cancellationToken">Operation cancellation token.</param>
     /// <returns></returns>
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
 }

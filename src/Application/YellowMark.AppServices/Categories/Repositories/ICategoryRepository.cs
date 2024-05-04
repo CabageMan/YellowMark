@@ -41,6 +41,14 @@ public interface ICategoryRepository
     Task<Category> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Check if category exists.
+    /// </summary>
+    /// <param name="id">Category Id.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Bool if category exists.</returns>
+    Task<bool> ExistsWithId(Guid id, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Update current Category.
     /// </summary>
     /// <param name="entity">Entity model <see cref="Category"/></param>

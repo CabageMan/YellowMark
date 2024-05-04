@@ -30,5 +30,14 @@ public class CommentProfile : Profile
             .ForMember(dest => dest.UserInfo, opt => opt.Ignore())
             .ForMember(dest => dest.AdId, opt => opt.MapFrom(src => src.AdId))
             .ForMember(dest => dest.Ad, opt => opt.Ignore());
+
+        CreateMap<UpdateCommentRequest, Comment>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.UserId, opt => opt.Ignore())
+            .ForMember(dest => dest.UserInfo, opt => opt.Ignore())
+            .ForMember(dest => dest.AdId, opt => opt.Ignore())
+            .ForMember(dest => dest.Ad, opt => opt.Ignore());
     }
 }

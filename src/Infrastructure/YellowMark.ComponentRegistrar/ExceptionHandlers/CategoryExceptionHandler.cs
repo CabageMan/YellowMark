@@ -31,6 +31,13 @@ public class CategoryExceptionHandler : IExceptionHandler
             httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
             await httpContext.Response.WriteAsJsonAsync(categoryOperationException.Message, cancellationToken);
             return true;
+        } if (exception is CategoryNotFoundException categoryNotFoundException)
+        {
+            _logger.LogError("CategoryNotFoundException: {Message}", categoryNotFoundException.Message);
+
+            httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+            await httpContext.Response.WriteAsJsonAsync(categoryNotFoundException.Message, cancellationToken);
+            return true;
         }
 
         return false;

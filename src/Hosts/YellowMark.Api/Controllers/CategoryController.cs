@@ -18,6 +18,7 @@ public class CategoryController : ControllerBase
 {
     private readonly ICategoryService _categoryService;
     private readonly IValidator<CreateCategoryRequest> _categoryValidator;
+    private readonly IValidator<UpdateCategoryRequest> _updateCategoryValidator;
     private readonly IValidator<Guid> _guidValidator;
 
     /// <summary>
@@ -25,14 +26,17 @@ public class CategoryController : ControllerBase
     /// </summary>
     /// <param name="categoryService">Category service <see cref="ICategoryService"/></param>
     /// <param name="categoryValidator">Categories validator <see cref="IValidator"/></param>
+    /// <param name="updateCategoryValidator">Categories validator <see cref="IValidator"/></param>
     /// <param name="guidValidator">Guid validator <see cref="IValidator"/></param>
     public CategoryController(
         ICategoryService categoryService,
         IValidator<CreateCategoryRequest> categoryValidator,
+        IValidator<UpdateCategoryRequest> updateCategoryValidator,
         IValidator<Guid> guidValidator)
     {
         _categoryService = categoryService;
         _categoryValidator = categoryValidator;
+        _updateCategoryValidator = updateCategoryValidator;
         _guidValidator = guidValidator;
     }
 
@@ -104,7 +108,7 @@ public class CategoryController : ControllerBase
     /// Update Category by Id. Awailable only for Admins or SuperUsers. 
     /// </summary>
     /// <param name="id">Needed to update category id.</param>
-    /// <param name="request">Category request model <see cref="CreateCategoryRequest"/></param>
+    /// <param name="request">Category request model <see cref="UpdateCategoryRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Updated category <see cref="CategoryDto"/></returns>
     [Authorize(Roles = $"{UserRoles.Admin}, {UserRoles.SuperUser}")]
@@ -112,7 +116,7 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(typeof(CategoryDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> UpdateCategory(Guid id, CreateCategoryRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateCategory(Guid id, UpdateCategoryRequest request, CancellationToken cancellationToken)
     {
         var guidValidationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
         if (!guidValidationResult.IsValid) 
@@ -120,7 +124,7 @@ public class CategoryController : ControllerBase
             return BadRequest(guidValidationResult.ToString());
         }
 
-        var categoryValidationResult = await _categoryValidator.ValidateAsync(request, cancellationToken);
+        var categoryValidationResult = await _updateCategoryValidator.ValidateAsync(request, cancellationToken);
         if (!categoryValidationResult.IsValid) 
         {
             return BadRequest(categoryValidationResult.ToString());

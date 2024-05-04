@@ -30,13 +30,21 @@ public interface ICategoryService
     Task<CategoryDto> GetCategoryByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Check if category exists by Id.
+    /// </summary>
+    /// <param name="id">Category Id.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Bool if category exist.</returns>
+    Task<bool> CategoryExistsWithId(Guid id, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Update current Category.
     /// </summary>
     /// <param name="id">Category id</param>
-    /// <param name="request">Creation model <see cref="CreateCategoryRequest"/></param>
+    /// <param name="request">Update model <see cref="UpdateCategoryRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Updated category <see cref="CategoryDto"/></returns>
-    Task<CategoryDto> UpdateCategoryAsync(Guid id, CreateCategoryRequest request, CancellationToken cancellationToken);
+    Task<CategoryDto> UpdateCategoryAsync(Guid id, UpdateCategoryRequest request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete the Category by id.

@@ -40,4 +40,18 @@ public class CommentOperationException : Exception {
             throw message == null ? new CommentOperationException() : new CommentOperationException(message);
         }
     }
+
+    /// <summary>
+    /// Throw <see cref="CommentOperationException"/> if argument is FALSE.
+    /// </summary>
+    /// <param name="argument">Bool value.</param>
+    /// <param name="message">Exception message.</param>
+    /// <exception cref="CommentOperationException"></exception>
+    public static void ThrowIfFalse(bool argument, string? message = null)
+    {
+        if (!argument)
+        {
+            throw message == null ? new CommentOperationException() : new CommentOperationException(message);
+        }
+    }
 }

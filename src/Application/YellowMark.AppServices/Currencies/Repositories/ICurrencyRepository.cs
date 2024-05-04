@@ -41,6 +41,14 @@ public interface ICurrencyRepository
     Task<Currency> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Check if currency exists.
+    /// </summary>
+    /// <param name="id">Currency Id.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns></returns>
+    Task<bool> ExistsWithId(Guid id, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Update current Currency.
     /// </summary>
     /// <param name="entity">Entity model <see cref="Currency"/></param>

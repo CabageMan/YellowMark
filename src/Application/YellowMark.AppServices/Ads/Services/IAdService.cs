@@ -40,6 +40,14 @@ public interface IAdService
     Task<IEnumerable<AdDto>> GetAdsByTitleAsync(AdByTitleRequest request, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Check if ad exists by Id.
+    /// </summary>
+    /// <param name="id">Ad Id.</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Bool if ad exist.</returns>
+    Task<bool> AdExistsWithId(Guid id, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Update current Ad.
     /// </summary>
     /// <param name="id">Ad id</param>

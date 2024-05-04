@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using YellowMark.AppServices.Accounts.Services;
+using YellowMark.AppServices.Ads.Services;
 using YellowMark.AppServices.Comments.Exceptions;
 using YellowMark.AppServices.Comments.Repositories;
 using YellowMark.AppServices.Comments.Specifications;
@@ -16,6 +17,7 @@ public class CommentService : ICommentService
 {
     private readonly ICommentRepository _commentRepository;
     private readonly IAccountService _accountService;
+    private readonly IAdService _adService;
     private readonly IMapper _mapper;
 
     /// <summary>
@@ -23,14 +25,17 @@ public class CommentService : ICommentService
     /// </summary>
     /// <param name="commentRepository">Comment repository <see cref="ICommentRepository"/></param>
     /// <param name="accountService">Account service <see cref="IAccountService"/></param>
+    /// <param name="adService">Account service <see cref="IAdService"/></param>
     /// <param name="mapper">Ads mapper.</param>
     public CommentService(
         ICommentRepository commentRepository,
         IAccountService accountService,
+        IAdService adService,
         IMapper mapper)
     {
         _commentRepository = commentRepository;
         _accountService = accountService;
+        _adService = adService;
         _mapper = mapper;
     }
 
@@ -39,6 +44,9 @@ public class CommentService : ICommentService
     {
         var currentUserInfo = await _accountService.GetAccountInfoAssync(cancellationToken);
         CommentOperationException.ThrowIfNull(currentUserInfo, "Could not get user info for comment creation.");
+
+        var commentedAdExists = await _adService.AdExistsWithId(request.AdId, cancellationToken);
+        CommentOperationException.ThrowIfFalse(commentedAdExists, $"There is no ad with id: {request.AdId}");
 
         var entity = _mapper.Map<CreateCommentRequest, Comment>(request);
         entity.UserId = currentUserInfo.Id;
@@ -68,7 +76,7 @@ public class CommentService : ICommentService
     }
 
     /// <inheritdoc/>
-    public async Task<CommentDto> UpdateCommentAsync(Guid id, CreateCommentRequest request, CancellationToken cancellationToken)
+    public async Task<CommentDto> UpdateCommentAsync(Guid id, UpdateCommentRequest request, CancellationToken cancellationToken)
     {
         var currentUserInfo = await _accountService.GetAccountInfoAssync(cancellationToken);
         CommentOperationException.ThrowIfNull(currentUserInfo, "Could not get user info for comment update.");
@@ -81,9 +89,10 @@ public class CommentService : ICommentService
             throw new CommentPermissionsDeniedException("Current user can not update this comment.");
         }
 
-        var updatedEntity = _mapper.Map<CreateCommentRequest, Comment>(request);
+        var updatedEntity = _mapper.Map<UpdateCommentRequest, Comment>(request);
         updatedEntity.Id = id;
         updatedEntity.CreatedAt = currentEntity.CreatedAt;
+        updatedEntity.AdId = currentEntity.AdId;
 
         await _commentRepository.UpdateAsync(updatedEntity, cancellationToken);
 
@@ -103,7 +112,7 @@ public class CommentService : ICommentService
             currentUserInfo.Id != currentEntity.UserId ||
             currentUserInfo.UserRoles.Contains(UserRoles.Admin) ||
             currentUserInfo.UserRoles.Contains(UserRoles.SuperUser))
-        { 
+        {
             throw new CommentPermissionsDeniedException("Current user can not delete this comment.");
         }
 
