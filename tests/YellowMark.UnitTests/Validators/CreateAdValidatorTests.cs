@@ -192,52 +192,6 @@ public class CreateAdValidatorTests : BaseUnitTest
         result.ShouldNotHaveValidationErrorFor(x => x.CurrencyId);
     }
 
-    // Owner Id
-    [Fact]
-    public void ShouldCorrect_OwnerId()
-    {
-        var createAdRequest = Fixture
-            .Build<CreateAdRequest>()
-            .With(x => x.Price, 1000)
-            .With(x => x.OwnerId, new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
-            .Create();
-        var sut = new CreateAdValidator();
-
-        var result = sut.TestValidate(createAdRequest);
-
-        result.ShouldNotHaveValidationErrorFor(x => x.OwnerId);
-    }
-
-    [Fact]
-    public void ShouldError_OwnerIdNull()
-    {
-        var createAdRequest = Fixture
-            .Build<CreateAdRequest>()
-            .With(x => x.Price, 1000)
-            .With(x => x.OwnerId, (Guid?)null)
-            .Create();
-        var sut = new CreateAdValidator();
-
-        var result = sut.TestValidate(createAdRequest);
-
-        result.ShouldHaveValidationErrorFor(x => x.OwnerId).Only();
-    }
-
-    [Fact]
-    public void ShouldError_OwnerIdEmpty()
-    {
-        var createAdRequest = Fixture
-            .Build<CreateAdRequest>()
-            .With(x => x.Price, 1000)
-            .With(x => x.OwnerId, Guid.Empty)
-            .Create();
-        var sut = new CreateAdValidator();
-
-        var result = sut.TestValidate(createAdRequest);
-
-        result.ShouldHaveValidationErrorFor(x => x.OwnerId).Only();
-    }
-
     // SubcategoryId Id
     [Fact]
     public void ShouldCorrect_SubcategoryId()

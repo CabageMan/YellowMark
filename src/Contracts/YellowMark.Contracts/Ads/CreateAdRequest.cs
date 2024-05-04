@@ -26,11 +26,6 @@ public class CreateAdRequest
     public Guid? CurrencyId { get; set; }
 
     /// <summary>
-    /// Ad owner id.
-    /// </summary>
-    public Guid OwnerId { get; set; }
-
-    /// <summary>
     /// Ad Subcategory id <see cref="Guid"/>.
     /// </summary>
     public Guid CategoryId { get; set; }

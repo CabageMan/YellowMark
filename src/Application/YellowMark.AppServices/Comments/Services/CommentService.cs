@@ -71,7 +71,7 @@ public class CommentService : ICommentService
     public async Task<CommentDto> UpdateCommentAsync(Guid id, CreateCommentRequest request, CancellationToken cancellationToken)
     {
         var currentUserInfo = await _accountService.GetAccountInfoAssync(cancellationToken);
-        CommentOperationException.ThrowIfNull(currentUserInfo, "Could not get user info for comment creation.");
+        CommentOperationException.ThrowIfNull(currentUserInfo, "Could not get user info for comment update.");
 
         var currentEntity = await _commentRepository.GetByIdAsync(id, cancellationToken);
         CommentNotFoundException.ThrowIfNull(currentEntity, "Could not get comment for update.");
@@ -94,7 +94,7 @@ public class CommentService : ICommentService
     public async Task DeleteCommentByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         var currentUserInfo = await _accountService.GetAccountInfoAssync(cancellationToken);
-        CommentOperationException.ThrowIfNull(currentUserInfo, "Could not get user info for comment creation.");
+        CommentOperationException.ThrowIfNull(currentUserInfo, "Could not get user info for comment deletion.");
 
         var currentEntity = await _commentRepository.GetByIdAsync(id, cancellationToken);
         CommentNotFoundException.ThrowIfNull(currentEntity, "There is nothing to delete.");

@@ -107,7 +107,7 @@ public class CommentController : ControllerBase
         var result = await _commentService.GetCommentByIdAsync(id, cancellationToken);
         if (result == null)
         {
-            return NotFound();
+            return NotFound("Could not find comment.");
         }
 
         return Ok(result);
@@ -144,6 +144,12 @@ public class CommentController : ControllerBase
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> UpdateComment(Guid id, CreateCommentRequest request, CancellationToken cancellationToken)
     {
+        var guidValidationResult = await _guidValidator.ValidateAsync(id, cancellationToken);
+        if (!guidValidationResult.IsValid)
+        {
+            return BadRequest(guidValidationResult.ToString());
+        }
+
         var commentValidationResult = await _commentValidator.ValidateAsync(request, cancellationToken);
         if (!commentValidationResult.IsValid)
         {

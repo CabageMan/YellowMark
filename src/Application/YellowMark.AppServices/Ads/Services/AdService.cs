@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using YellowMark.AppServices.Accounts.Services;
+using YellowMark.AppServices.Ads.Exceptions;
 using YellowMark.AppServices.Ads.Repositories;
 using YellowMark.AppServices.Ads.Specifications;
 using YellowMark.AppServices.Specifications;
 using YellowMark.Contracts.Ads;
 using YellowMark.Contracts.Pagination;
 using YellowMark.Domain.Ads.Entity;
+using YellowMark.Domain.UserRoles;
 
 namespace YellowMark.AppServices.Ads.Services;
 
@@ -12,23 +15,34 @@ namespace YellowMark.AppServices.Ads.Services;
 public class AdService : IAdService
 {
     private readonly IAdRepository _adRepository;
+    private readonly IAccountService _accountService;
     private readonly IMapper _mapper;
 
     /// <summary>
     /// Init <see cref="AdService"/> instance.
     /// </summary>
     /// <param name="adRepository">Ad repository <see cref="IAdRepository"/></param>
+    /// <param name="accountService">Account service <see cref="IAccountService"/></param>
     /// <param name="mapper">Ads mapper.</param>
-    public AdService(IAdRepository adRepository, IMapper mapper)
+    public AdService(
+        IAdRepository adRepository,
+        IAccountService accountService,
+        IMapper mapper)
     {
         _adRepository = adRepository;
+        _accountService = accountService;
         _mapper = mapper;
     }
 
     /// <inheritdoc/>
     public async Task<Guid> AddAdAsync(CreateAdRequest request, CancellationToken cancellationToken)
     {
+        var currentUserInfo = await _accountService.GetAccountInfoAssync(cancellationToken);
+        AdOperationException.ThrowIfNull(currentUserInfo, "Could not get user info for ad creation.");
+
         var entity = _mapper.Map<CreateAdRequest, Ad>(request);
+        entity.UserInfoId = currentUserInfo.Id;
+
         await _adRepository.AddAsync(entity, cancellationToken);
         return entity.Id;
     }
@@ -56,7 +70,16 @@ public class AdService : IAdService
     /// <inheritdoc/>
     public async Task<AdDto> UpdateAdAsync(Guid id, CreateAdRequest request, CancellationToken cancellationToken)
     {
+        var currentUserInfo = await _accountService.GetAccountInfoAssync(cancellationToken);
+        AdOperationException.ThrowIfNull(currentUserInfo, "Could not get user info for ad update.");
+
         var currentEntity = await _adRepository.GetByIdAsync(id, cancellationToken);
+        AdNotFoundException.ThrowIfNull(currentEntity, "Could not get ad for update.");
+
+        if (currentUserInfo.Id != currentEntity.UserInfoId)
+        {
+            throw new AdPermissionsDeniedException("Current user can not update this ad.");
+        }
 
         var updatedEntity = _mapper.Map<CreateAdRequest, Ad>(request);
         updatedEntity.Id = id;
@@ -70,6 +93,20 @@ public class AdService : IAdService
     /// <inheritdoc/>
     public async Task DeleteAdByIdAsync(Guid id, CancellationToken cancellationToken)
     {
+        var currentUserInfo = await _accountService.GetAccountInfoAssync(cancellationToken);
+        AdOperationException.ThrowIfNull(currentUserInfo, "Could not get user info for ad deletion.");
+
+        var currentEntity = await _adRepository.GetByIdAsync(id, cancellationToken);
+        AdNotFoundException.ThrowIfNull(currentEntity, "There is nothing to delete.");
+
+        if (
+            currentUserInfo.Id != currentEntity.UserInfoId ||
+            currentUserInfo.UserRoles.Contains(UserRoles.Admin) ||
+            currentUserInfo.UserRoles.Contains(UserRoles.SuperUser))
+        { 
+            throw new AdPermissionsDeniedException("Current user can not delete this ad.");
+        }
+
         await _adRepository.DeleteAsync(id, cancellationToken);
     }
 }
