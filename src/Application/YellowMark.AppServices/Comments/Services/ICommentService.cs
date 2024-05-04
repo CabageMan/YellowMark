@@ -1,5 +1,4 @@
-﻿using YellowMark.Contracts;
-using YellowMark.Contracts.Comments;
+﻿using YellowMark.Contracts.Comments;
 using YellowMark.Contracts.Pagination;
 
 namespace YellowMark.AppServices.Comments.Services;
@@ -42,15 +41,17 @@ public interface ICommentService
 
     /// <summary>
     /// Update current Comment.
+    /// Any User can update only own comment. 
     /// </summary>
-    /// <param name="id">Comment id</param>
-    /// <param name="request">Creation model <see cref="CreateCommentRequest"/></param>
+    /// <param name="request">Create comment model <see cref="CreateCommentRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Updated ad <see cref="CommentDto"/></returns>
     Task<CommentDto> UpdateCommentAsync(Guid id, CreateCommentRequest request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete the Comment by id.
+    /// User can delete only own comment. 
+    /// Admin or Superuser can delete any comment.
     /// </summary>
     /// <param name="id">Comment id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>

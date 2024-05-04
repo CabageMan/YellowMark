@@ -82,6 +82,7 @@ public class UserInfoController : ControllerBase
         {
             return NotFound();
         }
+
         return Ok(result);
     }
 

@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using YellowMark.Contracts;
+using YellowMark.Contracts.Comments;
 
 namespace YellowMark.AppServices.Validators;
 
@@ -13,8 +13,7 @@ public class CreateCommentValidator : AbstractValidator<CreateCommentRequest>
     /// </summary>
     public CreateCommentValidator()
     {
-        RuleFor(ad => ad.Text).StringCorrectLength(0, 1024);
-        RuleFor(ad => ad.UserId).NonEmptyGuid();
-        RuleFor(ad => ad.AdId).NonEmptyGuid();
+        RuleFor(c => c.Text).StringCorrectLength(0, 1024);
+        RuleFor(c => c.AdId).NonEmptyGuid();
     }
 }

@@ -19,6 +19,7 @@ public class AccountProfile : Profile
             .ForMember(dest => dest.ShowPhone, opt => opt.Ignore());
 
         CreateMap<UserInfoDto, AccountInfoDto>()
+            .ForMember(dest => dest.UserRoles, opt => opt.Ignore())
             .ForMember(dest => dest.Phone, opt => opt.Ignore())
             .ForMember(dest => dest.Email, opt => opt.Ignore());
 

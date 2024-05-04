@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using YellowMark.Contracts;
 using YellowMark.Contracts.Comments;
 using YellowMark.Domain.Comments.Entity;
 
@@ -17,7 +16,7 @@ public class CommentProfile : Profile
     {
         CreateMap<Comment, CommentDto>()
             .ForMember(dest => dest.IsEdited, opt => opt.MapFrom(src => src.CreatedAt != src.UpdatedAt))
-            .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.UserInfo.Id))
+            .ForMember(dest => dest.AuthorId, opt => opt.MapFrom(src => src.UserId))
             .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.UserInfo.FirstName))
             .ForMember(dest => dest.AuthorLastName, opt => opt.MapFrom(src => src.UserInfo.LastName))
             .ForMember(dest => dest.AdId, opt => opt.MapFrom(src => src.Ad.Id))
@@ -27,7 +26,7 @@ public class CommentProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
-            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.UserId, opt => opt.Ignore())
             .ForMember(dest => dest.UserInfo, opt => opt.Ignore())
             .ForMember(dest => dest.AdId, opt => opt.MapFrom(src => src.AdId))
             .ForMember(dest => dest.Ad, opt => opt.Ignore());

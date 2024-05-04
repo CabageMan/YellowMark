@@ -1,7 +1,7 @@
 ﻿using AutoFixture;
 using FluentValidation.TestHelper;
 using YellowMark.AppServices.Validators;
-using YellowMark.Contracts;
+using YellowMark.Contracts.Comments;
 
 namespace YellowMark.UnitTests.Validators;
 
@@ -68,49 +68,6 @@ public class CreateCommentValidatorTests : BaseUnitTest
         var result = sut.TestValidate(createCommentRequest);
 
         result.ShouldHaveValidationErrorFor(x => x.Text).Only();
-    }
-
-    // User Id
-    [Fact]
-    public void ShouldCorrect_UserId()
-    {
-        var createCommentRequest = Fixture
-            .Build<CreateCommentRequest>()
-            .With(x => x.UserId, new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6"))
-            .Create();
-        var sut = new CreateCommentValidator();
-
-        var result = sut.TestValidate(createCommentRequest);
-
-        result.ShouldNotHaveValidationErrorFor(x => x.UserId);
-    }
-
-    [Fact]
-    public void ShouldError_UserIdNull()
-    {
-        var createCommentRequest = Fixture
-            .Build<CreateCommentRequest>()
-            .With(x => x.UserId, (Guid?)null)
-            .Create();
-        var sut = new CreateCommentValidator();
-
-        var result = sut.TestValidate(createCommentRequest);
-
-        result.ShouldHaveValidationErrorFor(x => x.UserId).Only();
-    }
-
-    [Fact]
-    public void ShouldError_UserIdEmpty()
-    {
-        var createCommentRequest = Fixture
-            .Build<CreateCommentRequest>()
-            .With(x => x.UserId, Guid.Empty)
-            .Create();
-        var sut = new CreateCommentValidator();
-
-        var result = sut.TestValidate(createCommentRequest);
-
-        result.ShouldHaveValidationErrorFor(x => x.UserId).Only();
     }
 
     // Ad Id

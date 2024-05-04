@@ -1,10 +1,11 @@
 ﻿using System.Net;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using YellowMark.AppServices.Comments.Services;
-using YellowMark.Contracts;
 using YellowMark.Contracts.Comments;
 using YellowMark.Contracts.Pagination;
+using YellowMark.Domain.UserRoles;
 
 namespace YellowMark.Api.Controllers;
 
@@ -12,28 +13,31 @@ namespace YellowMark.Api.Controllers;
 /// Comment controller.
 /// </summary>
 [ApiController]
-[Route("v1/comments")]
+[Route("api/v1/comments")]
 [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
 public class CommentController : ControllerBase
 {
     private readonly ICommentService _commentService;
     private readonly IValidator<CreateCommentRequest> _commentValidator;
+    private readonly IValidator<GetAllRequestWithPagination> _paginationRequestValidator;
     private readonly IValidator<Guid> _guidValidator;
 
     /// <summary>
     /// Init instance of <see cref="CommentController"/>
     /// </summary>
-    /// <param name="commentService"></param>
-    /// <param name="commentValidator"></param>
+    /// <param name="commentService">Comments service.</param>
+    /// <param name="commentValidator">Comment creation validator.</param>
+    /// <param name="paginationRequestValidator">Pagination params validator</param>
     /// <param name="guidValidator"></param>
     public CommentController(
         ICommentService commentService,
         IValidator<CreateCommentRequest> commentValidator,
-        IValidator<Guid> guidValidator
-    )
+        IValidator<GetAllRequestWithPagination> paginationRequestValidator,
+        IValidator<Guid> guidValidator)
     {
         _commentService = commentService;
         _commentValidator = commentValidator;
+        _paginationRequestValidator = paginationRequestValidator;
         _guidValidator = guidValidator;
     }
 
@@ -43,6 +47,7 @@ public class CommentController : ControllerBase
     /// <param name="request">Comment request model <see cref="CreateCommentRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Created comment Id <see cref="Guid"/></returns>
+    [Authorize]
     [HttpPost]
     [ProducesResponseType(typeof(Guid), (int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -64,13 +69,18 @@ public class CommentController : ControllerBase
     /// <param name="request">Pagination params <see cref="GetAllRequestWithPagination"/>.</param>
     /// <param name="cancellationToken">Operation cancelation token.</param>
     /// <returns>Comments list.</returns>
+    [Authorize(Roles = $"{UserRoles.Admin}")]
     [HttpGet]
     [ProducesResponseType(typeof(ResultWithPagination<CommentDto>), (int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> GetAllComments([FromQuery] GetAllRequestWithPagination request, CancellationToken cancellationToken)
     {
-        // TODO: Implement pagination validator.
-        // TODO: Implement all possible returning status codes.
+        var validationResult = await _paginationRequestValidator.ValidateAsync(request, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.ToString());
+        }
+
         var result = await _commentService.GetCommentsAsync(request, cancellationToken);
         return Ok(result);
     }
@@ -81,9 +91,11 @@ public class CommentController : ControllerBase
     /// <param name="id">Comment id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Comment.</returns>
+    [Authorize]
     [HttpGet("{id:Guid}")]
     [ProducesResponseType(typeof(CommentDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetCommentById(Guid id, CancellationToken cancellationToken)
     {
         var validationResult = await _guidValidator.ValidateAsync(id, cancellationToken);
@@ -93,6 +105,11 @@ public class CommentController : ControllerBase
         }
 
         var result = await _commentService.GetCommentByIdAsync(id, cancellationToken);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
         return Ok(result);
     }
 
@@ -102,53 +119,55 @@ public class CommentController : ControllerBase
     /// <param name="searchString">Search string to filter comments</param> 
     /// <param name="cancellationToken">Operation cancelation token.</param>
     /// <returns>Comments list.</returns>
+    [Authorize]
     [HttpGet]
     [Route("by-text-or-author")]
     [ProducesResponseType(typeof(IEnumerable<CommentDto>), (int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetAllByTextOrAuthor([FromQuery] string searchString, CancellationToken cancellationToken)
     {
-        // TODO: Implement all possible returning status codes.
         var result = await _commentService.GetCommentsByStringAsync(searchString, cancellationToken);
         return Ok(result);
     }
 
     /// <summary>
     /// Update Comment by Id.
+    /// Any User can update only own comment. 
     /// </summary>
-    /// <param name="id">Needed to update comment.</param>
-    /// <param name="request">Comment request model <see cref="CreateCommentRequest"/></param>
+    /// <param name="id">Comment Id to update.</param>
+    /// <param name="request">Create comment request model <see cref="CreateCommentRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Updated comment <see cref="CommentDto"/></returns>
+    [Authorize]
     [HttpPut("{id:Guid}")]
     [ProducesResponseType(typeof(CommentDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> UpdateComment(Guid id, CreateCommentRequest request, CancellationToken cancellationToken)
     {
-        var guidValidationResult = await _guidValidator.ValidateAsync(id, cancellationToken);
-        if (!guidValidationResult.IsValid)
-        {
-            return BadRequest(guidValidationResult.ToString());
-        }
-
         var commentValidationResult = await _commentValidator.ValidateAsync(request, cancellationToken);
         if (!commentValidationResult.IsValid)
         {
             return BadRequest(commentValidationResult.ToString());
         }
-        // TODO: Handle exceptions
 
-        var updatedAd = await _commentService.UpdateCommentAsync(id, request, cancellationToken);
-        return Ok(updatedAd);
+        var updatedComment = await _commentService.UpdateCommentAsync(id, request, cancellationToken);
+        if (updatedComment == null)
+        {
+            return NotFound("Could not find comment to update.");
+        }
+
+        return Ok(updatedComment);
     }
 
     /// <summary>
-    /// Delete Comment by Id.
+    /// Delete user comment by Id. 
+    /// User can delete only own comment. 
+    /// Admin or Superuser can delete any comment.
     /// </summary>
     /// <param name="id">Comment id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Task</returns>
+    [Authorize]
     [HttpDelete("{id:Guid}")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -162,7 +181,6 @@ public class CommentController : ControllerBase
         }
 
         await _commentService.DeleteCommentByIdAsync(id, cancellationToken);
-        // TODO: Handle exceptions
 
         return NoContent();
     }

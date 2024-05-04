@@ -6,7 +6,7 @@
 public class AccountInfoDto
 {
     /// <summary>
-    /// User record identifier. 
+    /// User Info record identifier. 
     /// </summary>
     public Guid Id { get; set; }
 
@@ -44,4 +44,9 @@ public class AccountInfoDto
     /// User birth date.
     /// </summary>
     public DateOnly BirthDate { get; set; }
+
+    /// <summary>
+    /// User roles.
+    /// </summary>
+    public List<string> UserRoles { get; set; }
 }

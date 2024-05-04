@@ -110,22 +110,14 @@ public class AccountService : IAccountService
         _logger.LogInformation("Try to find existed account.");
 
         var account = await _userManager.FindByEmailAsync(request.Email);
-        if (account == null)
-        {
-            throw new AccountNotFoundException($"Account with email {request.Email} does not exist.");
-        }
+        AccountNotFoundException.ThrowIfNull(account, $"Account with email {request.Email} does not exist.");
 
         _logger.LogInformation("Check password.");
 
         var isPasswordValid = await _userManager.CheckPasswordAsync(account, request.Password);
-        if (!isPasswordValid)
-        {
-            throw new AccountBadRequestException($"Password for {request.Email} does not match.");
-        }
+        AccountBadRequestException.ThrowIfFalse(isPasswordValid, $"Password for {request.Email} does not match.");
 
         _logger.LogInformation("Try to get roles for account.");
-
-        var accountRoles = await _userManager.GetRolesAsync(account);
 
         if (account.UserName == null || account.Email == null || account.PhoneNumber == null)
         {
@@ -137,6 +129,8 @@ public class AccountService : IAccountService
             new(ClaimTypes.Email, account.Email),
             new(ClaimTypes.MobilePhone, account.PhoneNumber)
         };
+
+        var accountRoles = await _userManager.GetRolesAsync(account);
         foreach (var userRole in accountRoles)
         {
             authClaims.Add(new(ClaimTypes.Role, userRole));
@@ -196,8 +190,16 @@ public class AccountService : IAccountService
         _logger.LogInformation("Try to find existed account from token info. And get info.");
 
         var existedAccount = await GetAccountByTokenAsync();
+        AccountOperationException.ThrowIfNull(existedAccount, "Could not get account by token.");
+
+        var accountRoles = await _userManager.GetRolesAsync(existedAccount);
+        AccountOperationException.ThrowIfNull(accountRoles, "Could not get roles from account.");
+
         var userInfo = await _userInfoService.GetUserByAccountIdAsync(existedAccount.Id, cancellationToken);
+        AccountOperationException.ThrowIfNull(userInfo, "Could not get user info related to account.");
+
         var accountInfo = _mapper.Map<UserInfoDto, AccountInfoDto>(userInfo);
+        accountInfo.UserRoles = accountRoles.ToList();
         accountInfo.Email = existedAccount.Email;
         accountInfo.Phone = existedAccount.PhoneNumber;
 
@@ -268,11 +270,8 @@ public class AccountService : IAccountService
     private JwtSecurityToken GenerateJwtToken(List<Claim> claims)
     {
         var secretKey = _configuration.GetSection("Jwt")["SecretKey"];
-        if (secretKey == null)
-        {
-            // TODO: Think how to handle this case:
-            throw new ArgumentNullException("Secret key is null.");
-        }
+        AccountOperationException.ThrowIfNull(secretKey, "Configuration SecretKey is null.");
+
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         var credentials = new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256);
 
@@ -288,25 +287,23 @@ public class AccountService : IAccountService
     private async Task<Account> GetAccountByTokenAsync()
     {
         var context = _httpContextAccessor.HttpContext;
-        ArgumentNullException.ThrowIfNull(context);
+        AccountOperationException.ThrowIfNull(context, "Http context is null.");
 
         var tokenString = await context.GetTokenAsync("access_token");
-        ArgumentNullException.ThrowIfNull(tokenString);
+        AccountOperationException.ThrowIfNull(tokenString, "Http context 'access_token' string is null.");
 
         var emailClaim = new JwtSecurityTokenHandler()
             .ReadJwtToken(tokenString)
             .Claims
             .FirstOrDefault(c => c.Type == ClaimTypes.Email);
-        ArgumentNullException.ThrowIfNull(emailClaim);
+        AccountOperationException.ThrowIfNull(emailClaim, "Email claim is null.");
 
         var email = emailClaim.Value;
-        ArgumentNullException.ThrowIfNull(email);
+        AccountOperationException.ThrowIfNull(email, "Email claim value is null.");
 
         var existedAccount = await _userManager.FindByEmailAsync(email);
-        if (existedAccount == null)
-        {
-            throw new AccountNotFoundException($"Could not find account related to {email}.");
-        }
+        AccountNotFoundException.ThrowIfNull(existedAccount, $"Could not find account related to {email}.");
+
         return existedAccount;
     }
 

@@ -1,4 +1,4 @@
-﻿namespace YellowMark.Contracts;
+﻿namespace YellowMark.Contracts.Comments;
 
 /// <summary>
 /// Request data model for Comment creation.
@@ -9,11 +9,6 @@ public class CreateCommentRequest
     /// Comment text.
     /// </summary>
     public string Text { get; set; }
-
-    /// <summary>
-    /// Author's (User) Id.
-    /// </summary>
-    public Guid UserId { get; set; }
 
     /// <summary>
     /// Ad Id.

@@ -1,4 +1,6 @@
-﻿namespace YellowMark.AppServices.Accounts.Exceptions;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace YellowMark.AppServices.Accounts.Exceptions;
 
 /// <summary>
 /// Account bad requet exception.
@@ -25,4 +27,18 @@ public class AccountBadRequestException : Exception
     /// <param name="inner">Inner <see cref="Exception"/></param>
     public AccountBadRequestException(string message, Exception inner) : base(message, inner)
     { }
+
+    /// <summary>
+    /// Throw <see cref="AccountBadRequestException"/> if argument is false.
+    /// </summary>
+    /// <param name="argument">Bool value</param>
+    /// <param name="message">Exception message.</param>
+    /// <exception cref="AccountBadRequestException"></exception>
+    public static void ThrowIfFalse(bool argument, string? message = null)
+    {
+        if (!argument)
+        {
+            throw message == null ? new AccountBadRequestException() : new AccountBadRequestException(message);
+        }
+    }
 }
