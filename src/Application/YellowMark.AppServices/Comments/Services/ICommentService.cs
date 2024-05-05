@@ -40,6 +40,13 @@ public interface ICommentService
     Task<IEnumerable<CommentDto>> GetCommentsByStringAsync(string searchRequestString, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Return list of the <see cref="CommentDto"/> related to Ad id.
+    /// </summary>
+    /// <param name="id">Ad id</param>
+    /// <returns>List of the <see cref="CommentDto"/></returns>
+    Task<IEnumerable<CommentDto>> GetCommentsByAdIdAsync(Guid adId, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Update current Comment.
     /// Any User can update only own comment. 
     /// </summary>

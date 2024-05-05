@@ -76,6 +76,13 @@ public class CommentService : ICommentService
     }
 
     /// <inheritdoc/>
+    public Task<IEnumerable<CommentDto>> GetCommentsByAdIdAsync(Guid adId, CancellationToken cancellationToken)
+    {
+        Specification<Comment> specification = new CommentsByAdIdSpecification(adId);
+        return _commentRepository.GetFiltered(specification, cancellationToken);
+    }
+
+    /// <inheritdoc/>
     public async Task<CommentDto> UpdateCommentAsync(Guid id, UpdateCommentRequest request, CancellationToken cancellationToken)
     {
         var currentUserInfo = await _accountService.GetAccountInfoAssync(cancellationToken);

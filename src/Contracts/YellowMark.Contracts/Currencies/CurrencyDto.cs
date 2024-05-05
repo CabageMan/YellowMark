@@ -11,16 +11,6 @@ public class CurrencyDto
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Currency creation date.
-    /// </summary>
-    public DateTime CreatedAt { get; set; }
-
-    /// <summary>
-    /// Currency update date.
-    /// </summary>
-    public DateTime UpdatedAt { get; set; }
-
-    /// <summary>
     /// International alphabetic currency code. 
     /// </summary>
     public string AlphabeticCode { get; set; }

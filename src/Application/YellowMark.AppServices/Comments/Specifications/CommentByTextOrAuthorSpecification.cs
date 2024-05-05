@@ -9,7 +9,7 @@ namespace YellowMark.AppServices.Comments.Specifications;
 /// </summary>
 public class CommentByTextOrAuthorSpecification : Specification<Comment>
 {
-    private readonly string _searchString;
+    private readonly string _searchStringLoweCase;
 
     /// <summary>
     /// Constructor of specification.
@@ -17,7 +17,7 @@ public class CommentByTextOrAuthorSpecification : Specification<Comment>
     /// <param name="searchString">Search string to find any comments.</param>
     public CommentByTextOrAuthorSpecification(string searchString)
     {
-        _searchString = searchString;
+        _searchStringLoweCase = searchString.ToLower();
     }
 
     /// <summary>
@@ -26,8 +26,8 @@ public class CommentByTextOrAuthorSpecification : Specification<Comment>
     /// <returns>Expression</returns>
     public override Expression<Func<Comment, bool>> ToExpression()
     {
-        return comment => comment.Text.Contains(_searchString) 
-            || comment.UserInfo.FirstName.Contains(_searchString)
-            || comment.UserInfo.LastName.Contains(_searchString);
+        return comment => comment.Text.ToLower().Contains(_searchStringLoweCase) 
+            || comment.UserInfo.FirstName.ToLower().Contains(_searchStringLoweCase)
+            || comment.UserInfo.LastName.ToLower().Contains(_searchStringLoweCase);
     }
 }

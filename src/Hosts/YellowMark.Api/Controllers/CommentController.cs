@@ -134,6 +134,30 @@ public class CommentController : ControllerBase
     }
 
     /// <summary>
+    /// Return ad comments.
+    /// </summary>
+    /// <param name="id">Ad id <see cref="Guid"/></param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>List of the <see cref="CommentDto"/>.</returns>
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("~/api/v1/ads/{id:Guid}/comments")]
+    [ProducesResponseType(typeof(CommentDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> GetCommentsByAdId(Guid id, CancellationToken cancellationToken)
+    {
+        var validationResult = await _guidValidator.ValidateAsync(id, cancellationToken);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.ToString());
+        }
+
+        var result = await _commentService.GetCommentsByAdIdAsync(id, cancellationToken);
+
+        return Ok(result);
+    }
+
+    /// <summary>
     /// Update Comment by Id.
     /// Any User can update only own comment. 
     /// </summary>
