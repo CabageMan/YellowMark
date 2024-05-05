@@ -10,7 +10,7 @@ namespace YellowMark.Api.Controllers;
 /// File controller.
 /// </summary>
 [ApiController]
-[Route("v1/files")]
+[Route("api/v1/files")]
 [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
 public class FileController : ControllerBase
 {
