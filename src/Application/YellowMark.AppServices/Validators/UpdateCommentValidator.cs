@@ -13,6 +13,7 @@ public class UpdateCommentValidator : AbstractValidator<UpdateCommentRequest>
     /// </summary>
     public UpdateCommentValidator()
     {
+        RuleFor(c => c.Id).NonEmptyGuid();
         RuleFor(c => c.Text).StringCorrectLength(0, 1024);
     }
 }

@@ -37,7 +37,7 @@ public class UserInfoController : ControllerBase
     }
 
     /// <summary>
-    /// Returns all users list with pagination.
+    /// Returns all users list with pagination. Available only for authorized users.
     /// </summary>
     /// <param name="request">Pagination params <see cref="GetAllRequestWithPagination"/>.</param>
     /// <param name="cancellationToken">Operation cancelation token.</param>
@@ -59,7 +59,7 @@ public class UserInfoController : ControllerBase
     }
 
     /// <summary>
-    /// Return user info by id.
+    /// Return user info by id. Available only for authorized users.
     /// </summary>
     /// <param name="id">User id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -87,7 +87,7 @@ public class UserInfoController : ControllerBase
     }
 
     /// <summary>
-    /// Returns users infos list filtered by name.
+    /// Returns users infos list filtered by name. Available only for authorized users.
     /// </summary>
     /// <param name="request">Request <see cref="UserInfoByNameRequest"/></param> 
     /// <param name="cancellationToken">Operation cancelation token.</param>

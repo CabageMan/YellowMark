@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using YellowMark.AppServices.Files.Services;
 using YellowMark.Contracts.Files;
@@ -31,12 +32,13 @@ public class FileController : ControllerBase
     }
 
     /// <summary>
-    /// Upload file.
+    /// Upload file. Available only for authorized users.
     /// </summary>
     /// <param name="file">File from form <see cref="IFormFile"/></param>
     /// <param name="adId">Ad id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Uploaded file id <see cref="Guid"/></returns>
+    [Authorize]
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -61,11 +63,12 @@ public class FileController : ControllerBase
     }
 
     /// <summary>
-    /// Download file by id.
+    /// Download file by id. Available only for authorized users.
     /// </summary>
     /// <param name="id">File id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Ad.</returns>
+    [Authorize]
     [HttpGet("{id:Guid}")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -89,11 +92,12 @@ public class FileController : ControllerBase
     }
 
     /// <summary>
-    /// Get file info by id.
+    /// Get file info by id. Available only for authorized users.
     /// </summary>
     /// <param name="id">File id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>File info string.</returns>
+    [Authorize]
     [HttpGet("{id:Guid}/info")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -111,11 +115,12 @@ public class FileController : ControllerBase
     }
 
     /// <summary>
-    /// Delete file by id.
+    /// Delete file by id. Available only for authorized users.
     /// </summary>
     /// <param name="id">File id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Task.</returns>
+    [Authorize]
     [HttpDelete("{id:Guid}")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -128,7 +133,6 @@ public class FileController : ControllerBase
             return BadRequest(validationResult.ToString());
         }
 
-        // TODO: Handle exception.
         await _fileService.DeleteFileByIdAsync(id, cancellationToken);
         return NoContent();
     }

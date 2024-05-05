@@ -6,6 +6,11 @@
 public class UpdateCommentRequest
 {
     /// <summary>
+    /// Comment to update Id.
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
     /// Comment text.
     /// </summary>
     public string Text { get; set; }

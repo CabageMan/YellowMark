@@ -46,7 +46,7 @@ public class CommentController : ControllerBase
     }
 
     /// <summary>
-    /// Create new Comment.
+    /// Create new Comment. Available only for authorized users.
     /// </summary>
     /// <param name="request">Comment request model <see cref="CreateCommentRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -68,7 +68,7 @@ public class CommentController : ControllerBase
     }
 
     /// <summary>
-    /// Returns all comments list with pagination.
+    /// Returns all comments list with pagination. Available only for 'Admin' users.
     /// </summary>
     /// <param name="request">Pagination params <see cref="GetAllRequestWithPagination"/>.</param>
     /// <param name="cancellationToken">Operation cancelation token.</param>
@@ -90,7 +90,7 @@ public class CommentController : ControllerBase
     }
 
     /// <summary>
-    /// Return comment by id.
+    /// Return comment by id. Available only for authorized users.
     /// </summary>
     /// <param name="id">Comment id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -119,6 +119,7 @@ public class CommentController : ControllerBase
 
     /// <summary>
     /// Returns comments list filtered by text, author name or last name.
+    /// Available only for authorized users.
     /// </summary>
     /// <param name="searchString">Search string to filter comments</param> 
     /// <param name="cancellationToken">Operation cancelation token.</param>
@@ -134,7 +135,7 @@ public class CommentController : ControllerBase
     }
 
     /// <summary>
-    /// Return ad comments.
+    /// Return ad comments. Available for anonymous users.
     /// </summary>
     /// <param name="id">Ad id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -158,10 +159,8 @@ public class CommentController : ControllerBase
     }
 
     /// <summary>
-    /// Update Comment by Id.
-    /// Any User can update only own comment. 
+    /// Update Comment by Id. Available only for authorized users.
     /// </summary>
-    /// <param name="id">Comment Id to update.</param>
     /// <param name="request">Update comment request model <see cref="UpdateCommentRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Updated comment <see cref="CommentDto"/></returns>
@@ -170,21 +169,15 @@ public class CommentController : ControllerBase
     [ProducesResponseType(typeof(CommentDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> UpdateComment(Guid id, UpdateCommentRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateComment(UpdateCommentRequest request, CancellationToken cancellationToken)
     {
-        var guidValidationResult = await _guidValidator.ValidateAsync(id, cancellationToken);
-        if (!guidValidationResult.IsValid)
-        {
-            return BadRequest(guidValidationResult.ToString());
-        }
-
         var commentValidationResult = await _updateCommentValidator.ValidateAsync(request, cancellationToken);
         if (!commentValidationResult.IsValid)
         {
             return BadRequest(commentValidationResult.ToString());
         }
 
-        var updatedComment = await _commentService.UpdateCommentAsync(id, request, cancellationToken);
+        var updatedComment = await _commentService.UpdateCommentAsync(request, cancellationToken);
         if (updatedComment == null)
         {
             return NotFound("Could not find comment to update.");
@@ -194,7 +187,7 @@ public class CommentController : ControllerBase
     }
 
     /// <summary>
-    /// Delete user comment by Id. 
+    /// Delete user comment by Id. Available only for authorized users.
     /// User can delete only own comment. 
     /// Admin or Superuser can delete any comment.
     /// </summary>

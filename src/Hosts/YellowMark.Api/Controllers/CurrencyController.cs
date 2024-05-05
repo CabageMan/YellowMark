@@ -12,7 +12,7 @@ namespace YellowMark.Api.Controllers;
 /// Currency Controller
 /// </summary>
 [ApiController]
-[Route("v1/currencies")]
+[Route("api/v1/currencies")]
 [ProducesResponseType((int)HttpStatusCode.InternalServerError)]
 public class CurrencyController : ControllerBase
 {
@@ -37,7 +37,7 @@ public class CurrencyController : ControllerBase
     }
 
     /// <summary>
-    /// Create new Currency. Awailable only for Admins or SuperUsers.
+    /// Create new Currency. Available only for Admins or SuperUsers.
     /// </summary>
     /// <param name="request">Currency request model <see cref="CreateCurrencyRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -59,7 +59,7 @@ public class CurrencyController : ControllerBase
     }
 
     /// <summary>
-    /// Returns all currencies list.
+    /// Returns all currencies list. Available for anonymous users.
     /// </summary>
     /// <param name="cancellationToken">Operation cancelation token.</param>
     /// <returns>Currencies list.</returns>
@@ -73,7 +73,7 @@ public class CurrencyController : ControllerBase
     }
 
     /// <summary>
-    /// Return currency by id.
+    /// Return currency by id. Available for anonymous users.
     /// </summary>
     /// <param name="id">Currency id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -101,7 +101,7 @@ public class CurrencyController : ControllerBase
     }
 
     /// <summary>
-    /// Update Currency by Id. Awailable only for Admins or SuperUsers. 
+    /// Update Currency by Id. Available only for Admins or SuperUsers. 
     /// </summary>
     /// <param name="id">Needed to update currency.</param>
     /// <param name="request">Currency request model <see cref="CreateCurrencyRequest"/></param>
@@ -136,7 +136,7 @@ public class CurrencyController : ControllerBase
     }
 
     /// <summary>
-    /// Delete Currency by Id.
+    /// Delete Currency by Id. Available only for Admins or SuperUsers.
     /// </summary>
     /// <param name="id">Currency id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>

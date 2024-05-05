@@ -47,7 +47,7 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// Register new account.
+    /// Register new account. Available for anonymous users.
     /// </summary>
     /// <param name="request">Create account request model <see cref="CreateAccountRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -77,7 +77,7 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// Sign in into account.
+    /// Sign in into account. Available for anonymous users.
     /// </summary>
     /// <param name="request">Sign in request model <see cref="SignInRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -114,7 +114,7 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// Get account info.
+    /// Get account info. Available only for authorized users.
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Account info <see cref="AccountInfoDto"/></returns>
@@ -141,7 +141,7 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// Update account info.
+    /// Update account info. Available only for authorized users.
     /// </summary>
     /// <param name="request">Update account info request <see cref="UpdateAccountRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -196,7 +196,7 @@ public class AccountController : ControllerBase
     */
 
     /// <summary>
-    /// Delete current account.
+    /// Delete current account. Available only for authorized users.
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns></returns>
@@ -218,7 +218,7 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// Add Users Roles to database. Temp. method for convenient ussage.
+    /// Add Users Roles to database. Temp. method for convenient ussage. Rework it.
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>List of added roles names.</returns>
@@ -238,7 +238,7 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// Add admin role to current account.
+    /// Add admin role to current account. Available for authorized user with 'User' role.
     /// Temp. method for convenient ussage.
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -254,7 +254,7 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// Add superUser role to current account.
+    /// Add superUser role to current account. Available for authorized user with 'Admin' role.
     /// Temp. method for convenient ussage.
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>

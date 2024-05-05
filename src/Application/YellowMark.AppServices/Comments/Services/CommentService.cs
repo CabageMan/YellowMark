@@ -83,12 +83,12 @@ public class CommentService : ICommentService
     }
 
     /// <inheritdoc/>
-    public async Task<CommentDto> UpdateCommentAsync(Guid id, UpdateCommentRequest request, CancellationToken cancellationToken)
+    public async Task<CommentDto> UpdateCommentAsync(UpdateCommentRequest request, CancellationToken cancellationToken)
     {
         var currentUserInfo = await _accountService.GetAccountInfoAssync(cancellationToken);
         CommentOperationException.ThrowIfNull(currentUserInfo, "Could not get user info for comment update.");
 
-        var currentEntity = await _commentRepository.GetByIdAsync(id, cancellationToken);
+        var currentEntity = await _commentRepository.GetByIdAsync(request.Id, cancellationToken);
         CommentNotFoundException.ThrowIfNull(currentEntity, "Could not get comment for update.");
 
         if (currentUserInfo.Id != currentEntity.UserId)
@@ -97,7 +97,7 @@ public class CommentService : ICommentService
         }
 
         var updatedEntity = _mapper.Map<UpdateCommentRequest, Comment>(request);
-        updatedEntity.Id = id;
+        updatedEntity.Id = request.Id;
         updatedEntity.CreatedAt = currentEntity.CreatedAt;
         updatedEntity.AdId = currentEntity.AdId;
 

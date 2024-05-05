@@ -53,7 +53,7 @@ public interface ICommentService
     /// <param name="request">Update comment model <see cref="UpdateCommentRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Updated ad <see cref="CommentDto"/></returns>
-    Task<CommentDto> UpdateCommentAsync(Guid id, UpdateCommentRequest request, CancellationToken cancellationToken);
+    Task<CommentDto> UpdateCommentAsync(UpdateCommentRequest request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete the Comment by id.

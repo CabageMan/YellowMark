@@ -41,7 +41,7 @@ public class AdController : ControllerBase
     }
 
     /// <summary>
-    /// Create new Ad.
+    /// Create new Ad. Available only for authorized users.
     /// </summary>
     /// <param name="request">Ad request model <see cref="CreateAdRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -63,7 +63,7 @@ public class AdController : ControllerBase
     }
 
     /// <summary>
-    /// Returns all ads list with pagination.
+    /// Returns all ads list with pagination. Available for anonymous users.
     /// </summary>
     /// <param name="request">Pagination params <see cref="GetAllRequestWithPagination"/>.</param>
     /// <param name="cancellationToken">Operation cancelation token.</param>
@@ -85,7 +85,7 @@ public class AdController : ControllerBase
     }
 
     /// <summary>
-    /// Return ad by id.
+    /// Return ad by id. Available for anonymous users.
     /// </summary>
     /// <param name="id">Ad id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -113,7 +113,7 @@ public class AdController : ControllerBase
     }
 
     /// <summary>
-    /// Returns ads list filtered by title.
+    /// Returns ads list filtered by title. Available for anonymous users.
     /// </summary>
     /// <param name="request">Request <see cref="AdByTitleRequest"/></param> 
     /// <param name="cancellationToken">Operation cancelation token.</param>
@@ -129,7 +129,7 @@ public class AdController : ControllerBase
     }
 
     /// <summary>
-    /// Returns ads list filtered by category.
+    /// Returns ads list filtered by category. Available for anonymous users.
     /// </summary>
     /// <param name="categoryID">Category id.</param>
     /// <param name="cancellationToken">Operation cancelation token.</param>
@@ -145,7 +145,7 @@ public class AdController : ControllerBase
     }
 
     /// <summary>
-    /// Update Ad by Id.
+    /// Update Ad by Id. Available only for authorized users.
     /// </summary>
     /// <param name="id">Needed to update ad.</param>
     /// <param name="request">Ad request model <see cref="CreateAdRequest"/></param>
@@ -180,7 +180,7 @@ public class AdController : ControllerBase
     }
 
     /// <summary>
-    /// Delete Ad by Id.
+    /// Delete Ad by Id. Available only for authorized users.
     /// </summary>
     /// <param name="id">Ad id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>

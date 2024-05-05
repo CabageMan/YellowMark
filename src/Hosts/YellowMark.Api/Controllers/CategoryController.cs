@@ -41,7 +41,7 @@ public class CategoryController : ControllerBase
     }
 
     /// <summary>
-    /// Create new Category. Awailable only for Admins or SuperUsers.
+    /// Create new Category. Available only for Admins or SuperUsers.
     /// </summary>
     /// <param name="request">Category request model <see cref="CreateCategoryRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -63,7 +63,7 @@ public class CategoryController : ControllerBase
     }
 
     /// <summary>
-    /// Returns all categories list.
+    /// Returns all categories list. Available for anonymous users.
     /// </summary>
     /// <param name="cancellationToken">Operation cancelation token.</param>
     /// <returns>Categories list.</returns>
@@ -77,7 +77,7 @@ public class CategoryController : ControllerBase
     }
 
     /// <summary>
-    /// Return category by id.
+    /// Return category by id. Available for anonymous users.
     /// </summary>
     /// <param name="id">Category id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
@@ -105,7 +105,7 @@ public class CategoryController : ControllerBase
     }
 
     /// <summary>
-    /// Update Category by Id. Awailable only for Admins or SuperUsers. 
+    /// Update Category by Id. Available only for Admins or SuperUsers. 
     /// </summary>
     /// <param name="id">Needed to update category id.</param>
     /// <param name="request">Category request model <see cref="UpdateCategoryRequest"/></param>
@@ -140,7 +140,7 @@ public class CategoryController : ControllerBase
     }
 
     /// <summary>
-    /// Delete Category by Id. Awailable only for Admins or SuperUsers.
+    /// Delete Category by Id. Available only for Admins or SuperUsers.
     /// </summary>
     /// <param name="id">Category id <see cref="Guid"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
