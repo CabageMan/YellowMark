@@ -1,32 +1,32 @@
 ﻿using System.Linq.Expressions;
-using System.Reflection.Metadata.Ecma335;
+using Microsoft.IdentityModel.Tokens;
 using YellowMark.AppServices.Specifications;
 using YellowMark.Domain.Ads.Entity;
 
 namespace YellowMark.AppServices.Ads.Specifications;
 
 /// <summary>
-/// Get Ad by title implementation of the Specification.
+/// Get Ad by category implementation of the Specification.
 /// </summary>
-public class AdByTitleSpecification : Specification<Ad>
+public class AdsByCategorySpecification : Specification<Ad>
 {
-    private readonly string _title;
+    private readonly Guid _categoryId;
 
     /// <summary>
     /// Constructor of specification.
     /// </summary>
     /// <param name="title">Target ad param.</param>
-    public AdByTitleSpecification(string title)
+    public AdsByCategorySpecification(Guid categoryId)
     {
-        _title = title;
+        _categoryId = categoryId;
     }
 
     /// <summary>
-    /// Get Ad by title implementation of ToExpression method.
+    /// Get Ad by category implementation of ToExpression method.
     /// </summary>
     /// <returns>Expression</returns>
     public override Expression<Func<Ad, bool>> ToExpression()
     {
-        return ad => ad.Title.ToLower().Contains(_title.ToLower());
+        return ad => (ad.Category.Subcategories == null || ad.Category.Subcategories.Count == 0) && ad.CategoryId == _categoryId;
     }
 }

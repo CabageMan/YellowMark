@@ -9,7 +9,7 @@ namespace YellowMark.AppServices.UsersInfos.Specifications;
 /// </summary>
 public class UserInfoByNameSpecification : Specification<UserInfo>
 {
-    private readonly string _name;
+    private readonly string _nameLowerCase;
 
     /// <summary>
     /// Constructor of specification.
@@ -17,7 +17,7 @@ public class UserInfoByNameSpecification : Specification<UserInfo>
     /// <param name="name">Target user param.</param>
     public UserInfoByNameSpecification(string name)
     {
-        _name = name;
+        _nameLowerCase = name.ToLower();
     }
 
     /// <summary>
@@ -26,8 +26,8 @@ public class UserInfoByNameSpecification : Specification<UserInfo>
     /// <returns>Expression</returns>
     public override Expression<Func<UserInfo, bool>> ToExpression()
     {
-        return user => user.FirstName.Contains(_name) || 
-            user.MiddleName.Contains(_name) ||
-            user.LastName.Contains(_name);
+        return user => user.FirstName.ToLower().Contains(_nameLowerCase) || 
+            user.MiddleName.ToLower().Contains(_nameLowerCase) ||
+            user.LastName.ToLower().Contains(_nameLowerCase);
     }
 }

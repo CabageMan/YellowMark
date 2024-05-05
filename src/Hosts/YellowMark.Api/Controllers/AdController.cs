@@ -129,6 +129,22 @@ public class AdController : ControllerBase
     }
 
     /// <summary>
+    /// Returns ads list filtered by category.
+    /// </summary>
+    /// <param name="categoryID">Category id.</param>
+    /// <param name="cancellationToken">Operation cancelation token.</param>
+    /// <returns>Ads list.</returns>
+    [AllowAnonymous]
+    [HttpGet]
+    [Route("by-category")]
+    [ProducesResponseType(typeof(IEnumerable<AdDto>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetAllByCategory([FromQuery] Guid categoryID, CancellationToken cancellationToken)
+    {
+        var result = await _adService.GetAdsByCategoryAsync(categoryID, cancellationToken);
+        return Ok(result);
+    }
+
+    /// <summary>
     /// Update Ad by Id.
     /// </summary>
     /// <param name="id">Needed to update ad.</param>

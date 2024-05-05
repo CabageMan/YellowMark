@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http.Features;
 using YellowMark.AppServices.Accounts.Services;
 using YellowMark.AppServices.Ads.Exceptions;
 using YellowMark.AppServices.Ads.Repositories;
@@ -83,6 +84,13 @@ public class AdService : IAdService
     public Task<IEnumerable<AdDto>> GetAdsByTitleAsync(AdByTitleRequest request, CancellationToken cancellationToken)
     {
         Specification<Ad> specification = new AdByTitleSpecification(request.Title);
+        return _adRepository.GetFiltered(specification, cancellationToken);
+    }
+
+    /// <inheritdoc/>
+    public Task<IEnumerable<AdDto>> GetAdsByCategoryAsync(Guid id, CancellationToken cancellationToken)
+    {
+        Specification<Ad> specification = new AdsByCategorySpecification(id);
         return _adRepository.GetFiltered(specification, cancellationToken);
     }
 

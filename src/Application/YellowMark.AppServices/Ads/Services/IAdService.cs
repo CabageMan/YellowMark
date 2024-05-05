@@ -40,6 +40,14 @@ public interface IAdService
     Task<IEnumerable<AdDto>> GetAdsByTitleAsync(AdByTitleRequest request, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Returns all ads related to category.
+    /// </summary>
+    /// <param name="id">Category id</param>
+    /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
+    /// <returns>Ads collection of <see cref="AdDto"/>.</returns>
+    Task<IEnumerable<AdDto>> GetAdsByCategoryAsync(Guid id, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Check if ad exists by Id.
     /// </summary>
     /// <param name="id">Ad Id.</param>
