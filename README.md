@@ -41,9 +41,10 @@ To run databases in Docker see
 ```
 dotnet ef migrations add <migration_name> --project YellowMark.DbMigrator.csproj --context <DbContext>
 ```
+
 MigrationDbContextFactory is implemented to apply different database contexts, but for now is available only one, so as DbContext for --context argument you should pass MigrationDbContext.
 
-**To add changes to database you need to run the YellowMark.DbMigrator project:**
+**To add changes to database you need to run the YellowMark.DbMigrator project:**\
 Run it from IDE or from terminal using:
 
 ```
