@@ -16,7 +16,8 @@ public class AdProfile : Profile
     {
         CreateMap<Ad, AdDto>()
             .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.UserInfo))
-            .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category));
+            .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category))
+            .ForMember(dest => dest.FilesIds, opt => opt.MapFrom(src => src.Files.Select(f => f.Id)));
 
         var creationDate = DateTime.UtcNow;
         CreateMap<CreateAdRequest, Ad>()

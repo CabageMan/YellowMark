@@ -14,11 +14,12 @@ public class CategoryProfile : Profile
     /// </summary>
     public CategoryProfile()
     {
-        CreateMap<Category, CategoryDto>();
+        CreateMap<Category, CategoryDto>()
+            .ForMember(dest => dest.Subcategories, opt => opt.MapFrom(src => src.Subcategories));
 
         var creationDate = DateTime.UtcNow;
         CreateMap<CreateCategoryRequest, Category>()
-            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid()))
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(_ => Guid.NewGuid()))
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => creationDate))
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => creationDate))
             .ForMember(dest => dest.ParentCategory, opt => opt.Ignore())

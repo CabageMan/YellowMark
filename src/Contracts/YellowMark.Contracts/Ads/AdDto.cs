@@ -53,4 +53,9 @@ public class AdDto
     /// Goods currency <see cref="CurrencyDto"/> specified in the ad. 
     /// </summary>
     public CurrencyDto Currency { get; set; }
+
+    /// <summary>
+    /// Collection of Files Ids <see cref="Guid"/>.
+    /// </summary>
+    public virtual List<Guid> FilesIds { get; set; }
 }
