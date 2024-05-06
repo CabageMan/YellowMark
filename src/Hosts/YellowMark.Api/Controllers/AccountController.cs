@@ -218,7 +218,7 @@ public class AccountController : ControllerBase
     }
 
     /// <summary>
-    /// Add Users Roles to database. Temp. method for convenient ussage. Rework it.
+    /// Add Users Roles to database. Temp method for convenient ussage. Remove it later.
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>List of added roles names.</returns>
@@ -239,7 +239,7 @@ public class AccountController : ControllerBase
 
     /// <summary>
     /// Add admin role to current account. Available for authorized user with 'User' role.
-    /// Temp. method for convenient ussage.
+    /// Temp method for convenient ussage. Remove it later.
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>List of suer roles.</returns>
@@ -255,7 +255,7 @@ public class AccountController : ControllerBase
 
     /// <summary>
     /// Add superUser role to current account. Available for authorized user with 'Admin' role.
-    /// Temp. method for convenient ussage.
+    /// Temp method for convenient ussage. Remove it later.
     /// </summary>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>List of user roles.</returns>
