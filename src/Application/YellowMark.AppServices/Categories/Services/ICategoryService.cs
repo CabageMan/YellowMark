@@ -40,11 +40,10 @@ public interface ICategoryService
     /// <summary>
     /// Update current Category.
     /// </summary>
-    /// <param name="id">Category id</param>
     /// <param name="request">Update model <see cref="UpdateCategoryRequest"/></param>
     /// <param name="cancellationToken"><see cref="CancellationToken"/></param>
     /// <returns>Updated category <see cref="CategoryDto"/></returns>
-    Task<CategoryDto> UpdateCategoryAsync(Guid id, UpdateCategoryRequest request, CancellationToken cancellationToken);
+    Task<CategoryDto> UpdateCategoryAsync(UpdateCategoryRequest request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Delete the Category by id.

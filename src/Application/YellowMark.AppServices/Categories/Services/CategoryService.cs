@@ -115,13 +115,12 @@ public class CategoryService : ICategoryService
     }
 
     /// <inheritdoc/>
-    public async Task<CategoryDto> UpdateCategoryAsync(Guid id, UpdateCategoryRequest request, CancellationToken cancellationToken)
+    public async Task<CategoryDto> UpdateCategoryAsync(UpdateCategoryRequest request, CancellationToken cancellationToken)
     {
-        var currentEntity = await _categoryRepository.GetByIdAsync(id, cancellationToken);
+        var currentEntity = await _categoryRepository.GetByIdAsync(request.Id, cancellationToken);
         CategoryNotFoundException.ThrowIfNull(currentEntity, "Could not find category to update.");
 
         var updatedEntity = _mapper.Map<UpdateCategoryRequest, Category>(request);
-        updatedEntity.Id = id;
         updatedEntity.CreatedAt = currentEntity.CreatedAt;
         updatedEntity.ParentCategoryId = currentEntity.ParentCategoryId;
 

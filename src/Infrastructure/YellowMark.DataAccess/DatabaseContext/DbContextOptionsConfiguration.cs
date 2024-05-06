@@ -48,9 +48,6 @@ public class DbContextOptionsConfiguration<TContext> : IDbContextOptionsConfigur
             Password = _configuration.GetSection("DbConnection")["Password"]
         };
 
-        //  TODO: Handle Exceptions in controllers when DB string is empty.
-        //  TODO: Handle Exceptions when database does not exist.
-
         optionsBuilder.UseNpgsql(connectionStringBuilder.ConnectionString);
     }
 }

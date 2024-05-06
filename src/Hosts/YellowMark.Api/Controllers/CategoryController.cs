@@ -116,21 +116,15 @@ public class CategoryController : ControllerBase
     [ProducesResponseType(typeof(CategoryDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    public async Task<IActionResult> UpdateCategory(Guid id, UpdateCategoryRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateCategory(UpdateCategoryRequest request, CancellationToken cancellationToken)
     {
-        var guidValidationResult = await _guidValidator.ValidateAsync(id, cancellationToken); 
-        if (!guidValidationResult.IsValid) 
-        {
-            return BadRequest(guidValidationResult.ToString());
-        }
-
         var categoryValidationResult = await _updateCategoryValidator.ValidateAsync(request, cancellationToken);
         if (!categoryValidationResult.IsValid) 
         {
             return BadRequest(categoryValidationResult.ToString());
         }
 
-        var updatedCategory = await _categoryService.UpdateCategoryAsync(id, request, cancellationToken);
+        var updatedCategory = await _categoryService.UpdateCategoryAsync(request, cancellationToken);
         if (updatedCategory == null)
         {
             return NotFound("Could not find category to update.");

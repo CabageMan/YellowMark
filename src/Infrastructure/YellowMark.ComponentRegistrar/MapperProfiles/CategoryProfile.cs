@@ -26,9 +26,9 @@ public class CategoryProfile : Profile
             .ForMember(dest => dest.Ads, opt => opt.Ignore());
 
         CreateMap<UpdateCategoryRequest, Category>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => DateTime.UtcNow))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
             .ForMember(dest => dest.ParentCategoryId, opt => opt.Ignore())
             .ForMember(dest => dest.ParentCategory, opt => opt.Ignore())
             .ForMember(dest => dest.Subcategories, opt => opt.Ignore())

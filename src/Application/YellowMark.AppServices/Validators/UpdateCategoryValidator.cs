@@ -13,6 +13,7 @@ public class UpdateCategoryValidator : AbstractValidator<UpdateCategoryRequest>
     /// </summary>
     public UpdateCategoryValidator()
     {
+        RuleFor(s => s.Id).NonEmptyGuid();
         RuleFor(s => s.Name).StringCorrectLength(0, 255);
     }
 }
